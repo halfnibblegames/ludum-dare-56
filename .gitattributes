@@ -9,10 +9,10 @@
 *.csproj   text eol=crlf
 
 # GD files
-*.gd       text
-*.import   text
-*.godot    text
-*.tscn     text
+*.gd       text eol=lf
+*.import   text eol=lf
+*.godot    text eol=lf
+*.tscn     text eol=lf
 
 # Documentation
 *.md       text diff=markdown
