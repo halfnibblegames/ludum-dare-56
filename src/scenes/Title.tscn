@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://nodes/SceneChangerLabel.cs" type="Script" id=2]
+[ext_resource path="res://assets/Monocons.tres" type="DynamicFont" id=5]
+
+[node name="TitleScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0941176, 0.0941176, 0.0941176, 1 )
+
+[node name="StartButton" type="Label" parent="."]
+margin_left = 587.0
+margin_top = 387.0
+margin_right = 689.0
+margin_bottom = 408.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 0.792157, 0.823529, 0.760784, 1 )
+custom_fonts/font = ExtResource( 5 )
+text = "Start"
+script = ExtResource( 2 )
+TargetScenePath = "res://scenes/Game.tscn"

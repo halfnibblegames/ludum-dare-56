@@ -1,0 +1,95 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://assets/goofy_ahh_bite.mp3" type="AudioStream" id=1]
+[ext_resource path="res://nodes/Splash.cs" type="Script" id=2]
+[ext_resource path="res://assets/Monocons.tres" type="DynamicFont" id=3]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/strawberry_bite.png-2cc8704db917175623d7366ba3758927.stex"
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = SubResource( 1 )
+region = Rect2( 0, 0, 35, 35 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = SubResource( 1 )
+region = Rect2( 35, 0, 35, 35 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = SubResource( 1 )
+region = Rect2( 70, 0, 35, 35 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = SubResource( 1 )
+region = Rect2( 0, 35, 35, 35 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = SubResource( 1 )
+region = Rect2( 35, 35, 35, 35 )
+
+[sub_resource type="SpriteFrames" id=7]
+animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ), SubResource( 6 ) ],
+"loop": false,
+"name": "Bite",
+"speed": 34.0
+} ]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0941176, 0.0941176, 0.0941176, 1 )
+
+[node name="Strawberry" type="AnimatedSprite" parent="."]
+position = Vector2( 630, 247 )
+scale = Vector2( 8, 8 )
+frames = SubResource( 7 )
+animation = "Bite"
+__meta__ = {
+"_aseprite_wizard_config_": {
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"source": "res://assets/strawberry_bite.aseprite"
+}
+}
+
+[node name="BiteSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+pitch_scale = 0.85
+
+[node name="Copyright" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -182.0
+margin_top = 27.0
+margin_right = 162.0
+margin_bottom = 48.0
+custom_fonts/font = ExtResource( 3 )
+text = "Half Nibble games"
+align = 1
+valign = 1
+percent_visible = 0.0
+
+[node name="TextTween" type="Tween" parent="."]
+
+[node name="FadeRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0941176, 0.0941176, 0.0941176, 0 )
+
+[node name="FadeTween" type="Tween" parent="."]
+
+[connection signal="animation_finished" from="Strawberry" to="." method="OnBiteAnimationFinished"]
+[connection signal="tween_all_completed" from="TextTween" to="." method="OnTextShown"]
+[connection signal="tween_all_completed" from="FadeTween" to="." method="OnFadeEnded"]

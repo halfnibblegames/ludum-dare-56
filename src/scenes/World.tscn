@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://nodes/ShakeCamera.cs" type="Script" id=1]
+[ext_resource path="res://assets/backpack.png" type="Texture" id=2]
+[ext_resource path="res://nodes/WorldClickable.cs" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 13, 13 )
+
+[node name="World" type="Node2D"]
+
+[node name="ShakeCamera" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+editor_draw_screen = false
+script = ExtResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( 41, 32 )
+monitoring = false
+monitorable = false
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="Area2D"]
+scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 2 )
