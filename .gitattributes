@@ -1,5 +1,25 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# C# files
+*.cs       text diff=csharp
+*.cshtml   text diff=html
+*.csx      text diff=csharp
+*.sln      text eol=crlf
+*.csproj   text eol=crlf
+
+# GD files
+*.gd       text
+*.import   text
+*.godot    text
+*.tscn     text
+
+# Documentation
+*.md       text diff=markdown
+*.txt      text
+
+# Assets
+*.png      binary
+
 # Ignore addons for GitHub language statistics
 src/addons/** linguist-vendored
