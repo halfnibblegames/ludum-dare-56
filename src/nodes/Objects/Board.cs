@@ -48,18 +48,18 @@ public sealed class Board : Node2D
             }
         }
 
-        // Spawn a hardcoded queen for now
-        var queen = Global.Prefabs.QueenBee?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate queen bee.");
-        AddChild(queen);
-        var queenTile = tiles[toIndex(2, 2)];
-        queen.Position = queenTile.Position;
-        queenTile.Piece = queen;
+        // Spawn hardcoded pieces for testing
+        spawnObjectDebug(Global.Prefabs.QueenBee, 2, 2);
+        spawnObjectDebug(Global.Prefabs.QueenBee, 6, 6);
+    }
 
-        var queen2 = Global.Prefabs.QueenBee?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate queen bee.");
-        AddChild(queen2);
-        var queen2Tile = tiles[toIndex(6, 6)];
-        queen2.Position = queen2Tile.Position;
-        queen2Tile.Piece = queen2;
+    private void spawnObjectDebug(PackedScene? prefab, int x, int y)
+    {
+        var piece = prefab?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate piece.");
+        AddChild(piece);
+        var queenTile = tiles[toIndex(x, y)];
+        piece.Position = queenTile.Position;
+        queenTile.Piece = piece;
     }
 
     public void ResetHighlightedTiles()
