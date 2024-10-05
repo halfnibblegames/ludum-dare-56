@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Godot;
+using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
 
@@ -18,14 +19,25 @@ public abstract class Piece : Node2D
         }
     }
 
+    public bool IsDead { get; private set; }
+
     public event PieceDestroyedEventHandler? Destroyed;
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
+
+    public void OnMove(Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
+    {
+        if (toTile.Piece is { } piece && piece.IsEnemy != IsEnemy)
+        {
+            sideEffects.CapturePiece(toTile);
+        }
+    }
 
     public void Destroy()
     {
         QueueFree();
         Destroyed?.Invoke();
+        IsDead = true;
     }
 
     protected bool ContainsSameColorPiece(Tile tile)

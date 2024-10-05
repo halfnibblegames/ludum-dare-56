@@ -78,30 +78,10 @@ public sealed class InputHandler
             }
         }
 
-        public IMove? TryHandleTileClick(Tile clickedTile)
+        public Move? TryHandleTileClick(Tile clickedTile)
         {
-            if (clickedTile == tile)
-            {
-                return null;
-            }
-
-            if (!piece.ReachableTiles(tile.Coord, board).ToHashSet().Contains(clickedTile.Coord))
-            {
-                return null;
-            }
-
-            if (clickedTile.Piece is null)
-            {
-                return Moves.MovePiece(piece, tile, clickedTile);
-            }
-
-            var clickedPiece = clickedTile.Piece;
-            if (clickedPiece.IsEnemy == piece.IsEnemy)
-            {
-                throw new InvalidOperationException("Cannot capture your own pieces");
-            }
-
-            return Moves.Capture(piece, tile, clickedTile);
+            var moveCandidate = board.PreviewMove(piece, tile, clickedTile);
+            return moveCandidate.Validate() ? moveCandidate : null;
         }
     }
 }

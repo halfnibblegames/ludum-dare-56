@@ -22,6 +22,11 @@ public sealed class Board : Node2D
         Pieces = pieces.AsReadOnly();
     }
 
+    public Move PreviewMove(Piece piece, Tile from, Tile to)
+    {
+        return new Move(this, piece, from, to);
+    }
+
     public override void _Ready()
     {
         // Make the origin be bottom left.

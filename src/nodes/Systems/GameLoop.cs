@@ -11,7 +11,7 @@ public sealed class GameLoop : Node2D
 {
     private readonly Random random;
     private GameLoopState state = GameLoopState.AwaitingInput;
-    private readonly List<IMove> enemyMoves = new();
+    private readonly List<Move> enemyMoves = new();
 
     public InputHandler Input { get; }
 
@@ -26,14 +26,14 @@ public sealed class GameLoop : Node2D
         startTurn();
     }
 
-    public void SubmitMove(IMove move)
+    public void SubmitMove(Move move)
     {
         if (state != GameLoopState.AwaitingInput) throw new InvalidOperationException();
 
         _ = doPlayerMove(move);
     }
 
-    private async Task doPlayerMove(IMove move)
+    private async Task doPlayerMove(Move move)
     {
         state = GameLoopState.PlayerMove;
         Input.Deactivate();
@@ -46,7 +46,7 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.EnemyMove;
 
-        var moveExecutions = enemyMoves.Select(m => m.Execute()).ToList();
+        var moveExecutions = enemyMoves.Where(m => m.Validate()).Select(m => m.Execute()).ToList();
         enemyMoves.Clear();
         await Task.WhenAll(moveExecutions);
 
@@ -69,9 +69,18 @@ public sealed class GameLoop : Node2D
         var (tile, piece) = enemyPieces[random.Next(enemyPieces.Count)];
         var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();
         if (reachableTiles.Count == 0) return;
-        var target = reachableTiles[random.Next(reachableTiles.Count)];
 
-        enemyMoves.Add(Moves.MovePiece(piece, tile, board[target]));
+        const int maxTries = 5;
+        for (var i = 0; i < maxTries; i++)
+        {
+            var target = reachableTiles[random.Next(reachableTiles.Count)];
+            var moveCandidate = board.PreviewMove(piece, tile, board[target]);
+            if (moveCandidate.Validate())
+            {
+                enemyMoves.Add(moveCandidate);
+                break;
+            }
+        }
     }
 
     private enum GameLoopState
