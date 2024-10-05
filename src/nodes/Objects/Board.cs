@@ -15,9 +15,12 @@ public sealed class Board : Node2D
     private Tile[] tiles = Array.Empty<Tile>();
     private readonly List<Piece> pieces = new();
 
+    public IReadOnlyList<Piece> Pieces { get; }
+
     public Board()
     {
         input = new InputHandler(this);
+        Pieces = pieces.AsReadOnly();
     }
 
     public override void _Ready()
