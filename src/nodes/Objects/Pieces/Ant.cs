@@ -11,6 +11,6 @@ public sealed class Ant : Piece
             .Concat(
                 currentTile.EnumerateValidAdjacent().Where(t => board[t].Piece == null))
             .Concat(
-                currentTile.EnumerateDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
+                currentTile.EnumerateValidDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
     }
 }

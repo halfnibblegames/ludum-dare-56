@@ -13,7 +13,14 @@ public sealed class GameLoop : Node2D
 {
     // Needs to be lazily initiated
     private static readonly Func<List<PackedScene>> pieceTypesFactory = () =>
-        new List<PackedScene> { Global.Prefabs.HornedBeetle!, Global.Prefabs.PrayingMantis! };
+        new List<PackedScene>
+        {
+            Global.Prefabs.Ant!,
+            Global.Prefabs.Dragonfly!,
+            Global.Prefabs.Grasshopper!,
+            Global.Prefabs.HornedBeetle!,
+            Global.Prefabs.PrayingMantis!
+        };
 
     private readonly Random random;
     private readonly List<Move> enemyMoves = new();
