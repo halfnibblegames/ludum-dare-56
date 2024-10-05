@@ -1,0 +1,62 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using HalfNibbleGame.Objects;
+
+namespace HalfNibbleGame;
+
+public readonly record struct TileCoord(int X, int Y)
+{
+    public bool IsValid() => X >= 0 && Y >= 0 && X < Board.Width && Y < Board.Height;
+
+    public IEnumerable<TileCoord> EnumerateValidNeighbors() => EnumerateNeighbors().Where(t => t.IsValid());
+
+    public IEnumerable<TileCoord> EnumerateNeighbors()
+    {
+        yield return this + Step.Right;
+        yield return this + Step.Up;
+        yield return this + Step.Left;
+        yield return this + Step.Down;
+    }
+
+    public IEnumerable<TileCoord> EnumerateValidAdjacent() => EnumerateAdjacent().Where(t => t.IsValid());
+
+    public IEnumerable<TileCoord> EnumerateAdjacent()
+    {
+        yield return this + Step.Right;
+        yield return this + Step.UpRight;
+        yield return this + Step.Up;
+        yield return this + Step.UpLeft;
+        yield return this + Step.Left;
+        yield return this + Step.DownLeft;
+        yield return this + Step.Down;
+        yield return this + Step.DownRight;
+    }
+
+    public IEnumerable<TileCoord> EnumerateStepsWhileValid(Step step)
+    {
+        var t = this + step;
+        while (t.IsValid())
+        {
+            yield return t;
+            t += step;
+        }
+    }
+
+    public static TileCoord operator +(TileCoord coord, Step step) => new(coord.X + step.X, coord.Y + step.Y);
+}
+
+public readonly record struct Step(int X, int Y)
+{
+    public static Step Right { get; } = new(1, 0);
+    public static Step Up { get; } = new(0, -1);
+    public static Step Left { get; } = new(-1, 0);
+    public static Step Down { get; } = new(0, 1);
+    public static Step UpRight { get; } = Up + Right;
+    public static Step UpLeft { get; } = Up + Left;
+    public static Step DownLeft { get; } = Down + Left;
+    public static Step DownRight { get; } = Down + Right;
+
+    public static Step operator -(Step step) => new(-step.X, -step.Y);
+    public static Step operator +(Step left, Step right) => new(left.X + right.X, left.Y + right.Y);
+    public static Step operator -(Step left, Step right) => new(left.X - right.X, left.Y - right.Y);
+}

@@ -10,8 +10,9 @@ public sealed class Tile : Area2D
     private static readonly char[] rows = { '1', '2', '3', '4', '5', '6', '7', '8' };
     private static readonly char[] cols = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
-    public int Col;
-    public int Row;
+    public TileCoord Coord;
+    public int Col => Coord.X;
+    public int Row => Coord.Y;
 
     private TileColor color;
     public TileColor Color
