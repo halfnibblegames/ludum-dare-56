@@ -11,6 +11,9 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To)
         // Piece has died
         if (Piece.IsDead) return false;
 
+        // Piece is stunned
+        if (Piece.IsStunned) return false;
+
         // Piece cannot reach the target
         if (!Piece.ReachableTiles(From.Coord, Board).ToHashSet().Contains(To.Coord)) return false;
 

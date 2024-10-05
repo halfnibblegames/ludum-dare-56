@@ -57,6 +57,10 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.AwaitingInput;
         determineEnemyMove();
+        foreach (var piece in GetNode<Board>("Board").Pieces)
+        {
+            piece.OnTurnStart();
+        }
         Input.Activate();
     }
 
@@ -64,7 +68,10 @@ public sealed class GameLoop : Node2D
     {
         var board = GetNode<Board>("Board");
 
-        var enemyPieces = board.Tiles.Where(t => t.Piece is {IsEnemy: true}).Select(t => (t, t.Piece!)).ToList();
+        var enemyPieces = board.Tiles
+            .Where(t => t.Piece is {IsEnemy: true, IsStunned: false})
+            .Select(t => (t, t.Piece!))
+            .ToList();
         if (enemyPieces.Count == 0) return;
         var (tile, piece) = enemyPieces[random.Next(enemyPieces.Count)];
         var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();

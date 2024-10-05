@@ -19,6 +19,7 @@ public abstract class Piece : Node2D
         }
     }
 
+    public bool IsStunned { get; protected set; }
     public bool IsDead { get; private set; }
 
     public event PieceDestroyedEventHandler? Destroyed;
@@ -32,6 +33,8 @@ public abstract class Piece : Node2D
             sideEffects.CapturePiece(toTile);
         }
     }
+
+    public virtual void OnTurnStart() { }
 
     public void Destroy()
     {
