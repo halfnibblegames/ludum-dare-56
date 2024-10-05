@@ -31,6 +31,7 @@ public sealed class InputHandler
     {
         selectedPiece = new SelectedPiece(
             board, continuation.From, continuation.Piece, continuation.TargetTiles, continuation.PreviousMovesInTurn);
+        selectedPiece.HighlightTargetTiles();
         isSelectionLocked = true;
     }
 
