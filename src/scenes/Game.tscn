@@ -19,6 +19,7 @@ shader_param/offScreenColor = Plane( 0.098, 0.161, 0.11, 1 )
 material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="ViewportContainer" type="ViewportContainer" parent="."]
 rect_scale = Vector2( 4, 4 )
