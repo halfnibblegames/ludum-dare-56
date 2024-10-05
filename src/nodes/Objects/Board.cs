@@ -51,6 +51,9 @@ public sealed class Board : Node2D
         // Spawn hardcoded pieces for testing
         spawnObjectDebug(Global.Prefabs.QueenBee, 2, 2);
         spawnObjectDebug(Global.Prefabs.QueenBee, 6, 6);
+        spawnObjectDebug(Global.Prefabs.HornedBeetle, 1, 6);
+        spawnObjectDebug(Global.Prefabs.PrayingMantis, 3, 6);
+        spawnObjectDebug(Global.Prefabs.HornedBeetle, 4, 6);
     }
 
     private void spawnObjectDebug(PackedScene? prefab, int x, int y)
