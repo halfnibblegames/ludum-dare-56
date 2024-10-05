@@ -25,7 +25,7 @@ public abstract class Piece : Node2D
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 
-    public void OnMove(Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
+    public virtual void OnMove(Board board, Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
     {
         if (toTile.Piece is { } piece && piece.IsEnemy != IsEnemy)
         {

@@ -1,18 +1,47 @@
 ﻿using Godot;
+using JetBrains.Annotations;
 
 namespace HalfNibbleGame.Objects;
 
 public sealed class Tile : Area2D
 {
+    private readonly Vector2 origin = 0.5f * size + (Board.Height - 1) * size.y * Vector2.Down;
     public delegate void TileClickedEventHandler();
 
+    private bool beingHovered = false;
     private const float width = 16;
     private const float height = 16;
-    public static readonly Vector2 Size = new(width, height);
+    private static readonly Vector2 size = new(width, height);
     private static readonly char[] rows = { '1', '2', '3', '4', '5', '6', '7', '8' };
     private static readonly char[] cols = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
-    public TileCoord Coord;
+    private TileCoord coord;
+    public TileCoord Coord
+    {
+        get => coord;
+        set
+        {
+            coord = value;
+            UpdatePosition();
+        }
+    }
+
+    private void UpdatePosition()
+    {
+        Position = origin + new Vector2(Coord.X * size.x, -Coord.Y * size.y + HeightOffsetInPixels);
+    }
+
+    private float heightOffsetInPixels;
+    public float HeightOffsetInPixels
+    {
+        get => heightOffsetInPixels;
+        set
+        {
+            heightOffsetInPixels = value;
+            UpdatePosition();
+        }
+    }
+
     public int Col => Coord.X;
     public int Row => Coord.Y;
 
@@ -40,6 +69,15 @@ public sealed class Tile : Area2D
 
     public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
     {
+        if (@event is InputEventMouseMotion)
+        {
+            beingHovered = true;
+        }
+        else if (beingHovered)
+        {
+            beingHovered = false;
+        }
+
         if (@event is InputEventMouseButton { Pressed: true })
         {
             Clicked?.Invoke();

@@ -11,4 +11,9 @@ public sealed class MoveSideEffects
         tile.Piece.Destroy();
         tile.Piece = null;
     }
+
+    public void Ripple(Board board, Tile origin, int rippleRadius)
+    {
+        origin.AddChild(new BoardRippleAnimation(board, origin, rippleRadius));
+    }
 }

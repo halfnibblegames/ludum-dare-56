@@ -30,7 +30,6 @@ public sealed class Board : Node2D
     public override void _Ready()
     {
         // Make the origin be bottom left.
-        var origin = 0.5f * Tile.Size + (Height - 1) * Tile.Size.y * Vector2.Down;
         tiles = new Tile[Width * Height];
         var prefab = Global.Prefabs.Tile ?? throw new Exception("Could not find tile instance.");
 
@@ -48,11 +47,8 @@ public sealed class Board : Node2D
 
                 AddChild(tile);
 
-                var pos = origin + new Vector2(x * Tile.Size.x, -y * Tile.Size.y);
-                tile.Position = pos;
                 tile.Color = (TileColor) ((x + y) % 2);
                 tile.Coord = new TileCoord(x, y);
-
                 tiles[toIndex(x, y)] = tile;
 
                 tile.Clicked += () => input.HandleTileClick(this, tile);

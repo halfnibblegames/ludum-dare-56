@@ -32,15 +32,33 @@ public readonly struct TileCoord : IEquatable<TileCoord>
 
     public IEnumerable<TileCoord> EnumerateNeighboring()
     {
-        yield return this + Step.Right;
-        yield return this + Step.UpRight;
-        yield return this + Step.Up;
-        yield return this + Step.UpLeft;
-        yield return this + Step.Left;
-        yield return this + Step.DownLeft;
-        yield return this + Step.Down;
-        yield return this + Step.DownRight;
+        return EnumerateNeighboringAtRadius(1);
     }
+
+    private static readonly Step[] clockwiseSteps = { Step.Right, Step.Down, Step.Left, Step.Up };
+    public IEnumerable<TileCoord> EnumerateNeighboringAtRadius(int distanceFromCenter)
+    {
+        // Go north-west to the correct starting point.
+        var current = this;
+        for (var i = 0; i < distanceFromCenter; i++)
+        {
+            current += Step.UpLeft;
+        }
+
+        // For each of the base directions
+        foreach (var step in clockwiseSteps)
+        {
+            // Go in that direction 2 * distanceFromCenter times
+            for (var i = 0; i < distanceFromCenter * 2; i++)
+            {
+                current += step;
+                yield return current;
+            }
+        }
+    }
+
+    public IEnumerable<TileCoord> EnumerateValidNeighboringAtRadius(int distanceFromCenter)
+        => EnumerateNeighboringAtRadius(distanceFromCenter).Where(x => x.IsValid());
 
     public IEnumerable<TileCoord> EnumerateStepsWhileValid(Step step)
     {
@@ -73,6 +91,9 @@ public readonly struct TileCoord : IEquatable<TileCoord>
     }
 
     public override string ToString() => $"({X}, {Y})";
+
+    public int Manhattan(TileCoord other) => Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
+    public int DiagonalDistance(TileCoord other) => Math.Max(Math.Abs(X - other.X), Math.Abs(Y - other.Y));
 }
 
 public readonly struct Step

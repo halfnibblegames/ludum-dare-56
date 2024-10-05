@@ -36,7 +36,7 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To)
 
     private void doLogic()
     {
-        Piece.OnMove(From, To, new MoveSideEffects());
+        Piece.OnMove(Board, From, To, new MoveSideEffects());
         From.Piece = null;
         To.Piece = Piece;
         Piece.Position = To.Position;
