@@ -56,6 +56,16 @@ public sealed class Board : Node2D
         queenTile.Piece = queen;
     }
 
+    public void ResetHighlightedTiles()
+    {
+        foreach (var t in tiles)
+        {
+            t.ResetHighlight();
+        }
+    }
+
+    public Tile this[TileCoord coord] => tiles[toIndex(coord)];
+
     private static int toIndex(TileCoord coord) => toIndex(coord.X, coord.Y);
     private static int toIndex(int x, int y) => y * Width + x;
     private static TileCoord toCoord(int i) => new(i / Width, i % Width);

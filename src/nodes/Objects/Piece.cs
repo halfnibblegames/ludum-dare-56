@@ -6,8 +6,8 @@ namespace HalfNibbleGame.Objects;
 
 public sealed class Piece : Node2D
 {
-    public HashSet<TileCoord> ReachableTiles(TileCoord currentTile, Board board)
+    public IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board)
     {
-        return currentTile.EnumerateValidNeighboring().ToHashSet();
+        return currentTile.EnumerateValidNeighboring();
     }
 }

@@ -16,6 +16,8 @@ public sealed class Tile : Area2D
     public int Col => Coord.X;
     public int Row => Coord.Y;
 
+    private bool isHighlighted;
+
     private TileColor color;
     public TileColor Color
     {
@@ -23,7 +25,7 @@ public sealed class Tile : Area2D
         set
         {
             color = value;
-            applyColor();
+            updateAnimation();
         }
     }
 
@@ -33,12 +35,7 @@ public sealed class Tile : Area2D
 
     public override void _Ready()
     {
-        applyColor();
-    }
-
-    private void applyColor()
-    {
-        GetNode<AnimatedSprite>("AnimatedSprite").Animation = color == TileColor.Dark ? "Dark" : "Light";
+        updateAnimation();
     }
 
     public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
@@ -50,6 +47,34 @@ public sealed class Tile : Area2D
     }
 
     public override string ToString() => $"{cols[Col]}{rows[Row]}";
+
+    public void Highlight()
+    {
+        isHighlighted = true;
+        updateAnimation();
+    }
+
+    public void ResetHighlight()
+    {
+        isHighlighted = false;
+        updateAnimation();
+    }
+
+    private void updateAnimation()
+    {
+        GetNode<AnimatedSprite>("AnimatedSprite").Animation = chooseAnimation();
+    }
+
+    private string chooseAnimation()
+    {
+        return (color, isHighlighted) switch
+        {
+            (TileColor.Light, false) => "Light",
+            (TileColor.Light, true) => "SelectedLight",
+            (TileColor.Dark, false) => "Dark",
+            (TileColor.Dark, true) => "SelectedDark",
+        };
+    }
 }
 
 public enum TileColor : byte
