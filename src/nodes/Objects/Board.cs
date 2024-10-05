@@ -54,6 +54,12 @@ public sealed class Board : Node2D
         var queenTile = tiles[toIndex(2, 2)];
         queen.Position = queenTile.Position;
         queenTile.Piece = queen;
+
+        var queen2 = Global.Prefabs.QueenBee?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate queen bee.");
+        AddChild(queen2);
+        var queen2Tile = tiles[toIndex(6, 6)];
+        queen2.Position = queen2Tile.Position;
+        queen2Tile.Piece = queen2;
     }
 
     public void ResetHighlightedTiles()
