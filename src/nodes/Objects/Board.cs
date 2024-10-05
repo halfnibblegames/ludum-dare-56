@@ -73,9 +73,10 @@ public sealed class Board : Node2D
     {
         pieces.Add(piece);
         AddChild(piece);
-        var queenTile = tiles[toIndex(tileCoord)];
-        piece.Position = queenTile.Position;
-        queenTile.Piece = piece;
+        var tile = tiles[toIndex(tileCoord)];
+        piece.Position = tile.Position;
+        tile.Piece = piece;
+        piece.Destroyed += () => pieces.Remove(piece);
     }
 
     public void ResetHighlightedTiles()
