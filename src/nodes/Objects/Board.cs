@@ -53,12 +53,14 @@ public sealed class Board : Node2D
         spawnObjectDebug(Global.Prefabs.QueenBee, 6, 6);
         spawnObjectDebug(Global.Prefabs.HornedBeetle, 1, 6);
         spawnObjectDebug(Global.Prefabs.PrayingMantis, 3, 6);
-        spawnObjectDebug(Global.Prefabs.HornedBeetle, 4, 6);
+        spawnObjectDebug(Global.Prefabs.HornedBeetle, 4, 6, true);
+        spawnObjectDebug(Global.Prefabs.PrayingMantis, 6, 1, true);
     }
 
-    private void spawnObjectDebug(PackedScene? prefab, int x, int y)
+    private void spawnObjectDebug(PackedScene? prefab, int x, int y, bool isEnemy = false)
     {
         var piece = prefab?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate piece.");
+        piece.IsEnemy = isEnemy;
         AddChild(piece);
         var queenTile = tiles[toIndex(x, y)];
         piece.Position = queenTile.Position;
