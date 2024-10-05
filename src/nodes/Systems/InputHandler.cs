@@ -1,55 +1,57 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
 public sealed class InputHandler
 {
-    private readonly Board board;
+    private readonly GameLoop gameLoop;
 
     private SelectedPiece? selectedPiece;
-    private bool isAwaiting;
+    private bool isActive;
 
-    public InputHandler(Board board)
+    public InputHandler(GameLoop gameLoop)
     {
-        this.board = board;
+        this.gameLoop = gameLoop;
     }
 
-    public void HandleTileClick(Tile tile)
+    public void Activate()
     {
-        if (isAwaiting) return;
+        isActive = true;
+    }
+
+    public void Deactivate()
+    {
+        isActive = false;
+    }
+
+    public void HandleTileClick(Board board, Tile tile)
+    {
+        if (!isActive) return;
 
         if (selectedPiece?.TryHandleTileClick(tile) is { } move)
         {
-            isAwaiting = true;
-            deselectPiece();
-            _ = doMove(move);
+            gameLoop.SubmitMove(move);
+            deselectPiece(board);
             return;
         }
 
         if (tile.Piece is not { IsEnemy: false } piece) return;
         if (selectedPiece is not null)
         {
-            deselectPiece();
+            deselectPiece(board);
         }
-        selectPiece(tile, piece);
+        selectPiece(board, tile, piece);
     }
 
-    private async Task doMove(IMove move)
-    {
-        await move.Execute();
-        isAwaiting = false;
-    }
-
-    private void selectPiece(Tile tile, Piece piece)
+    private void selectPiece(Board board, Tile tile, Piece piece)
     {
         selectedPiece = new SelectedPiece(board, tile, piece);
         selectedPiece.HighlightReachableTiles();
     }
 
-    private void deselectPiece()
+    private void deselectPiece(Board board)
     {
         board.ResetHighlightedTiles();
         selectedPiece = null;

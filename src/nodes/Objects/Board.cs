@@ -11,7 +11,6 @@ public sealed class Board : Node2D
     public const int Width = 8;
     public const int Height = 8;
 
-    private readonly InputHandler input;
     private Tile[] tiles = Array.Empty<Tile>();
     private readonly List<Piece> pieces = new();
 
@@ -19,7 +18,6 @@ public sealed class Board : Node2D
 
     public Board()
     {
-        input = new InputHandler(this);
         Pieces = pieces.AsReadOnly();
     }
 
@@ -29,6 +27,8 @@ public sealed class Board : Node2D
         var origin = 0.5f * Tile.Size + (Height - 1) * Tile.Size.y * Vector2.Down;
         tiles = new Tile[Width * Height];
         var prefab = Global.Prefabs.Tile ?? throw new Exception("Could not find tile instance.");
+
+        var input = GetParent<GameLoop>().Input;
 
         // Create the board back to front to get the right draw order
         for (var y = Height - 1; y >= 0; y--)
@@ -49,7 +49,7 @@ public sealed class Board : Node2D
 
                 tiles[toIndex(x, y)] = tile;
 
-                tile.Clicked += () => input.HandleTileClick(tile);
+                tile.Clicked += () => input.HandleTileClick(this, tile);
             }
         }
 
