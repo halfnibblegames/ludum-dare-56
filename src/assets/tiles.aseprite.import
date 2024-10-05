@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/tiles.aseprite-ed00089d6a3781ba013f85b2fe18c315.res"
+
+[deps]
+
+source_file="res://assets/tiles.aseprite"
+dest_files=[ "res://.import/tiles.aseprite-ed00089d6a3781ba013f85b2fe18c315.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

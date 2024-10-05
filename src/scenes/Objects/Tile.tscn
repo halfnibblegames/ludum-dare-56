@@ -7,7 +7,7 @@ load_path = "res://.import/tiles.png-5ff37419618d6d13a4165ae13ba9420c.stex"
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = SubResource( 1 )
-region = Rect2( 0, 0, 32, 19 )
+region = Rect2( 0, 0, 16, 19 )
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
@@ -31,7 +31,8 @@ __meta__ = {
 "o_folder": "",
 "o_name": "",
 "only_visible": false,
-"op_exp": true,
+"op_exp": false,
+"slice": "Light",
 "source": "res://assets/tiles.aseprite"
 }
 }
