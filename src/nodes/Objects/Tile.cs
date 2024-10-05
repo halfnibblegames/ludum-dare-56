@@ -2,11 +2,16 @@
 
 namespace HalfNibbleGame.Objects;
 
-public sealed class Tile : Node2D
+public sealed class Tile : Area2D
 {
     private const float width = 16;
     private const float height = 16;
     public static readonly Vector2 Size = new(width, height);
+    private static readonly char[] rows = { '1', '2', '3', '4', '5', '6', '7', '8' };
+    private static readonly char[] cols = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+
+    public int Col;
+    public int Row;
 
     private TileColor color;
     public TileColor Color
@@ -19,6 +24,8 @@ public sealed class Tile : Node2D
         }
     }
 
+    public Piece? Piece;
+
     public override void _Ready()
     {
         applyColor();
@@ -28,6 +35,16 @@ public sealed class Tile : Node2D
     {
         GetNode<AnimatedSprite>("AnimatedSprite").Animation = color == TileColor.Dark ? "Dark" : "Light";
     }
+
+    public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
+    {
+        if (@event is InputEventMouseButton { Pressed: true })
+        {
+            GD.Print($"Tile {this} clicked");
+        }
+    }
+
+    public override string ToString() => $"{cols[Col]}{rows[Row]}";
 }
 
 public enum TileColor : byte

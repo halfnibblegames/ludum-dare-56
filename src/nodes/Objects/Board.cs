@@ -14,13 +14,15 @@ public sealed class Board : Node2D
 
     public override void _Ready()
     {
-        var origin = 0.5f * Tile.Size;
+        // Make the origin be bottom left.
+        var origin = 0.5f * Tile.Size + (height - 1) * Tile.Size.y * Vector2.Down;
         tiles = new Tile[width * height];
         var prefab = Global.Prefabs.Tile ?? throw new Exception("Could not find tile instance.");
 
-        for (var y = 0; y < height; y++)
+        // Create the board back to front to get the right draw order
+        for (var y = height - 1; y >= 0; y--)
         {
-            for (var x = 0; x < width; x++)
+            for (var x = width - 1; x >= 0; x--)
             {
                 if (prefab.Instance() is not Tile tile)
                 {
@@ -29,9 +31,11 @@ public sealed class Board : Node2D
 
                 AddChild(tile);
 
-                var pos = origin + new Vector2(x * Tile.Size.x, y * Tile.Size.y);
+                var pos = origin + new Vector2(x * Tile.Size.x, -y * Tile.Size.y);
                 tile.Position = pos;
                 tile.Color = (TileColor) ((x + y) % 2);
+                tile.Col = x;
+                tile.Row = y;
 
                 tiles[toIndex(x, y)] = tile;
             }
