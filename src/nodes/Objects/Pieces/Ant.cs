@@ -9,8 +9,8 @@ public sealed class Ant : Piece
     {
         return Enumerable.Empty<TileCoord>()
             .Concat(
-                currentTile.EnumerateValidAdjacent().Where(t => board[t].Piece == null))
+                currentTile.EnumerateOrthogonal().Where(t => board[t].Piece == null))
             .Concat(
-                currentTile.EnumerateValidDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
+                currentTile.EnumerateDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
     }
 }

@@ -28,7 +28,7 @@ public sealed class BoardRippleAnimation : Node
         this.board = board;
         tilesToAnimate =
             Enumerable.Range(0, radius)
-                .SelectMany(distance => distance == 0 ? new[] { origin.Coord } : origin.Coord.EnumerateValidNeighboringAtRadius(distance))
+                .SelectMany(distance => distance == 0 ? new[] { origin.Coord } : origin.Coord.EnumerateAtRadius(distance))
                 .GroupBy(x => origin.Coord.DiagonalDistance(x));
     }
 

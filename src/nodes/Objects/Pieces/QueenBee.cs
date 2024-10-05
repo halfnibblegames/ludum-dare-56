@@ -6,6 +6,6 @@ namespace HalfNibbleGame.Objects.Pieces;
 public sealed class QueenBee : Piece
 {
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
-        currentTile.EnumerateValidNeighboring()
+        currentTile.EnumerateAdjacent()
             .Where(c => !ContainsSameColorPiece(board[c]));
 }

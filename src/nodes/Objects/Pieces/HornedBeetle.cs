@@ -12,7 +12,7 @@ public sealed class HornedBeetle : Piece
 
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
         validSteps.SelectMany(step =>
-            currentTile.EnumerateStepsWhileValid(step)
+            currentTile.EnumerateDirection(step)
                 .TakeWhile(c => !ContainsSameColorPiece(board[c]))
                 .TakeWhileIncluding(c => board[c].Piece is null));
 
