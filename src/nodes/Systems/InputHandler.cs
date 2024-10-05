@@ -29,7 +29,7 @@ public sealed class InputHandler
             return;
         }
 
-        if (tile.Piece is not { } piece) return;
+        if (tile.Piece is not { IsEnemy: false } piece) return;
         if (selectedPiece is not null)
         {
             deselectPiece();
