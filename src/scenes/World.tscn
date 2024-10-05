@@ -14,4 +14,4 @@ editor_draw_screen = false
 script = ExtResource( 1 )
 
 [node name="Board" parent="." instance=ExtResource( 4 )]
-position = Vector2( 16, 16 )
+position = Vector2( 96, 26 )
