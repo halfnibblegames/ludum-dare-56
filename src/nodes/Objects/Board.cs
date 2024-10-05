@@ -29,6 +29,8 @@ public sealed class Board : Node2D
 
     public override void _Ready()
     {
+        GetNode("EditorRect").QueueFree();
+
         // Make the origin be bottom left.
         tiles = new Tile[Width * Height];
         var prefab = Global.Prefabs.Tile ?? throw new Exception("Could not find tile instance.");
