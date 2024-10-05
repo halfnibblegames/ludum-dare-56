@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace HalfNibbleGame.Objects;
@@ -21,5 +22,10 @@ public abstract class Piece : Node2D
     public void Destroy()
     {
         QueueFree();
+    }
+
+    protected bool ContainsSameColorPiece(Tile tile)
+    {
+        return tile.Piece is { } piece && piece.IsEnemy == IsEnemy;
     }
 }
