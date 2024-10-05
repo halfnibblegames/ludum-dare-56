@@ -1,4 +1,6 @@
-﻿using HalfNibbleGame.Objects;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
@@ -7,6 +9,7 @@ public sealed class InputHandler
     private readonly GameLoop gameLoop;
 
     private SelectedPiece? selectedPiece;
+    private bool isSelectionLocked;
     private bool isActive;
 
     public InputHandler(GameLoop gameLoop)
@@ -24,6 +27,13 @@ public sealed class InputHandler
         isActive = false;
     }
 
+    public void SetContinuation(Board board, MoveContinuation continuation)
+    {
+        selectedPiece = new SelectedPiece(
+            board, continuation.From, continuation.Piece, continuation.TargetTiles, continuation.PreviousMovesInTurn);
+        isSelectionLocked = true;
+    }
+
     public void HandleTileClick(Board board, Tile tile)
     {
         if (!isActive) return;
@@ -35,7 +45,7 @@ public sealed class InputHandler
             return;
         }
 
-        if (tile.Piece is not { IsEnemy: false, IsStunned: false } piece) return;
+        if (isSelectionLocked || tile.Piece is not { IsEnemy: false, IsStunned: false } piece) return;
         if (selectedPiece is not null)
         {
             deselectPiece(board);
@@ -46,12 +56,13 @@ public sealed class InputHandler
     private void selectPiece(Board board, Tile tile, Piece piece)
     {
         selectedPiece = new SelectedPiece(board, tile, piece);
-        selectedPiece.HighlightReachableTiles();
+        selectedPiece.HighlightTargetTiles();
     }
 
     private void deselectPiece(Board board)
     {
         board.ResetHighlightedTiles();
+        isSelectionLocked = false;
         selectedPiece = null;
     }
 
@@ -60,17 +71,25 @@ public sealed class InputHandler
         private readonly Board board;
         private readonly Tile tile;
         private readonly Piece piece;
+        private readonly IReadOnlyList<TileCoord> targetTiles;
+        private readonly int previousMovesInTurn;
 
         public SelectedPiece(Board board, Tile tile, Piece piece)
+            : this(board, tile, piece, piece.ReachableTiles(tile.Coord, board), 0) { }
+
+        public SelectedPiece(
+            Board board, Tile tile, Piece piece, IEnumerable<TileCoord> targetTiles, int previousMovesInTurn)
         {
             this.board = board;
             this.tile = tile;
             this.piece = piece;
+            this.targetTiles = targetTiles.ToList();
+            this.previousMovesInTurn = previousMovesInTurn;
         }
 
-        public void HighlightReachableTiles()
+        public void HighlightTargetTiles()
         {
-            foreach (var t in piece.ReachableTiles(tile.Coord, board))
+            foreach (var t in targetTiles)
             {
                 board[t].Highlight();
             }
@@ -78,7 +97,8 @@ public sealed class InputHandler
 
         public Move? TryHandleTileClick(Tile clickedTile)
         {
-            var moveCandidate = board.PreviewMove(piece, tile, clickedTile);
+            if (!targetTiles.Contains(clickedTile.Coord)) return null;
+            var moveCandidate = board.PreviewMove(piece, tile, clickedTile, previousMovesInTurn);
             return moveCandidate.Validate() ? moveCandidate : null;
         }
     }

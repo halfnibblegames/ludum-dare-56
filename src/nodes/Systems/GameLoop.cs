@@ -110,7 +110,13 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.PlayerMove;
         Input.Deactivate();
-        await move.Execute();
+        var continuation = await move.Execute();
+
+        if (continuation is not null)
+        {
+            continueTurn(continuation);
+            return;
+        }
 
         _ = doEnemyMove();
     }
@@ -137,6 +143,13 @@ public sealed class GameLoop : Node2D
         Input.Activate();
     }
 
+    private void continueTurn(MoveContinuation continuation)
+    {
+        state = GameLoopState.AwaitingInput;
+        Input.Activate();
+        Input.SetContinuation(board, continuation);
+    }
+
     private void determineEnemyMove()
     {
         var enemyPieces = board.Tiles
@@ -152,7 +165,7 @@ public sealed class GameLoop : Node2D
         for (var i = 0; i < maxTries; i++)
         {
             var target = reachableTiles[random.Next(reachableTiles.Count)];
-            var moveCandidate = board.PreviewMove(piece, tile, board[target]);
+            var moveCandidate = board.PreviewMove(piece, tile, board[target], 0);
             if (moveCandidate.Validate())
             {
                 enemyMoves.Add(moveCandidate);

@@ -11,16 +11,12 @@ public sealed class Dragonfly : Piece
         Enumerable.Empty<TileCoord>()
             .Concat(
                 currentTile.EnumerateDiagonal().Where(c => board[c].Piece is null))
-            .Concat(
-                TileCoordExtensions.DiagonalSteps
-                    .Where(s => (currentTile + s).IsValid() && (currentTile + 2 * s).IsValid())
-                    .Where(s => board[currentTile + s].Piece is { } piece && piece.IsEnemy != IsEnemy)
-                    .Select(s => currentTile + 2 * s));
+            .Concat(potentialCaptures(board, currentTile));
 
-    public override void OnMove(Board board, Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, MoveSideEffects sideEffects)
     {
-        base.OnMove(board, fromTile, toTile, sideEffects);
-        var step = toTile.Coord - fromTile.Coord;
+        base.OnMove(move, sideEffects);
+        var step = move.To.Coord - move.From.Coord;
 
         // We are always moving diagonally
         if (Math.Abs(step.X) != Math.Abs(step.Y)) throw new InvalidOperationException();
@@ -30,14 +26,29 @@ public sealed class Dragonfly : Piece
         switch (distanceMoved)
         {
             case 1:
-                break;
+                return;
             case 2:
-                var intermediateTileCoord = fromTile.Coord + new Step(Math.Sign(step.X), Math.Sign(step.Y));
-                var intermediateTile = board[intermediateTileCoord];
+                var intermediateTileCoord = move.From.Coord + new Step(Math.Sign(step.X), Math.Sign(step.Y));
+                var intermediateTile = move.Board[intermediateTileCoord];
                 sideEffects.CapturePiece(intermediateTile);
                 break;
             default:
                 throw new InvalidOperationException("Dragonfly did illegal move");
         }
+
+        // See if there are any turn continuations
+        var potentialNewCaptures = potentialCaptures(move.Board, move.To.Coord).ToList();
+        if (potentialNewCaptures.Count > 0)
+        {
+            sideEffects.AllowContinuation(potentialNewCaptures);
+        }
+    }
+
+    private IEnumerable<TileCoord> potentialCaptures(Board board, TileCoord from)
+    {
+        return TileCoordExtensions.DiagonalSteps
+            .Where(s => (from + s).IsValid() && (from + 2 * s).IsValid())
+            .Where(s => board[from + s].Piece is { } piece && piece.IsEnemy != IsEnemy)
+            .Select(s => from + 2 * s);
     }
 }

@@ -22,9 +22,9 @@ public sealed class Board : Node2D
         Pieces = pieces.AsReadOnly();
     }
 
-    public Move PreviewMove(Piece piece, Tile from, Tile to)
+    public Move PreviewMove(Piece piece, Tile from, Tile to, int previousMovesInTurn)
     {
-        return new Move(this, piece, from, to);
+        return new Move(this, piece, from, to, previousMovesInTurn);
     }
 
     public override void _Ready()

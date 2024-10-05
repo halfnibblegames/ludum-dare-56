@@ -26,11 +26,11 @@ public abstract class Piece : Node2D
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 
-    public virtual void OnMove(Board board, Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
+    public virtual void OnMove(Move move, MoveSideEffects sideEffects)
     {
-        if (toTile.Piece is { } piece && piece.IsEnemy != IsEnemy)
+        if (move.To.Piece is { } piece && piece.IsEnemy != IsEnemy)
         {
-            sideEffects.CapturePiece(toTile);
+            sideEffects.CapturePiece(move.To);
         }
     }
 

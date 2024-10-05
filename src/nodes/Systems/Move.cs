@@ -4,7 +4,7 @@ using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
-public sealed record Move(Board Board, Piece Piece, Tile From, Tile To)
+public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int PreviousMovesInTurn)
 {
     public bool Validate()
     {
@@ -26,7 +26,7 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To)
         return true;
     }
 
-    public async Task Execute()
+    public async Task<MoveContinuation?> Execute()
     {
         var anim = new MoveAnimation(From.Position, To.Position, Piece);
         var signal = Piece.ToSignal(anim, nameof(MoveAnimation.Finished));
@@ -34,12 +34,14 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To)
 
         await signal;
 
-        doLogic();
+        var sideEffects = new MoveSideEffects(this);
+        doLogic(sideEffects);
+        return sideEffects.Continuation;
     }
 
-    private void doLogic()
+    private void doLogic(MoveSideEffects sideEffects)
     {
-        Piece.OnMove(Board, From, To, new MoveSideEffects());
+        Piece.OnMove(this, sideEffects);
         From.Piece = null;
         To.Piece = Piece;
         Piece.Position = To.Position;

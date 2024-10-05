@@ -10,9 +10,9 @@ public sealed class PrayingMantis : Piece
         currentTile.EnumerateAdjacent()
             .Where(c => !ContainsSameColorPiece(board[c]));
 
-    public override void OnMove(Board board, Tile fromTile, Tile toTile, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, MoveSideEffects sideEffects)
     {
-        base.OnMove(board, fromTile, toTile, sideEffects);
-        sideEffects.Ripple(board, toTile, 2);
+        base.OnMove(move, sideEffects);
+        sideEffects.Ripple(move.Board, move.To, 2);
     }
 }
