@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
 public sealed class GameLoop : Node2D
 {
+    private readonly Random random;
     private GameLoopState state = GameLoopState.AwaitingInput;
+    private readonly List<IMove> enemyMoves = new();
 
     public InputHandler Input { get; }
 
     public GameLoop()
     {
+        random = new Random();
         Input = new InputHandler(this);
     }
 
     public override void _Ready()
     {
-        Input.Activate();
+        startTurn();
     }
 
     public void SubmitMove(IMove move)
@@ -39,8 +45,10 @@ public sealed class GameLoop : Node2D
     private async Task doEnemyMove()
     {
         state = GameLoopState.EnemyMove;
-        // TODO: execute enemy moves
-        await Task.Delay(100);
+
+        var moveExecutions = enemyMoves.Select(m => m.Execute()).ToList();
+        enemyMoves.Clear();
+        await Task.WhenAll(moveExecutions);
 
         startTurn();
     }
@@ -48,9 +56,22 @@ public sealed class GameLoop : Node2D
     private void startTurn()
     {
         state = GameLoopState.AwaitingInput;
-
-        // TODO: determine next enemy moves
+        determineEnemyMove();
         Input.Activate();
+    }
+
+    private void determineEnemyMove()
+    {
+        var board = GetNode<Board>("Board");
+
+        var enemyPieces = board.Tiles.Where(t => t.Piece is {IsEnemy: true}).Select(t => (t, t.Piece!)).ToList();
+        if (enemyPieces.Count == 0) return;
+        var (tile, piece) = enemyPieces[random.Next(enemyPieces.Count)];
+        var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();
+        if (reachableTiles.Count == 0) return;
+        var target = reachableTiles[random.Next(reachableTiles.Count)];
+
+        enemyMoves.Add(Moves.MovePiece(piece, tile, board[target]));
     }
 
     private enum GameLoopState

@@ -15,6 +15,7 @@ public sealed class Board : Node2D
     private readonly List<Piece> pieces = new();
 
     public IReadOnlyList<Piece> Pieces { get; }
+    public IReadOnlyList<Tile> Tiles => tiles;
 
     public Board()
     {
