@@ -87,9 +87,9 @@ public readonly struct Step
     }
 
     public static Step Right { get; } = new(1, 0);
-    public static Step Up { get; } = new(0, -1);
+    public static Step Up { get; } = new(0, 1);
     public static Step Left { get; } = new(-1, 0);
-    public static Step Down { get; } = new(0, 1);
+    public static Step Down { get; } = new(0, -1);
     public static Step UpRight { get; } = Up + Right;
     public static Step UpLeft { get; } = Up + Left;
     public static Step DownLeft { get; } = Down + Left;

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
-static class Moves
+public static class Moves
 {
     public static IMove MovePiece(Piece piece, Tile from, Tile to) => new MovePieceMove(piece, from, to);
 
@@ -14,9 +15,15 @@ static class Moves
             return From.Piece == Piece && To.Piece == null;
         }
 
-        public void Execute()
+        public async Task Execute()
         {
             if (!Validate()) throw new Exception();
+
+            var anim = new MoveAnimation(From.Position, To.Position, Piece);
+            var signal = Piece.ToSignal(anim, nameof(MoveAnimation.Finished));
+            Piece.AddChild(anim);
+
+            await signal;
 
             From.Piece = null;
             To.Piece = Piece;
@@ -25,8 +32,8 @@ static class Moves
     }
 }
 
-interface IMove
+public interface IMove
 {
     bool Validate();
-    void Execute();
+    Task Execute();
 }

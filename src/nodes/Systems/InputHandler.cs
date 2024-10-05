@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Objects;
 
@@ -9,6 +10,7 @@ public sealed class InputHandler
     private readonly Board board;
 
     private SelectedPiece? selectedPiece;
+    private bool isAwaiting;
 
     public InputHandler(Board board)
     {
@@ -17,10 +19,13 @@ public sealed class InputHandler
 
     public void HandleTileClick(Tile tile)
     {
+        if (isAwaiting) return;
+
         if (selectedPiece?.TryHandleTileClick(tile) is { } move)
         {
-            move.Execute();
+            isAwaiting = true;
             deselectPiece();
+            _ = doMove(move);
             return;
         }
 
@@ -30,6 +35,12 @@ public sealed class InputHandler
             deselectPiece();
         }
         selectPiece(tile, piece);
+    }
+
+    private async Task doMove(IMove move)
+    {
+        await move.Execute();
+        isAwaiting = false;
     }
 
     private void selectPiece(Tile tile, Piece piece)
