@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using HalfNibbleGame.Objects;
+﻿using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
