@@ -46,12 +46,16 @@ public sealed class InputHandler
             return;
         }
 
-        if (isSelectionLocked || tile.Piece is not { IsEnemy: false, IsStunned: false } piece) return;
+        if (isSelectionLocked) return;
         if (selectedPiece is not null)
         {
             deselectPiece(board);
         }
-        selectPiece(board, tile, piece);
+
+        if (tile.Piece is { IsEnemy: false, IsStunned: false } piece)
+        {
+            selectPiece(board, tile, piece);
+        }
     }
 
     private void selectPiece(Board board, Tile tile, Piece piece)
