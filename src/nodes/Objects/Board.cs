@@ -5,7 +5,6 @@ using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
 
-[Tool]
 public sealed class Board : Node2D
 {
     public const int Width = 8;
