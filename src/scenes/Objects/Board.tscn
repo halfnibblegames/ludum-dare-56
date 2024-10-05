@@ -1,6 +1,46 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://nodes/Objects/Board.cs" type="Script" id=1]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/cursor.png-224f93d013e0812359a323dac1948615.stex"
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = SubResource( 1 )
+region = Rect2( 44, 0, 22, 22 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = SubResource( 1 )
+region = Rect2( 0, 22, 22, 22 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = SubResource( 1 )
+region = Rect2( 22, 22, 22, 22 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = SubResource( 1 )
+region = Rect2( 44, 22, 22, 22 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = SubResource( 1 )
+region = Rect2( 0, 0, 22, 22 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = SubResource( 1 )
+region = Rect2( 22, 0, 22, 22 )
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ) ],
+"loop": true,
+"name": "Confirm",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 6 ), SubResource( 7 ), SubResource( 7 ), SubResource( 7 ), SubResource( 7 ), SubResource( 7 ), SubResource( 7 ) ],
+"loop": true,
+"name": "Highlight",
+"speed": 10.0
+} ]
 
 [node name="Board" type="Node2D"]
 script = ExtResource( 1 )
@@ -9,3 +49,24 @@ script = ExtResource( 1 )
 margin_right = 128.0
 margin_bottom = 128.0
 color = Color( 0.717647, 0.196078, 0.956863, 1 )
+
+[node name="Cursor" type="AnimatedSprite" parent="."]
+z_index = 5
+frames = SubResource( 8 )
+animation = "Highlight"
+frame = 6
+playing = true
+__meta__ = {
+"_aseprite_wizard_config_": {
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"slice": "",
+"source": "res://assets/cursor.aseprite"
+}
+}
+
+[connection signal="animation_finished" from="Cursor" to="." method="OnCursorAnimationFinished"]

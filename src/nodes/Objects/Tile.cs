@@ -59,27 +59,27 @@ public sealed class Tile : Area2D
     }
 
     public Piece? Piece;
+    private AnimatedSprite cursor = default!;
 
     public event TileClickedEventHandler? Clicked;
 
     public override void _Ready()
     {
         updateAnimation();
+        cursor = GetParent<Board>().GetNode<AnimatedSprite>("Cursor");
     }
 
     public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
     {
         if (@event is InputEventMouseMotion)
         {
-            beingHovered = true;
-        }
-        else if (beingHovered)
-        {
-            beingHovered = false;
+            cursor.Position = Position;
+            cursor.Visible = true;
         }
 
         if (@event is InputEventMouseButton { Pressed: true })
         {
+            cursor.Animation = "Confirm";
             Clicked?.Invoke();
         }
     }
