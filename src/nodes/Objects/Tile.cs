@@ -26,7 +26,7 @@ public sealed class Tile : Node2D
 
     private void applyColor()
     {
-        // TODO: use correct sprite
+        GetNode<AnimatedSprite>("AnimatedSprite").FlipH = color == TileColor.Dark;
     }
 }
 
