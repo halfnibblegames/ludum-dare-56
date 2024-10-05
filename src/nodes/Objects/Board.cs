@@ -48,6 +48,13 @@ public sealed class Board : Node2D
                 tile.Clicked += () => input.HandleTileClick(tile);
             }
         }
+
+        // Spawn a hardcoded queen for now
+        var queen = Global.Prefabs.QueenBee?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate queen bee.");
+        AddChild(queen);
+        var queenTile = tiles[toIndex(2, 2)];
+        queen.Position = queenTile.Position;
+        queenTile.Piece = queen;
     }
 
     private static int toIndex(TileCoord coord) => toIndex(coord.X, coord.Y);

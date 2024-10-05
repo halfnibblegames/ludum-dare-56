@@ -15,8 +15,10 @@ public sealed class InputHandler
 
     public void HandleTileClick(Tile tile)
     {
-        if (selectedPiece?.TryHandleTileClick(tile) ?? false)
+        if (selectedPiece?.TryHandleTileClick(tile) is { } move)
         {
+            move.Execute();
+            selectedPiece = null;
             return;
         }
 
@@ -37,15 +39,14 @@ public sealed class InputHandler
             this.piece = piece;
         }
 
-        public bool TryHandleTileClick(Tile clickedTile)
+        public IMove? TryHandleTileClick(Tile clickedTile)
         {
             if (clickedTile == tile)
             {
-                return false;
+                return null;
             }
 
-            Moves.MovePiece(piece, tile, clickedTile).Execute();
-            return true;
+            return Moves.MovePiece(piece, tile, clickedTile);
         }
     }
 }
