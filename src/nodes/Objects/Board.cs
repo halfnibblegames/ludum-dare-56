@@ -1,6 +1,7 @@
 ﻿using System;
 using Godot;
 using HalfNibbleGame.Autoload;
+using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
 
@@ -10,7 +11,13 @@ public sealed class Board : Node2D
     public const int Width = 8;
     public const int Height = 8;
 
+    private readonly InputHandler input;
     private Tile[] tiles = Array.Empty<Tile>();
+
+    public Board()
+    {
+        input = new InputHandler(this);
+    }
 
     public override void _Ready()
     {
@@ -37,6 +44,8 @@ public sealed class Board : Node2D
                 tile.Coord = new TileCoord(x, y);
 
                 tiles[toIndex(x, y)] = tile;
+
+                tile.Clicked += () => input.HandleTileClick(tile);
             }
         }
     }

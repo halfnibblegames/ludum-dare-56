@@ -2,16 +2,16 @@
 
 [ext_resource path="res://nodes/Objects/Piece.cs" type="Script" id=1]
 
-[sub_resource type="StreamTexture" id=2]
+[sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"
 
-[sub_resource type="AtlasTexture" id=3]
-atlas = SubResource( 2 )
-region = Rect2( 0, 0, 20, 13 )
+[sub_resource type="AtlasTexture" id=2]
+atlas = SubResource( 1 )
+region = Rect2( 0, 0, 18, 18 )
 
-[sub_resource type="SpriteFrames" id=4]
+[sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ SubResource( 3 ) ],
+"frames": [ SubResource( 2 ) ],
 "loop": true,
 "name": "default",
 "speed": 10.0
@@ -21,7 +21,7 @@ animations = [ {
 script = ExtResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 4 )
+frames = SubResource( 3 )
 __meta__ = {
 "_aseprite_wizard_config_": {
 "layer": "",
@@ -29,7 +29,7 @@ __meta__ = {
 "o_folder": "res://assets",
 "o_name": "",
 "only_visible": false,
-"op_exp": true,
+"op_exp": false,
 "slice": "bee",
 "source": "res://assets/bugs.aseprite"
 }

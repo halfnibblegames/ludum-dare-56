@@ -4,6 +4,8 @@ namespace HalfNibbleGame.Objects;
 
 public sealed class Tile : Area2D
 {
+    public delegate void TileClickedEventHandler();
+
     private const float width = 16;
     private const float height = 16;
     public static readonly Vector2 Size = new(width, height);
@@ -27,6 +29,8 @@ public sealed class Tile : Area2D
 
     public Piece? Piece;
 
+    public event TileClickedEventHandler? Clicked;
+
     public override void _Ready()
     {
         applyColor();
@@ -41,7 +45,7 @@ public sealed class Tile : Area2D
     {
         if (@event is InputEventMouseButton { Pressed: true })
         {
-            GD.Print($"Tile {this} clicked");
+            Clicked?.Invoke();
         }
     }
 
