@@ -8,11 +8,13 @@ public sealed class Prefabs : Node
 {
     [Export] public PackedScene? Tile;
 
+    // Units
     [Export] public PackedScene? QueenBee;
-
-    [Export] public PackedScene? PrayingMantis;
-
+    [Export] public PackedScene? Ant;
+    [Export] public PackedScene? Dragonfly;
+    [Export] public PackedScene? Grasshopper;
     [Export] public PackedScene? HornedBeetle;
+    [Export] public PackedScene? PrayingMantis;
 
     public override void _Ready()
     {

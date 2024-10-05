@@ -1,14 +1,20 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://nodes/Autoload/Prefabs.cs" type="Script" id=1]
 [ext_resource path="res://scenes/Objects/Tile.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/Objects/Pieces/QueenBee.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/Objects/Pieces/PrayingMantis.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/Objects/Pieces/HornedBeetle.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/Objects/Pieces/Ant.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/Objects/Pieces/Dragonfly.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/Objects/Pieces/Grasshopper.tscn" type="PackedScene" id=8]
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
 Tile = ExtResource( 2 )
 QueenBee = ExtResource( 3 )
-PrayingMantis = ExtResource( 4 )
+Ant = ExtResource( 6 )
+Dragonfly = ExtResource( 7 )
+Grasshopper = ExtResource( 8 )
 HornedBeetle = ExtResource( 5 )
+PrayingMantis = ExtResource( 4 )

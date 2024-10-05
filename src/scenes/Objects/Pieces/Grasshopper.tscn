@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://nodes/Objects/Pieces/QueenBee.cs" type="Script" id=1]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = SubResource( 1 )
+region = Rect2( 109, 30, 11, 7 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = SubResource( 1 )
+region = Rect2( 43, 30, 11, 7 )
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "Dark",
+"speed": 1000.0
+}, {
+"frames": [ SubResource( 3 ) ],
+"loop": true,
+"name": "Light",
+"speed": 10.0
+} ]
+
+[node name="Grasshopper" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 4 )
+animation = "Light"
+__meta__ = {
+"_aseprite_wizard_config_": {
+"layer": "bugs",
+"o_ex_p": "",
+"o_folder": "res://assets",
+"o_name": "",
+"only_visible": false,
+"op_exp": false,
+"slice": "grasshopper",
+"source": "res://assets/bugs.aseprite"
+}
+}

@@ -28,6 +28,16 @@ public readonly struct TileCoord : IEquatable<TileCoord>
         yield return this + Step.Down;
     }
 
+    public IEnumerable<TileCoord> EnumerateValidDiagonal() => EnumerateDiagonal().Where(t => t.IsValid());
+
+    public IEnumerable<TileCoord> EnumerateDiagonal()
+    {
+        yield return this + Step.UpRight;
+        yield return this + Step.UpLeft;
+        yield return this + Step.DownLeft;
+        yield return this + Step.DownRight;
+    }
+
     public IEnumerable<TileCoord> EnumerateValidNeighboring() => EnumerateNeighboring().Where(t => t.IsValid());
 
     public IEnumerable<TileCoord> EnumerateNeighboring()
