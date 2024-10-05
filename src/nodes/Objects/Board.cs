@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
@@ -12,6 +13,7 @@ public sealed class Board : Node2D
 
     private readonly InputHandler input;
     private Tile[] tiles = Array.Empty<Tile>();
+    private readonly List<Piece> pieces = new();
 
     public Board()
     {
@@ -61,8 +63,14 @@ public sealed class Board : Node2D
     {
         var piece = prefab?.InstanceOrNull<Piece>() ?? throw new Exception("Could not instantiate piece.");
         piece.IsEnemy = isEnemy;
+        AddPiece(piece, new TileCoord(x, y));
+    }
+
+    public void AddPiece(Piece piece, TileCoord tileCoord)
+    {
+        pieces.Add(piece);
         AddChild(piece);
-        var queenTile = tiles[toIndex(x, y)];
+        var queenTile = tiles[toIndex(tileCoord)];
         piece.Position = queenTile.Position;
         queenTile.Piece = piece;
     }
