@@ -1,4 +1,5 @@
-﻿using HalfNibbleGame.Objects;
+﻿using Godot;
+using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
 
@@ -24,17 +25,19 @@ public sealed class InputHandler
 
         if (tile.Piece is not null)
         {
-            selectedPiece = new SelectedTile(tile, tile.Piece);
+            selectedPiece = new SelectedTile(board, tile, tile.Piece);
         }
     }
 
     private sealed class SelectedTile
     {
+        private readonly Board board;
         private readonly Tile tile;
         private readonly Piece piece;
 
-        public SelectedTile(Tile tile, Piece piece)
+        public SelectedTile(Board board, Tile tile, Piece piece)
         {
+            this.board = board;
             this.tile = tile;
             this.piece = piece;
         }
@@ -43,6 +46,12 @@ public sealed class InputHandler
         {
             if (clickedTile == tile)
             {
+                return null;
+            }
+
+            if (!piece.ReachableTiles(tile.Coord, board).Contains(clickedTile.Coord))
+            {
+                GD.Print($"{clickedTile.Coord} is not reachable, reachable tiles: {string.Join(", ", piece.ReachableTiles(tile.Coord, board))}");
                 return null;
             }
 

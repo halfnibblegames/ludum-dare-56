@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame;
 
-public readonly struct TileCoord
+public readonly struct TileCoord : IEquatable<TileCoord>
 {
     public int X { get; }
     public int Y { get; }
@@ -17,9 +18,9 @@ public readonly struct TileCoord
 
     public bool IsValid() => X >= 0 && Y >= 0 && X < Board.Width && Y < Board.Height;
 
-    public IEnumerable<TileCoord> EnumerateValidNeighbors() => EnumerateNeighbors().Where(t => t.IsValid());
+    public IEnumerable<TileCoord> EnumerateValidAdjacent() => EnumerateAdjacent().Where(t => t.IsValid());
 
-    public IEnumerable<TileCoord> EnumerateNeighbors()
+    public IEnumerable<TileCoord> EnumerateAdjacent()
     {
         yield return this + Step.Right;
         yield return this + Step.Up;
@@ -27,9 +28,9 @@ public readonly struct TileCoord
         yield return this + Step.Down;
     }
 
-    public IEnumerable<TileCoord> EnumerateValidAdjacent() => EnumerateAdjacent().Where(t => t.IsValid());
+    public IEnumerable<TileCoord> EnumerateValidNeighboring() => EnumerateNeighboring().Where(t => t.IsValid());
 
-    public IEnumerable<TileCoord> EnumerateAdjacent()
+    public IEnumerable<TileCoord> EnumerateNeighboring()
     {
         yield return this + Step.Right;
         yield return this + Step.UpRight;
@@ -52,6 +53,26 @@ public readonly struct TileCoord
     }
 
     public static TileCoord operator +(TileCoord coord, Step step) => new(coord.X + step.X, coord.Y + step.Y);
+
+    public bool Equals(TileCoord other)
+    {
+        return X == other.X && Y == other.Y;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TileCoord other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (X * 397) ^ Y;
+        }
+    }
+
+    public override string ToString() => $"({X}, {Y})";
 }
 
 public readonly struct Step
