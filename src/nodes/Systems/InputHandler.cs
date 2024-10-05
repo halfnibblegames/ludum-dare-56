@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Godot;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
@@ -85,11 +85,21 @@ public sealed class InputHandler
 
             if (!piece.ReachableTiles(tile.Coord, board).ToHashSet().Contains(clickedTile.Coord))
             {
-                GD.Print($"{clickedTile.Coord} is not reachable, reachable tiles: {string.Join(", ", piece.ReachableTiles(tile.Coord, board))}");
                 return null;
             }
 
-            return Moves.MovePiece(piece, tile, clickedTile);
+            if (clickedTile.Piece is null)
+            {
+                return Moves.MovePiece(piece, tile, clickedTile);
+            }
+
+            var clickedPiece = clickedTile.Piece;
+            if (clickedPiece.IsEnemy == piece.IsEnemy)
+            {
+                throw new InvalidOperationException("Cannot capture your own pieces");
+            }
+
+            return Moves.Capture(piece, tile, clickedTile);
         }
     }
 }
