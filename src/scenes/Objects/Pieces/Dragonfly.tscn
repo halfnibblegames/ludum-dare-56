@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://nodes/Objects/Pieces/QueenBee.cs" type="Script" id=1]
+[ext_resource path="res://nodes/Objects/Pieces/Dragonfly.cs" type="Script" id=1]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"

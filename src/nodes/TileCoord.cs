@@ -17,6 +17,7 @@ public readonly struct TileCoord : IEquatable<TileCoord>
     public bool IsValid() => X >= 0 && Y >= 0 && X < Board.Width && Y < Board.Height;
 
     public static TileCoord operator +(TileCoord coord, Step step) => new(coord.X + step.X, coord.Y + step.Y);
+    public static Step operator -(TileCoord left, TileCoord right) => new(left.X - right.X, left.Y - right.Y);
 
     public bool Equals(TileCoord other)
     {
@@ -65,6 +66,8 @@ public readonly struct Step
     public static Step operator -(Step step) => new(-step.X, -step.Y);
     public static Step operator +(Step left, Step right) => new(left.X + right.X, left.Y + right.Y);
     public static Step operator -(Step left, Step right) => new(left.X - right.X, left.Y - right.Y);
+    public static Step operator *(int scalar, Step step) => new(scalar * step.X, scalar * step.Y);
+    public static Step operator *(Step step, int scalar) => scalar * step;
 
     public void Deconstruct(out int X, out int Y)
     {
