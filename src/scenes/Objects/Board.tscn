@@ -51,6 +51,7 @@ margin_bottom = 128.0
 color = Color( 0.717647, 0.196078, 0.956863, 1 )
 
 [node name="Cursor" type="AnimatedSprite" parent="."]
+visible = false
 z_index = 5
 frames = SubResource( 8 )
 animation = "Highlight"
