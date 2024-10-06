@@ -16,28 +16,15 @@ public readonly struct TileCoord : IEquatable<TileCoord>
 
     public bool IsValid() => X >= 0 && Y >= 0 && X < Board.Width && Y < Board.Height;
 
+    public bool Equals(TileCoord other) => X == other.X && Y == other.Y;
+    public override bool Equals(object? obj) => obj is TileCoord other && Equals(other);
+    public override int GetHashCode() => (X * 397) ^ Y;
+    public override string ToString() => $"({X}, {Y})";
+
+    public static bool operator ==(TileCoord left, TileCoord right) => left.Equals(right);
+    public static bool operator !=(TileCoord left, TileCoord right) => !left.Equals(right);
     public static TileCoord operator +(TileCoord coord, Step step) => new(coord.X + step.X, coord.Y + step.Y);
     public static Step operator -(TileCoord left, TileCoord right) => new(left.X - right.X, left.Y - right.Y);
-
-    public bool Equals(TileCoord other)
-    {
-        return X == other.X && Y == other.Y;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is TileCoord other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (X * 397) ^ Y;
-        }
-    }
-
-    public override string ToString() => $"({X}, {Y})";
 
     public int Manhattan(TileCoord other) => Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
     public int DiagonalDistance(TileCoord other) => Math.Max(Math.Abs(X - other.X), Math.Abs(Y - other.Y));
