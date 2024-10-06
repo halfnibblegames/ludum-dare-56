@@ -24,6 +24,7 @@ sealed class Cursor : AnimatedSprite
         Global.Services.ProvideInScene(this);
         Play("Highlight");
         board = GetParent<Board>();
+        Visible = false;
     }
 
     public void Activate()
