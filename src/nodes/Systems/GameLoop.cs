@@ -165,20 +165,27 @@ public sealed class GameLoop : Node2D
             .Select(t => (t, t.Piece!))
             .ToList();
         if (enemyPieces.Count == 0) return;
-        var (tile, piece) = enemyPieces[random.Next(enemyPieces.Count)];
-        var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();
-        if (reachableTiles.Count == 0) return;
 
-        const int maxTries = 5;
-        for (var i = 0; i < maxTries; i++)
+        // 25% chance of moving two pieces.
+        var numberOfPieces = random.NextDouble() < 0.25 ? 2 : 1;
+        var chosenPieces = enemyPieces.OrderBy(_ => random.Next()).Take(numberOfPieces).ToList();
+
+        foreach (var (tile, piece) in chosenPieces)
         {
-            var target = reachableTiles[random.Next(reachableTiles.Count)];
-            var moveCandidate = board.PreviewMove(piece, tile, board[target], 0);
-            if (moveCandidate.Validate())
+            var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();
+            if (reachableTiles.Count == 0) return;
+
+            const int maxTries = 5;
+            for (var i = 0; i < maxTries; i++)
             {
-                enemyMoves.Add(moveCandidate);
-                moveCandidate.Piece.NextMove = moveCandidate;
-                break;
+                var target = reachableTiles[random.Next(reachableTiles.Count)];
+                var moveCandidate = board.PreviewMove(piece, tile, board[target], 0);
+                if (moveCandidate.Validate())
+                {
+                    enemyMoves.Add(moveCandidate);
+                    moveCandidate.Piece.NextMove = moveCandidate;
+                    break;
+                }
             }
         }
     }
