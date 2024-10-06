@@ -9,7 +9,7 @@ sealed class Cursor : AnimatedSprite
 
     private Vector2 startPos;
     private float timeSinceStart;
-    private Tile? targetTile = null;
+    private Tile? targetTile;
 
     public void MoveToTile(Tile tile)
     {

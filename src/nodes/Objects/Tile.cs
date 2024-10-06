@@ -1,4 +1,6 @@
-﻿using Godot;
+﻿using System;
+using Godot;
+using Object = Godot.Object;
 
 namespace HalfNibbleGame.Objects;
 
@@ -40,9 +42,6 @@ public sealed class Tile : Area2D
         }
     }
 
-    public int Col => Coord.X;
-    public int Row => Coord.Y;
-
     private bool isHighlighted;
 
     private TileColor color;
@@ -81,7 +80,7 @@ public sealed class Tile : Area2D
         }
     }
 
-    public override string ToString() => $"{cols[Col]}{rows[Row]}";
+    public override string ToString() => $"{cols[Coord.X]}{rows[Coord.Y]}";
 
     public void Highlight()
     {
@@ -102,12 +101,13 @@ public sealed class Tile : Area2D
 
     private string chooseAnimation()
     {
-        return (color, isHighlighted) switch
+        return (Color, isHighlighted) switch
         {
             (TileColor.Light, false) => "Light",
             (TileColor.Light, true) => "SelectedLight",
             (TileColor.Dark, false) => "Dark",
             (TileColor.Dark, true) => "SelectedDark",
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 }
