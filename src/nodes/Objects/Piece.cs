@@ -134,6 +134,17 @@ public abstract class Piece : Node2D, IHelpable
     public void Destroy()
     {
         if (isHovered) EndHover();
+        Global.Services.Get<ShakeCamera>().Shake(7.5f);
+        if (Global.Prefabs.CaptureExplosion?.Instance<Node2D>() is { } node)
+        {
+            node.Position = Position;
+            GetParent().AddChild(node);
+            GD.Print("yush");
+        }
+        else
+        {
+            GD.Print("yikes");
+        }
         Global.Services.Get<Boombox>().Play(Boombox.SoundEffect.Capture);
         QueueFree();
         Destroyed?.Invoke();

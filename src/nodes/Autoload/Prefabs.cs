@@ -16,6 +16,9 @@ public sealed class Prefabs : Node
     [Export] public PackedScene? HornedBeetle;
     [Export] public PackedScene? PrayingMantis;
 
+    // Effects
+    [Export] public PackedScene? CaptureExplosion;
+
     public override void _Ready()
     {
         Global.Services.ProvidePersistent(this);

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://nodes/Autoload/Prefabs.cs" type="Script" id=1]
 [ext_resource path="res://scenes/Objects/Tile.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/Objects/Pieces/Ant.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/Objects/Pieces/Dragonfly.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/Objects/Pieces/Grasshopper.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/Objects/Effects/Capture.tscn" type="PackedScene" id=9]
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
@@ -18,3 +19,4 @@ Dragonfly = ExtResource( 7 )
 Grasshopper = ExtResource( 8 )
 HornedBeetle = ExtResource( 5 )
 PrayingMantis = ExtResource( 4 )
+CaptureExplosion = ExtResource( 9 )

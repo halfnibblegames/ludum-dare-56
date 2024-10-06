@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://nodes/Objects/OneOffParticleEffect.cs" type="Script" id=1]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 1 ), 0.0, -0.0253291, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=2]
+interpolation_mode = 1
+offsets = PoolRealArray( 0, 0.530726 )
+colors = PoolColorArray( 0.427451, 0.521569, 0.439216, 1, 0.0980392, 0.160784, 0.109804, 1 )
+
+[node name="CaptureParticles" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+z_index = 3
+emitting = false
+amount = 32
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector2( 0, 0 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 80.0
+initial_velocity_random = 0.25
+damping = 50.0
+damping_random = 1.0
+scale_amount = 3.0
+scale_amount_curve = SubResource( 1 )
+color_initial_ramp = SubResource( 2 )
