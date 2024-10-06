@@ -25,7 +25,7 @@ public sealed class HelpService : Node
     public void ClearHelp()
     {
         name.Text = "";
-        description.Text = "";
+        description.Text = "Hover the mouse over (almost) anything and more information will appear here if available!";
     }
 }
 
