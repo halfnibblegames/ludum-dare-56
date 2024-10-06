@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/volume_track.aseprite-dc44c33753e772221a887a66582e6555.res"
+
+[deps]
+
+source_file="res://assets/volume_track.aseprite"
+dest_files=[ "res://.import/volume_track.aseprite-dc44c33753e772221a887a66582e6555.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

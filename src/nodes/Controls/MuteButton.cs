@@ -8,8 +8,7 @@ public class MuteButton : TextureButton
     public override void _Ready()
     {
         base._Ready();
-        
-        
+
         var service = Global.Services.Get<AudioService>();
         service.OnVolumeChanged += OnVolumeChanged;
     }
