@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/World.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/NoJamChunky.tres" type="DynamicFont" id=2]
 [ext_resource path="res://nodes/Chronometer.cs" type="Script" id=3]
 [ext_resource path="res://assets/side_panel.png" type="Texture" id=4]
 [ext_resource path="res://assets/PIxeloids.tres" type="DynamicFont" id=5]
+[ext_resource path="res://scenes/Controls/MasterVolumeSlider.tscn" type="PackedScene" id=6]
 
 [node name="Node2D" type="Node2D"]
 
@@ -74,3 +75,11 @@ text = "00:00"
 align = 2
 valign = 1
 script = ExtResource( 3 )
+
+[node name="VolumeController" parent="." instance=ExtResource( 6 )]
+margin_left = 50.0
+margin_top = 33.0
+margin_right = 157.0
+margin_bottom = 49.0
+rect_scale = Vector2( 2, 2 )
+size_flags_stretch_ratio = 2.0
