@@ -40,25 +40,54 @@ patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
 
-[node name="Label" type="Label" parent="ViewportContainer/UI/LeftPanel"]
-margin_left = 5.25
-margin_top = 5.0
-margin_right = 65.25
-margin_bottom = 24.0
+[node name="CaptureLabel" type="Label" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 67.0
+margin_bottom = 26.0
 custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
 custom_fonts/font = ExtResource( 2 )
-text = "Captures
+text = "Captured
 Pieces"
 
-[node name="Label2" type="Label" parent="ViewportContainer/UI/LeftPanel"]
-margin_left = 5.25
-margin_top = 72.5
-margin_right = 65.25
-margin_bottom = 91.5
+[node name="ObjectiveLabel" type="Label" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 7.0
+margin_top = 67.0
+margin_right = 70.0
+margin_bottom = 75.0
 rect_pivot_offset = Vector2( 33.75, 14 )
 custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
 custom_fonts/font = ExtResource( 2 )
 text = "Objectives"
+
+[node name="ColorRect" type="ColorRect" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 7.0
+margin_top = 61.0
+margin_right = 73.0
+margin_bottom = 62.0
+color = Color( 0.764706, 0.784314, 0.698039, 1 )
+
+[node name="Objectives" type="Label" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 7.0
+margin_top = 80.0
+margin_right = 70.0
+margin_bottom = 99.0
+rect_pivot_offset = Vector2( 33.75, 14 )
+custom_colors/font_color = Color( 0.776471, 0.239216, 0.478431, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Kill all monsters"
+autowrap = true
+
+[node name="Objectives2" type="Label" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 8.0
+margin_top = 81.0
+margin_right = 71.0
+margin_bottom = 100.0
+rect_pivot_offset = Vector2( 33.75, 14 )
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Kill all monsters"
+autowrap = true
 
 [node name="RightPanel" type="NinePatchRect" parent="ViewportContainer/UI"]
 anchor_left = 1.0
@@ -74,23 +103,30 @@ patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
 
-[node name="Label2" type="Label" parent="ViewportContainer/UI/RightPanel"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 65.0
-margin_bottom = 13.0
+[node name="AbilitiesLabel" type="Label" parent="ViewportContainer/UI/RightPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 67.0
+margin_bottom = 15.0
 custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
 custom_fonts/font = ExtResource( 2 )
 text = "Abilities"
 
-[node name="Label3" type="Label" parent="ViewportContainer/UI/RightPanel"]
-margin_left = 6.75
-margin_top = 68.0
-margin_right = 66.75
-margin_bottom = 77.0
+[node name="HelpLabel" type="Label" parent="ViewportContainer/UI/RightPanel"]
+margin_left = 7.0
+margin_top = 67.0
+margin_right = 67.0
+margin_bottom = 76.0
 custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
 custom_fonts/font = ExtResource( 2 )
 text = "Help"
+
+[node name="ColorRect" type="ColorRect" parent="ViewportContainer/UI/RightPanel"]
+margin_left = 7.0
+margin_top = 61.0
+margin_right = 73.0
+margin_bottom = 62.0
+color = Color( 0.764706, 0.784314, 0.698039, 1 )
 
 [node name="Chronometer" type="Label" parent="ViewportContainer/UI"]
 anchor_left = 1.0
