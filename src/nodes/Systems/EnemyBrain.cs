@@ -81,6 +81,6 @@ sealed class EnemyBrain
 
     private sealed record MoveCandidate(Move Move, IMoveResult Result)
     {
-        public int HeuristicScore => Result.PiecesCaptured.Count;
+        public int HeuristicScore => Result.PiecesCaptured.Sum(p => p.Value);
     }
 }

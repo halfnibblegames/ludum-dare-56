@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Systems;
 
@@ -31,6 +30,8 @@ public abstract class Piece : Node2D
     public bool IsDead { get; private set; }
 
     public event PieceDestroyedEventHandler? Destroyed;
+
+    public abstract int Value { get; }
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 

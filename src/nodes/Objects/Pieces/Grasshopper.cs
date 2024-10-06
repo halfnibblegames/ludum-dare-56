@@ -6,6 +6,8 @@ namespace HalfNibbleGame.Objects.Pieces;
 
 public sealed class Grasshopper : Piece
 {
+    public override int Value => 4;
+
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
         currentTile.EnumerateKnightMoves()
             .Where(c => !ContainsSameColorPiece(board[c]));

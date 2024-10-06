@@ -7,6 +7,8 @@ namespace HalfNibbleGame.Objects.Pieces;
 
 public sealed class Dragonfly : Piece
 {
+    public override int Value => 5;
+
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
         Enumerable.Empty<TileCoord>()
             .Concat(

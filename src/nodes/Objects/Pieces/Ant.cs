@@ -5,6 +5,8 @@ namespace HalfNibbleGame.Objects.Pieces;
 
 public sealed class Ant : Piece
 {
+    public override int Value => 1;
+
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board)
     {
         return Enumerable.Empty<TileCoord>()
