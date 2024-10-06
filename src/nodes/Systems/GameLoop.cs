@@ -47,35 +47,56 @@ public sealed class GameLoop : Node2D
 
     private void deployPieces()
     {
-        var queen = Global.Prefabs.QueenBee!.Instance<Piece>();
-        board.AddPiece(queen, randomPlayerTile());
+        const int playerPieceCount = 3;
+        const int enemyPieceCount = 6;
 
         var pieceTypes = pieceTypesFactory();
 
-        for (var i = 0; i < 4; i++)
+        // Player pieces
+        var playerPieces = new List<Piece>();
+
+        var queen = Global.Prefabs.QueenBee!.Instance<Piece>();
+        playerPieces.Add(queen);
+
+        for (var i = 0; i < playerPieceCount; i++)
         {
-            var piece = pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>();
-            var tile = randomPlayerTile();
-            while (board[tile].Piece != null) tile = randomPlayerTile();
-            board.AddPiece(piece, tile);
+            playerPieces.Add(pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>());
         }
 
-        for (var i = 0; i < 5; i++)
+        deployPiecesOnBoard(playerPieces, 0, 1);
+
+        // Enemy pieces
+        var enemyPieces = new List<Piece>();
+
+        for (var i = 0; i < enemyPieceCount; i++)
         {
             var piece = pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>();
             piece.IsEnemy = true;
-            var tile = randomEnemyTile();
-            while (board[tile].Piece != null) tile = randomEnemyTile();
-            board.AddPiece(piece, tile);
+            enemyPieces.Add(piece);
         }
+
+        deployPiecesOnBoard(enemyPieces, 7, -1);
     }
 
-    private TileCoord randomPlayerTile() => randomTile(0, 3);
-    private TileCoord randomEnemyTile() => randomTile(5, 8);
+    private static readonly int[] deployOrderInRow = { 3, 4, 2, 5, 1, 6, 0, 7 };
 
-    private TileCoord randomTile(int minRowInclusive, int maxRowExclusive)
+    private void deployPiecesOnBoard(IEnumerable<Piece> pieces, int startRow, int yUp)
     {
-        return new TileCoord(random.Next(Board.Width), random.Next(minRowInclusive, maxRowExclusive));
+        var sortedPieces = pieces.OrderByDescending(p => p.Value).ThenBy(p => p.Name).ToList();
+
+        var row = startRow;
+        var i = 0;
+
+        foreach (var p in sortedPieces)
+        {
+            var coord = new TileCoord(deployOrderInRow[i++], row);
+            board.AddPiece(p, coord);
+            if (i >= deployOrderInRow.Length)
+            {
+                row += yUp;
+                i = 0;
+            }
+        }
     }
 
     public override void _Process(float delta)
