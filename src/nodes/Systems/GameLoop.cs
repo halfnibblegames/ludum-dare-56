@@ -26,6 +26,7 @@ public sealed class GameLoop : Node2D
     private readonly List<Move> enemyMoves = new();
 
     private Board board = default!;
+    private EnemyBrain enemyBrain = default!;
     private GameLoopState state = GameLoopState.AwaitingInput;
 
     public InputHandler Input { get; }
@@ -39,11 +40,12 @@ public sealed class GameLoop : Node2D
     public override void _Ready()
     {
         board = GetNode<Board>("Board");
-        setupGame();
+        enemyBrain = new EnemyBrain(board, random);
+        deployPieces();
         startTurn();
     }
 
-    private void setupGame()
+    private void deployPieces()
     {
         var queen = Global.Prefabs.QueenBee!.Instance<Piece>();
         board.AddPiece(queen, randomPlayerTile());
@@ -160,34 +162,7 @@ public sealed class GameLoop : Node2D
 
     private void determineEnemyMove()
     {
-        var enemyPieces = board.Tiles
-            .Where(t => t.Piece is {IsEnemy: true, IsStunned: false})
-            .Select(t => (t, t.Piece!))
-            .ToList();
-        if (enemyPieces.Count == 0) return;
-
-        // 25% chance of moving two pieces.
-        var numberOfPieces = random.NextDouble() < 0.25 ? 2 : 1;
-        var chosenPieces = enemyPieces.OrderBy(_ => random.Next()).Take(numberOfPieces).ToList();
-
-        foreach (var (tile, piece) in chosenPieces)
-        {
-            var reachableTiles = piece.ReachableTiles(tile.Coord, board).ToList();
-            if (reachableTiles.Count == 0) return;
-
-            const int maxTries = 5;
-            for (var i = 0; i < maxTries; i++)
-            {
-                var target = reachableTiles[random.Next(reachableTiles.Count)];
-                var moveCandidate = board.PreviewMove(piece, tile, board[target], 0);
-                if (moveCandidate.Validate())
-                {
-                    enemyMoves.Add(moveCandidate);
-                    moveCandidate.Piece.NextMove = moveCandidate;
-                    break;
-                }
-            }
-        }
+        enemyMoves.AddRange(enemyBrain.PlanMoves());
     }
 
     private enum GameLoopState
