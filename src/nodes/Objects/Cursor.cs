@@ -12,6 +12,11 @@ sealed class Cursor : AnimatedSprite
     private float timeSinceStart;
     private Tile? targetTile;
 
+    public override void _Ready()
+    {
+        Play("Highlight");
+    }
+
     public void MoveToTile(Tile tile)
     {
         if (tile == targetTile) return;
