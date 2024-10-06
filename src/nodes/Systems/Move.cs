@@ -35,7 +35,7 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
         if (Piece.InterruptMove(this) is { } moveOverride)
         {
-            await moveOverride.Animation;
+            await moveOverride.AnimationFactory();
             moveOverride.Execute(this, sideEffects);
             return sideEffects.Continuation;
         }

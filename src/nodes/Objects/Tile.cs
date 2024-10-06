@@ -145,7 +145,6 @@ public sealed class Tile : Area2D
         }
         if (actionSprites.TryGetValue(actionShown, out var visibleSprite))
         {
-            GD.Print($"Showing {visibleSprite.Name}");
             visibleSprite.Visible = true;
         }
     }

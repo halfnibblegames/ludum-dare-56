@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Godot;
 using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects.Pieces;
@@ -37,7 +38,7 @@ public sealed class PrayingMantis : Piece
         var nextTile = move.Board[move.From.Coord + nextStep];
         var prevTile = move.Board[move.From.Coord + prevStep];
 
-        return new MoveOverride(Task.CompletedTask, execute);
+        return new MoveOverride(createAnimation(step), execute);
 
         void execute(Move m, IMoveSideEffects sideEffects)
         {
@@ -49,6 +50,40 @@ public sealed class PrayingMantis : Piece
                 }
             }
         }
+    }
+
+    private Func<Task> createAnimation(Step step)
+    {
+        var (spriteName, rotation) = lookUpAnimation(step);
+
+        var sprite = GetNode<AnimatedSprite>($"AnimationRoot/{spriteName}");
+
+        return playAnimation;
+
+        async Task playAnimation()
+        {
+            sprite.RotationDegrees = rotation;
+            var anim = new SpriteAnimation(sprite, "default");
+            var signal = ToSignal(anim, nameof(SpriteAnimation.Finished));
+            AddChild(anim);
+            await signal;
+        }
+    }
+
+    private static (string SpriteName, int rotation) lookUpAnimation(Step step)
+    {
+        return (step.X, step.Y) switch
+        {
+            (1, 0) => ("HorizontalSwipe", 90),
+            (1, 1) => ("DiagonalSwipe", 0),
+            (0, 1) => ("HorizontalSwipe", 0),
+            (-1, 1) => ("DiagonalSwipe", -90),
+            (-1, 0) => ("HorizontalSwipe", -90),
+            (-1, -1) => ("DiagonalSwipe", 180),
+            (0, -1) => ("HorizontalSwipe", 180),
+            (1, -1) => ("DiagonalSwipe", 90),
+            _ => throw new ArgumentOutOfRangeException(nameof(step), step, null)
+        };
     }
 
     public override void OnMove(Move move, IMoveSideEffects sideEffects)
