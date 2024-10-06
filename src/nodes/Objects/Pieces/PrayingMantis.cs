@@ -84,9 +84,4 @@ public sealed class PrayingMantis : Piece
             _ => throw new ArgumentOutOfRangeException(nameof(step), step, null)
         };
     }
-
-    public override void OnMove(Move move, IMoveSideEffects sideEffects)
-    {
-        sideEffects.Ripple(move.Board, move.To, 2);
-    }
 }
