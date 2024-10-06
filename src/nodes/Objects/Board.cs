@@ -27,15 +27,6 @@ public sealed class Board : Node2D
         return new Move(this, piece, from, to, previousMovesInTurn);
     }
 
-    public void OnCursorAnimationFinished()
-    {
-        var cursor = GetNode<AnimatedSprite>("Cursor");
-        if (cursor.Animation != "Highlight")
-        {
-            cursor.Animation = "Highlight";
-        }
-    }
-
     public override void _Ready()
     {
         GetNode("EditorRect").QueueFree();

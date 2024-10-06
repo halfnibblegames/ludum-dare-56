@@ -1,5 +1,4 @@
 ﻿using Godot;
-using JetBrains.Annotations;
 
 namespace HalfNibbleGame.Objects;
 
@@ -8,7 +7,6 @@ public sealed class Tile : Area2D
     private readonly Vector2 origin = 0.5f * size + (Board.Height - 1) * size.y * Vector2.Down;
     public delegate void TileClickedEventHandler();
 
-    private bool beingHovered = false;
     private const float width = 16;
     private const float height = 16;
     private static readonly Vector2 size = new(width, height);
@@ -59,27 +57,26 @@ public sealed class Tile : Area2D
     }
 
     public Piece? Piece;
-    private AnimatedSprite cursor = default!;
+    private Cursor cursor = default!;
 
     public event TileClickedEventHandler? Clicked;
 
     public override void _Ready()
     {
         updateAnimation();
-        cursor = GetParent<Board>().GetNode<AnimatedSprite>("Cursor");
+        cursor = GetParent<Board>().GetNode<Cursor>("Cursor");
     }
 
     public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
     {
         if (@event is InputEventMouseMotion)
         {
-            cursor.Position = Position;
-            cursor.Visible = true;
+            cursor.MoveToTile(this);
         }
 
-        if (@event is InputEventMouseButton { Pressed: true })
+        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: 1 })
         {
-            cursor.Animation = "Confirm";
+            cursor.Confirm();
             Clicked?.Invoke();
         }
     }

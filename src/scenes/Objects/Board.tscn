@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://nodes/Objects/Board.cs" type="Script" id=1]
+[ext_resource path="res://nodes/Objects/Cursor.cs" type="Script" id=2]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/cursor.png-224f93d013e0812359a323dac1948615.stex"
@@ -55,7 +56,9 @@ visible = false
 z_index = 5
 frames = SubResource( 8 )
 animation = "Highlight"
+frame = 6
 playing = true
+script = ExtResource( 2 )
 __meta__ = {
 "_aseprite_wizard_config_": {
 "layer": "",
@@ -69,4 +72,4 @@ __meta__ = {
 }
 }
 
-[connection signal="animation_finished" from="Cursor" to="." method="OnCursorAnimationFinished"]
+[connection signal="animation_finished" from="Cursor" to="Cursor" method="OnAnimationFinished"]

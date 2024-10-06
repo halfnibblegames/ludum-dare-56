@@ -9,7 +9,9 @@ public abstract class Piece : Node2D
 {
     public delegate void PieceDestroyedEventHandler();
 
-    private bool isEnemy = false;
+    public Move? NextMove { get; set; }
+
+    private bool isEnemy;
     public bool IsEnemy
     {
         get => isEnemy;
