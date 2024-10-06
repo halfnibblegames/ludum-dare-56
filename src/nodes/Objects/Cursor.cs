@@ -32,8 +32,8 @@ sealed class Cursor : AnimatedSprite
         if (targetTile != null)
         {
             startPos = targetTile.Position;
+            Visible = true;
         }
-        Visible = true;
     }
 
     public void Deactivate()
@@ -41,11 +41,18 @@ sealed class Cursor : AnimatedSprite
         Visible = false;
     }
 
+    public void Reset()
+    {
+        Visible = false;
+        targetTile = null;
+    }
+
     public void MoveToTile(Tile tile)
     {
         if (tile == targetTile) return;
 
         startPos = targetTile?.Position ?? Position;
+        Visible = true;
 
         targetTile = tile;
         timeSinceStart = 0;

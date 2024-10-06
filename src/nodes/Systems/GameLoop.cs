@@ -41,8 +41,25 @@ public sealed class GameLoop : Node2D
     {
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);
+        startGame();
+    }
+
+    private void restartGame()
+    {
+        endGame();
+        startGame();
+    }
+
+    private void startGame()
+    {
         deployPieces();
         startTurn();
+    }
+
+    private void endGame()
+    {
+        board.Reset();
+        Input.Reset();
     }
 
     private void deployPieces()
@@ -104,6 +121,14 @@ public sealed class GameLoop : Node2D
         checkGameEnd();
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
+        {
+            restartGame();
+        }
+    }
+
     private void checkGameEnd()
     {
         var groupedPieces = board.Pieces.ToLookup(p => p.IsEnemy);
@@ -112,13 +137,13 @@ public sealed class GameLoop : Node2D
         if (!groupedPieces[true].Any())
         {
             // Win!
-            Global.Instance.SwitchScene("res://scenes/Game.tscn");
+            restartGame();
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
             // Loss!
-            Global.Instance.SwitchScene("res://scenes/Game.tscn");
+            restartGame();
         }
     }
 
@@ -158,7 +183,14 @@ public sealed class GameLoop : Node2D
             }
         }
         enemyMoves.Clear();
-        await Task.WhenAll(moveExecutions);
+        var enemyAwait = Task.WhenAll(moveExecutions);
+        var timeout = Task.Delay(5000);
+
+        var completedTask = await Task.WhenAny(enemyAwait, timeout);
+        if (completedTask == timeout)
+        {
+            throw new Exception("Enemy move did not complete within 5 seconds");
+        }
 
         startTurn();
     }

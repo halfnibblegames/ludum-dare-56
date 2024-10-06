@@ -19,6 +19,13 @@ public sealed class InputHandler
         this.gameLoop = gameLoop;
     }
 
+    public void Reset()
+    {
+        cursor?.Reset();
+        selectedPiece = null;
+        isSelectionLocked = false;
+    }
+
     public void Activate()
     {
         isActive = true;

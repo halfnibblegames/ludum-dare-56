@@ -30,12 +30,34 @@ public sealed class Board : Node2D
     public override void _Ready()
     {
         GetNode("EditorRect").QueueFree();
+        setUp();
+    }
 
+    public void Reset()
+    {
+        cleanUp();
+        setUp();
+    }
+
+    private void cleanUp()
+    {
+        foreach (var p in pieces)
+        {
+            p.QueueFree();
+        }
+        pieces.Clear();
+        foreach (var t in tiles)
+        {
+            t.QueueFree();
+        }
+        tiles = Array.Empty<Tile>();
+    }
+
+    private void setUp()
+    {
         // Make the origin be bottom left.
         tiles = new Tile[Width * Height];
         var prefab = Global.Prefabs.Tile ?? throw new Exception("Could not find tile instance.");
-
-        var input = GetParent<GameLoop>().Input;
 
         // Create the board back to front to get the right draw order
         for (var y = Height - 1; y >= 0; y--)
