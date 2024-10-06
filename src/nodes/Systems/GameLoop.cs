@@ -125,7 +125,15 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.EnemyMove;
 
-        var moveExecutions = enemyMoves.Where(m => m.Validate()).Select(m => m.Execute()).ToList();
+        var moveExecutions = new List<Task>();
+        foreach (var move in enemyMoves)
+        {
+            move.Piece.NextMove = null;
+            if (move.Validate())
+            {
+                moveExecutions.Add(move.Execute());
+            }
+        }
         enemyMoves.Clear();
         await Task.WhenAll(moveExecutions);
 
@@ -169,6 +177,7 @@ public sealed class GameLoop : Node2D
             if (moveCandidate.Validate())
             {
                 enemyMoves.Add(moveCandidate);
+                moveCandidate.Piece.NextMove = moveCandidate;
                 break;
             }
         }

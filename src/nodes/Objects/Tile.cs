@@ -42,6 +42,7 @@ public sealed class Tile : Area2D
         }
     }
 
+    private bool isHovered;
     private bool isHighlighted;
 
     private TileColor color;
@@ -55,7 +56,24 @@ public sealed class Tile : Area2D
         }
     }
 
-    public Piece? Piece;
+    private Piece? piece;
+    public Piece? Piece
+    {
+        get => piece;
+        set
+        {
+            if (piece == value) return;
+            if (!isHovered)
+            {
+                piece = value;
+                return;
+            }
+            piece?.EndHover();
+            piece = value;
+            piece?.StartHover();
+        }
+    }
+
     private Cursor cursor = default!;
 
     public event TileClickedEventHandler? Clicked;
@@ -92,6 +110,16 @@ public sealed class Tile : Area2D
     {
         isHighlighted = false;
         updateAnimation();
+    }
+
+    public void StartHover()
+    {
+        isHovered = true;
+    }
+
+    public void EndHover()
+    {
+        isHovered = false;
     }
 
     private void updateAnimation()

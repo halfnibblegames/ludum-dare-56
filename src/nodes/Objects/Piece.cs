@@ -11,6 +11,10 @@ public abstract class Piece : Node2D
 
     public Move? NextMove { get; set; }
 
+    private AnimatedSprite sprite => GetNode<AnimatedSprite>("AnimatedSprite");
+
+    private bool isHovered;
+
     private bool isEnemy;
     public bool IsEnemy
     {
@@ -18,7 +22,7 @@ public abstract class Piece : Node2D
         set
         {
             isEnemy = value;
-            GetNode<AnimatedSprite>("AnimatedSprite").Animation = isEnemy ? "Dark" : "Light";
+            sprite.Animation = isEnemy ? "Dark" : "Light";
         }
     }
 
@@ -43,6 +47,28 @@ public abstract class Piece : Node2D
     }
 
     public virtual void OnTurnStart() { }
+
+    public override void _Process(float delta)
+    {
+        if (NextMove is null)
+        {
+            sprite.Position = Vector2.Zero;
+            return;
+        }
+
+        var offset = 0.5f + 0.5f * Mathf.Sin(0.03f * OS.GetTicksMsec());
+        sprite.Position = offset * Vector2.Right;
+    }
+
+    public void StartHover()
+    {
+        isHovered = true;
+    }
+
+    public void EndHover()
+    {
+        isHovered = false;
+    }
 
     public void Destroy()
     {

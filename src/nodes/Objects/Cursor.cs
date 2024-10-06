@@ -17,16 +17,19 @@ sealed class Cursor : AnimatedSprite
 
         Visible = true;
 
-        if (targetTile is null)
+        if (targetTile != null)
         {
-            targetTile = tile;
-            Position = tile.Position;
-            return;
+            startPos = targetTile.Position;
+            targetTile.EndHover();
+        }
+        else
+        {
+            startPos = Position;
         }
 
-        startPos = Position;
-        timeSinceStart = 0;
         targetTile = tile;
+        timeSinceStart = 0;
+        tile.StartHover();
     }
 
     public void Confirm()
