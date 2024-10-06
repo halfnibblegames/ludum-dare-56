@@ -15,7 +15,7 @@ public abstract class Piece : Node2D, IHelpable
 
     private bool isHovered;
     private NextMovePreview? nextMovePreview;
-    private int stunnedTurnsLeft;
+    protected int StunnedTurnsLeft { get; private set; }
 
     private bool isEnemy;
     public bool IsEnemy
@@ -40,7 +40,7 @@ public abstract class Piece : Node2D, IHelpable
     public Boombox.SoundEffect MovementEffect { get; protected set; } = Boombox.SoundEffect.Walk;
 
     public abstract string Name { get; }
-    public abstract string HelpText { get; }
+    public abstract string GetHelpText();
 
     public virtual MoveOverride? InterruptMove(Move move)
     {
@@ -57,13 +57,17 @@ public abstract class Piece : Node2D, IHelpable
 
     public void OnTurnStart()
     {
-        if (stunnedTurnsLeft == 0)
+        var stunLabel = GetNodeOrNull<Label>("Stun");
+        if (stunLabel is null) return;
+
+        if (StunnedTurnsLeft == 0)
         {
             IsStunned = false;
+            stunLabel.Text = "";
         }
         else
         {
-            stunnedTurnsLeft--;
+            stunLabel.Text = (StunnedTurnsLeft--).ToString();
         }
     }
 
@@ -123,7 +127,7 @@ public abstract class Piece : Node2D, IHelpable
 
     public void Stun(int stunnedTurns)
     {
-        stunnedTurnsLeft = stunnedTurns;
+        StunnedTurnsLeft = stunnedTurns;
         IsStunned = true;
     }
 

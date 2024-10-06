@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://nodes/Objects/Pieces/HornedBeetle.cs" type="Script" id=1]
+[ext_resource path="res://assets/monogram.tres" type="DynamicFont" id=2]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"
@@ -44,3 +45,12 @@ __meta__ = {
 "source": "res://assets/bugs.aseprite"
 }
 }
+
+[node name="Stun" type="Label" parent="."]
+margin_left = 3.0
+margin_top = -14.0
+margin_right = 43.0
+margin_bottom = 3.0
+custom_colors/font_color = Color( 0.776471, 0.239216, 0.478431, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "1"
