@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/swipe_tile.aseprite-808032314613e80927fdcf33eff85966.res"
+
+[deps]
+
+source_file="res://assets/swipe_tile.aseprite"
+dest_files=[ "res://.import/swipe_tile.aseprite-808032314613e80927fdcf33eff85966.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

@@ -35,7 +35,7 @@ public abstract class Piece : Node2D, IHelpable
 
     public abstract int Value { get; }
 
-    public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
+    public abstract IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board);
 
     public Boombox.SoundEffect MovementEffect { get; protected set; } = Boombox.SoundEffect.Walk;
 
@@ -93,6 +93,7 @@ public abstract class Piece : Node2D, IHelpable
         EndMovePreview();
 
         var clone = (Piece) Duplicate();
+        clone.ZIndex += 2;
         GetParent().AddChild(clone);
         clone.Modulate = new Color(1, 1, 1, 0.4f);
         var anim = new MoveAnimation(move.From.Position, move.To.Position, clone);
@@ -163,6 +164,11 @@ public abstract class Piece : Node2D, IHelpable
     {
         return tile.Piece is { } piece && piece.IsEnemy == IsEnemy;
     }
+
+    protected ReachableTile MoveOrCapture(Tile tile) => MoveOr(tile, TileAction.Capture);
+
+    protected ReachableTile MoveOr(Tile tile, TileAction action) =>
+        tile.Piece == null ? tile.Coord.MoveTo() : new ReachableTile(tile.Coord, action);
 
     private sealed record NextMovePreview(Piece Piece, MoveAnimation Animation);
 }

@@ -72,6 +72,7 @@ sealed class EnemyBrain
         var threatenedTiles = board.Tiles
             .Where(t => t.Piece is { IsEnemy: false })
             .SelectMany(t => t.Piece!.ReachableTiles(t.Coord, board))
+            .Select(rt => rt.Coord)
             .ToHashSet();
 
         return new MoveContext(queenBeePos, threatenedTiles);
@@ -89,13 +90,13 @@ sealed class EnemyBrain
     {
         foreach (var t in piece.ReachableTiles)
         {
-            var move = board.PreviewMove(piece.Piece, piece.Tile, board[t], 0);
+            var move = board.PreviewMove(piece.Piece, piece.Tile, board[t.Coord], 0);
             var result = move.Preview();
             yield return new MoveCandidate(move, result);
         }
     }
 
-    private sealed record PlacedPiece(Piece Piece, Tile Tile, IReadOnlyList<TileCoord> ReachableTiles)
+    private sealed record PlacedPiece(Piece Piece, Tile Tile, IReadOnlyList<ReachableTile> ReachableTiles)
     {
         public static PlacedPiece FromTile(Board board, Tile tile) =>
             new(tile.Piece!, tile, tile.Piece!.ReachableTiles(tile.Coord, board).ToList().AsReadOnly());

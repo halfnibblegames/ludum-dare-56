@@ -96,14 +96,14 @@ public sealed class InputHandler
         private readonly Board board;
         private readonly Tile tile;
         private readonly Piece piece;
-        private readonly IReadOnlyList<TileCoord> targetTiles;
+        private readonly IReadOnlyList<ReachableTile> targetTiles;
         private readonly int previousMovesInTurn;
 
         public SelectedPiece(Board board, Tile tile, Piece piece)
             : this(board, tile, piece, piece.ReachableTiles(tile.Coord, board), 0) { }
 
         public SelectedPiece(
-            Board board, Tile tile, Piece piece, IEnumerable<TileCoord> targetTiles, int previousMovesInTurn)
+            Board board, Tile tile, Piece piece, IEnumerable<ReachableTile> targetTiles, int previousMovesInTurn)
         {
             this.board = board;
             this.tile = tile;
@@ -130,13 +130,13 @@ public sealed class InputHandler
         {
             foreach (var t in targetTiles)
             {
-                board[t].Highlight();
+                board[t.Coord].ShowAction(t.Action);
             }
         }
 
         public Move? TryHandleTileClick(Tile clickedTile)
         {
-            if (!targetTiles.Contains(clickedTile.Coord)) return null;
+            if (targetTiles.All(t => t.Coord != clickedTile.Coord)) return null;
             var moveCandidate = board.PreviewMove(piece, tile, clickedTile, previousMovesInTurn);
             return moveCandidate.Validate() ? moveCandidate : null;
         }

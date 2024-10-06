@@ -7,13 +7,17 @@ public sealed class Ant : Piece
 {
     public override int Value => 1;
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board)
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board)
     {
-        return Enumerable.Empty<TileCoord>()
+        return Enumerable.Empty<ReachableTile>()
             .Concat(
-                currentTile.EnumerateOrthogonal().Where(t => board[t].Piece == null))
+                currentTile.EnumerateOrthogonal()
+                    .Where(t => board[t].Piece == null)
+                    .Select(t => t.MoveTo()))
             .Concat(
-                currentTile.EnumerateDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
+                currentTile.EnumerateDiagonal()
+                    .Where(t => board[t].Piece is { IsEnemy: true })
+                    .Select(t => t.Capture()));
     }
 
     public override string Name => "Ant";

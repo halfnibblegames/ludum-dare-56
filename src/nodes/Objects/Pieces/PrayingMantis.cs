@@ -15,9 +15,10 @@ public sealed class PrayingMantis : Piece
 
     public override int Value => 3;
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board) =>
         currentTile.EnumerateAdjacent()
-            .Where(c => !ContainsSameColorPiece(board[c]));
+            .Where(c => !ContainsSameColorPiece(board[c]))
+            .Select(t => MoveOr(board[t], TileAction.Swipe));
 
     public override MoveOverride? InterruptMove(Move move)
     {

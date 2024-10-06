@@ -13,9 +13,10 @@ public sealed class Grasshopper : Piece
 
     public override int Value => 4;
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board) =>
         currentTile.EnumerateKnightMoves()
-            .Where(c => !ContainsSameColorPiece(board[c]));
+            .Where(c => !ContainsSameColorPiece(board[c]))
+            .Select(t => MoveOrCapture(board[t]));
 
     public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {

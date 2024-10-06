@@ -12,7 +12,8 @@ public sealed class QueenBee : Piece
 
     public override int Value => 50;
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board) =>
         currentTile.EnumerateAdjacent()
-            .Where(c => !ContainsSameColorPiece(board[c]));
+            .Where(c => !ContainsSameColorPiece(board[c]))
+            .Select(t => MoveOrCapture(board[t]));
 }

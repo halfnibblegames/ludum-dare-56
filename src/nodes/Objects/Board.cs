@@ -70,7 +70,7 @@ public sealed class Board : Node2D
     {
         foreach (var t in tiles)
         {
-            t.ResetHighlight();
+            t.ResetAction();
         }
     }
 

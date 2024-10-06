@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
@@ -44,7 +45,8 @@ public sealed class Tile : Area2D
     }
 
     private bool isHovered;
-    private bool isHighlighted;
+    private TileAction actionShown;
+    private readonly Dictionary<TileAction, Sprite> actionSprites = new();
 
     private TileColor color;
     public TileColor Color
@@ -77,6 +79,10 @@ public sealed class Tile : Area2D
 
     public override void _Ready()
     {
+        actionSprites.Add(TileAction.Swipe, GetNode<Sprite>("HighlightSprites/SwipeTile"));
+        actionSprites.Add(TileAction.Capture, GetNode<Sprite>("HighlightSprites/AttackTile"));
+        actionSprites.Add(TileAction.Move, GetNode<Sprite>("HighlightSprites/SelectableTile"));
+
         updateAnimation();
     }
 
@@ -105,15 +111,15 @@ public sealed class Tile : Area2D
 
     public override string ToString() => $"{cols[Coord.X]}{rows[Coord.Y]}";
 
-    public void Highlight()
+    public void ShowAction(TileAction action)
     {
-        isHighlighted = true;
+        actionShown = action;
         updateAnimation();
     }
 
-    public void ResetHighlight()
+    public void ResetAction()
     {
-        isHighlighted = false;
+        actionShown = TileAction.None;
         updateAnimation();
     }
 
@@ -132,16 +138,23 @@ public sealed class Tile : Area2D
     private void updateAnimation()
     {
         GetNode<AnimatedSprite>("AnimatedSprite").Animation = chooseAnimation();
+        foreach (var sprite in actionSprites.Values)
+        {
+            sprite.Visible = false;
+        }
+        if (actionSprites.TryGetValue(actionShown, out var visibleSprite))
+        {
+            GD.Print($"Showing {visibleSprite.Name}");
+            visibleSprite.Visible = true;
+        }
     }
 
     private string chooseAnimation()
     {
-        return (Color, isHighlighted) switch
+        return (Color) switch
         {
-            (TileColor.Light, false) => "Light",
-            (TileColor.Light, true) => "SelectedLight",
-            (TileColor.Dark, false) => "Dark",
-            (TileColor.Dark, true) => "SelectedDark",
+            (TileColor.Light) => "Light",
+            (TileColor.Dark) => "Dark",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -151,4 +164,12 @@ public enum TileColor : byte
 {
     Light = 0,
     Dark = 1
+}
+
+public enum TileAction : byte
+{
+    None = 0,
+    Move = 1,
+    Capture = 2,
+    Swipe = 3,
 }

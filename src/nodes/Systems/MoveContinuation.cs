@@ -4,4 +4,4 @@ using HalfNibbleGame.Objects;
 namespace HalfNibbleGame.Systems;
 
 public sealed record MoveContinuation(
-    Tile From, Piece Piece, IReadOnlyList<TileCoord> TargetTiles, int PreviousMovesInTurn);
+    Tile From, Piece Piece, IReadOnlyList<ReachableTile> TargetTiles, int PreviousMovesInTurn);

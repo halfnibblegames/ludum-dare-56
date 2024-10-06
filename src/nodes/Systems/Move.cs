@@ -15,7 +15,10 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
         if (Piece.IsStunned) return false;
 
         // Piece cannot reach the target
-        if (!Piece.ReachableTiles(From.Coord, Board).ToHashSet().Contains(To.Coord)) return false;
+        if (!Piece.ReachableTiles(From.Coord, Board).Select(rt => rt.Coord).ToHashSet().Contains(To.Coord))
+        {
+            return false;
+        }
 
         // Can always move to an empty tile
         if (To.Piece is null) return true;

@@ -14,10 +14,12 @@ public sealed class Dragonfly : Piece
 
     public override int Value => 5;
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
-        Enumerable.Empty<TileCoord>()
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board) =>
+        Enumerable.Empty<ReachableTile>()
             .Concat(
-                currentTile.EnumerateDiagonal().Where(c => board[c].Piece is null))
+                currentTile.EnumerateDiagonal()
+                    .Where(c => board[c].Piece is null)
+                    .Select(t => t.MoveTo()))
             .Concat(potentialCaptures(board, currentTile));
 
     public override void OnMove(Move move, IMoveSideEffects sideEffects)
@@ -51,11 +53,12 @@ public sealed class Dragonfly : Piece
         }
     }
 
-    private IEnumerable<TileCoord> potentialCaptures(Board board, TileCoord from)
+    private IEnumerable<ReachableTile> potentialCaptures(Board board, TileCoord from)
     {
         return TileCoordExtensions.DiagonalSteps
             .Where(s => (from + s).IsValid() && (from + 2 * s).IsValid())
             .Where(s => board[from + s].Piece is { } piece && piece.IsEnemy != IsEnemy)
-            .Select(s => from + 2 * s);
+            .Select(s => from + 2 * s)
+            .Select(t => t.Capture());
     }
 }

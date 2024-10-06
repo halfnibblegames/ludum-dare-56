@@ -16,10 +16,25 @@ public sealed class HornedBeetle : Piece
 
     private static readonly Step[] validSteps = { Step.Up, Step.Left, Step.Right, Step.Down };
 
-    public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
-        validSteps.SelectMany(step =>
-            currentTile.EnumerateDirection(step)
-                .TakeWhile(c => !ContainsSameColorPiece(board[c])));
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board)
+    {
+        foreach (var step in validSteps)
+        {
+            var action = TileAction.Move;
+            var tiles = currentTile.EnumerateDirection(step)
+                .TakeWhile(c => !ContainsSameColorPiece(board[c]));
+
+            foreach (var tile in tiles)
+            {
+                if (board[tile].Piece != null)
+                {
+                    action = TileAction.Capture;
+                }
+
+                yield return new ReachableTile(tile, action);
+            }
+        }
+    }
 
     public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {

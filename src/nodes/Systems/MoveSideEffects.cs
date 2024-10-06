@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
 
@@ -11,7 +10,7 @@ public interface IMoveSideEffects
     void CapturePiece(Tile tile);
     void Stun(int turnCount);
     void Ripple(Board board, Tile origin, int rippleRadius);
-    void AllowContinuation(List<TileCoord> continuationTiles);
+    void AllowContinuation(List<ReachableTile> continuationTiles);
     void PlaySound(Boombox.SoundEffect soundEffect);
 }
 
@@ -40,7 +39,7 @@ public abstract class MoveSideSideEffectsBase : IMoveSideEffects
     public abstract void Ripple(Board board, Tile origin, int rippleRadius);
     public abstract void PlaySound(Boombox.SoundEffect soundEffect);
 
-    public void AllowContinuation(List<TileCoord> continuationTiles)
+    public void AllowContinuation(List<ReachableTile> continuationTiles)
     {
         if (Continuation != null) throw new InvalidOperationException();
         Continuation = new MoveContinuation(
