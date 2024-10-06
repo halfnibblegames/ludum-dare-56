@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
@@ -53,6 +54,7 @@ public sealed class MoveSideEffects : MoveSideSideEffectsBase
         if (tile.Piece is null) throw new InvalidOperationException();
         tile.Piece.Destroy();
         tile.Piece = null;
+        Global.Services.Get<ShakeCamera>().Shake(7.5f);
     }
 
     public override void Stun(int turnCount)
