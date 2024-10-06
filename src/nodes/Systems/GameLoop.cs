@@ -182,7 +182,7 @@ public sealed class GameLoop : Node2D
                 moveExecutions.Add(move.Execute());
             }
         }
-        enemyMoves.Clear();
+
         var enemyAwait = Task.WhenAll(moveExecutions);
         var timeout = Task.Delay(5000);
 
@@ -192,6 +192,7 @@ public sealed class GameLoop : Node2D
             throw new Exception("Enemy move did not complete within 5 seconds");
         }
 
+        enemyMoves.Clear();
         startTurn();
     }
 
