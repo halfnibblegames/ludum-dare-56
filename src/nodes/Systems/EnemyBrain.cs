@@ -25,11 +25,36 @@ sealed class EnemyBrain
     public IEnumerable<Move> PlanMoves()
     {
         var pieces = enumeratePieces().ToList();
-        if (pieces.Count == 0) yield break;
+        if (pieces.Count == 0) return Enumerable.Empty<Move>();
 
+        // 25% chance of moving two pieces.
+        var numberOfPieces = random.NextDouble() < 0.25 ? 2 : 1;
+
+        return planMovesForPieces(pieces, numberOfPieces);
+    }
+
+    public IEnumerable<Move> ImproveMoves(IEnumerable<Move> moves)
+    {
+        var validPieces = moves
+            .Where(m =>
+            {
+                if (m.Piece.IsDead) return false;
+
+                var expectedTile = m.From;
+                var expectedPiece = m.Piece;
+                return expectedPiece == expectedTile.Piece;
+            })
+            .Select(m => PlacedPiece.FromTile(m.Board, m.From))
+            .ToList();
+
+        return planMovesForPieces(validPieces, validPieces.Count);
+    }
+
+    private IEnumerable<Move> planMovesForPieces(IReadOnlyList<PlacedPiece> placedPieces, int pieceLimit)
+    {
         var ctx = makeContext();
 
-        var bestMovePerPiece = pieces.ToDictionary(
+        var bestMovePerPiece = placedPieces.ToDictionary(
             piece => piece,
             piece =>
             {
@@ -39,13 +64,10 @@ sealed class EnemyBrain
                 return bestMove;
             });
 
-        var orderedPieces = pieces
+        var orderedPieces = placedPieces
             .Where(p => bestMovePerPiece[p] is not null)
             .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore(ctx))
             .ToList();
-
-        // 25% chance of moving two pieces.
-        var numberOfPieces = random.NextDouble() < 0.25 ? 2 : 1;
 
         var occupiedTiles = new List<TileCoord>();
         foreach (var piece in orderedPieces)
@@ -59,8 +81,8 @@ sealed class EnemyBrain
             occupiedTiles.Add(candidateMove.Move.To.Coord);
             piece.Piece.IsPrimed = true;
 
-            numberOfPieces--;
-            if (numberOfPieces == 0) break;
+            pieceLimit--;
+            if (pieceLimit == 0) break;
         }
     }
 
