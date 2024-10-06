@@ -7,10 +7,9 @@ namespace HalfNibbleGame.Objects.Pieces;
 
 public sealed class Dragonfly : Piece
 {
-    public override string Name => "Dragonfly";
+    public override string DisplayName => "Dragonfly";
 
-    public override string GetHelpText() =>
-        "* Moves diagonally.\n* Can move again if they capture.\n* Final boss of every pond.";
+    public override string HelpText => "* Moves diagonally.\n* Can move again if they capture.\n* Final boss of every pond.";
 
     public override int Value => 5;
 

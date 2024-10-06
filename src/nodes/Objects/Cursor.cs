@@ -45,19 +45,10 @@ sealed class Cursor : AnimatedSprite
     {
         if (tile == targetTile) return;
 
-        if (targetTile != null)
-        {
-            startPos = targetTile.Position;
-            targetTile.EndHover();
-        }
-        else
-        {
-            startPos = Position;
-        }
+        startPos = targetTile?.Position ?? Position;
 
         targetTile = tile;
         timeSinceStart = 0;
-        tile.StartHover();
         TileHovered?.Invoke(board, tile);
     }
 

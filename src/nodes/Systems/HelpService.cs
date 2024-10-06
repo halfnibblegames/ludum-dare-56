@@ -18,8 +18,8 @@ public sealed class HelpService : Node
 
     public void ShowHelp(IHelpable helpable)
     {
-        name.Text = helpable.Name;
-        description.BbcodeText = helpable.GetHelpText();
+        name.Text = helpable.DisplayName;
+        description.BbcodeText = helpable.HelpText;
     }
 
     public void ClearHelp()
@@ -31,6 +31,6 @@ public sealed class HelpService : Node
 
 public interface IHelpable
 {
-    public string Name { get; }
-    public string GetHelpText();
+    public string DisplayName { get; }
+    public string HelpText { get; }
 }

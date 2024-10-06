@@ -82,7 +82,7 @@ public sealed class GameLoop : Node2D
 
     private void deployPiecesOnBoard(IEnumerable<Piece> pieces, int startRow, int yUp)
     {
-        var sortedPieces = pieces.OrderByDescending(p => p.Value).ThenBy(p => p.Name).ToList();
+        var sortedPieces = pieces.OrderByDescending(p => p.Value).ThenBy(p => p.DisplayName).ToList();
 
         var row = startRow;
         var i = 0;
@@ -151,7 +151,7 @@ public sealed class GameLoop : Node2D
         var moveExecutions = new List<Task>();
         foreach (var move in enemyMoves)
         {
-            move.Piece.NextMove = null;
+            move.Piece.IsPrimed = false;
             if (move.Validate())
             {
                 moveExecutions.Add(move.Execute());

@@ -9,11 +9,8 @@ public abstract class Piece : Node2D, IHelpable
 {
     public delegate void PieceDestroyedEventHandler();
 
-    public Move? NextMove { get; set; }
-
     private AnimatedSprite sprite => GetNode<AnimatedSprite>("AnimatedSprite");
 
-    private bool isHovered;
     private NextMovePreview? nextMovePreview;
     protected int StunnedTurnsLeft { get; private set; }
 
@@ -28,19 +25,20 @@ public abstract class Piece : Node2D, IHelpable
         }
     }
 
+    public bool IsPrimed { get; set; }
     public bool IsStunned { get; private set; }
     public bool IsDead { get; private set; }
 
     public event PieceDestroyedEventHandler? Destroyed;
 
-    public abstract int Value { get; }
 
     public abstract IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board);
 
     public Boombox.SoundEffect MovementEffect { get; protected set; } = Boombox.SoundEffect.Walk;
 
-    public abstract string Name { get; }
-    public abstract string GetHelpText();
+    public abstract string DisplayName { get; }
+    public abstract string HelpText { get; }
+    public abstract int Value { get; }
 
     public virtual MoveOverride? InterruptMove(Move move)
     {
@@ -73,7 +71,7 @@ public abstract class Piece : Node2D, IHelpable
 
     public override void _Process(float delta)
     {
-        if (NextMove is null)
+        if (!IsPrimed)
         {
             sprite.Position = Vector2.Zero;
             return;
@@ -81,11 +79,6 @@ public abstract class Piece : Node2D, IHelpable
 
         var offset = 0.5f + 0.5f * Mathf.Sin(0.03f * OS.GetTicksMsec());
         sprite.Position = offset * Vector2.Right;
-
-        if (isHovered && nextMovePreview is null)
-        {
-            SpawnMovePreview(NextMove);
-        }
     }
 
     public void SpawnMovePreview(Move move)
@@ -104,22 +97,6 @@ public abstract class Piece : Node2D, IHelpable
     public void EndMovePreview()
     {
         if (nextMovePreview is not null)
-        {
-            finishPreviewAnimation();
-        }
-    }
-
-    public void StartHover()
-    {
-        if (isHovered) return;
-        isHovered = true;
-    }
-
-    public void EndHover()
-    {
-        if (!isHovered) return;
-        isHovered = false;
-        if (IsEnemy)
         {
             finishPreviewAnimation();
         }
@@ -147,7 +124,6 @@ public abstract class Piece : Node2D, IHelpable
 
     public void Destroy()
     {
-        if (isHovered) EndHover();
         Global.Services.Get<ShakeCamera>().Shake(7.5f);
         if (Global.Prefabs.CaptureExplosion?.Instance<Node2D>() is { } node)
         {

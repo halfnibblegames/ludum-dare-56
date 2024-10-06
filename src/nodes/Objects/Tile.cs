@@ -44,7 +44,6 @@ public sealed class Tile : Area2D
         }
     }
 
-    private bool isHovered;
     private TileAction actionShown;
     private readonly Dictionary<TileAction, Sprite> actionSprites = new();
 
@@ -59,23 +58,7 @@ public sealed class Tile : Area2D
         }
     }
 
-    private Piece? piece;
-    public Piece? Piece
-    {
-        get => piece;
-        set
-        {
-            if (piece == value) return;
-            if (!isHovered)
-            {
-                piece = value;
-                return;
-            }
-            piece?.EndHover();
-            piece = value;
-            piece?.StartHover();
-        }
-    }
+    public Piece? Piece { get; set; }
 
     public override void _Ready()
     {
@@ -93,9 +76,9 @@ public sealed class Tile : Area2D
         if (@event is InputEventMouseMotion or InputEventScreenTouch)
         {
             cursor.MoveToTile(this);
-            if (piece is not null)
+            if (Piece is not null)
             {
-                Global.Services.Get<HelpService>().ShowHelp(piece);
+                Global.Services.Get<HelpService>().ShowHelp(Piece);
             }
             else
             {
@@ -122,18 +105,6 @@ public sealed class Tile : Area2D
     {
         actionShown = TileAction.None;
         updateAnimation();
-    }
-
-    public void StartHover()
-    {
-        isHovered = true;
-        Piece?.StartHover();
-    }
-
-    public void EndHover()
-    {
-        Piece?.EndHover();
-        isHovered = false;
     }
 
     private void updateAnimation()

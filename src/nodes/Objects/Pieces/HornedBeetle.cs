@@ -9,10 +9,9 @@ public sealed class HornedBeetle : Piece
 {
     public override int Value => 4;
 
-    public override string Name => "Horned Beetle";
+    public override string DisplayName => "Horned Beetle";
 
-    public override string GetHelpText() =>
-        $"* Moves horizontal or vertically.\n* Captures all pieces in their path.\n* {(IsStunned?$"[b]Stunned for the next {StunnedTurnsLeft+1} turns![/b]":"Capturing makes them Stunned for 2 turns.")}";
+    public override string HelpText => $"* Moves horizontal or vertically.\n* Captures all pieces in their path.\n* {(IsStunned ? $"[b]Stunned for the next {StunnedTurnsLeft + 1} turns![/b]" : "Capturing makes them Stunned for 2 turns.")}";
 
     private static readonly Step[] validSteps = { Step.Up, Step.Left, Step.Right, Step.Down };
 
