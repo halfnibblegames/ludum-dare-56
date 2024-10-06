@@ -49,6 +49,9 @@ public sealed class InputHandler
     private void handleTileHover(Board board, Tile tile)
     {
         if (!isActive) return;
+
+        selectedPiece?.EndMovePreview();
+        selectedPiece?.TryShowMovePreview(tile);
     }
 
     private void handleTileClick(Board board, Tile tile)
@@ -83,6 +86,7 @@ public sealed class InputHandler
     private void deselectPiece(Board board)
     {
         board.ResetHighlightedTiles();
+        selectedPiece?.EndMovePreview();
         isSelectionLocked = false;
         selectedPiece = null;
     }
@@ -106,6 +110,20 @@ public sealed class InputHandler
             this.piece = piece;
             this.targetTiles = targetTiles.ToList();
             this.previousMovesInTurn = previousMovesInTurn;
+        }
+
+        public void TryShowMovePreview(Tile target)
+        {
+            var moveCandidate = board.PreviewMove(piece, tile, target, previousMovesInTurn);
+            if (moveCandidate.Validate())
+            {
+                piece.SpawnMovePreview(moveCandidate);
+            }
+        }
+
+        public void EndMovePreview()
+        {
+            piece.EndMovePreview();
         }
 
         public void HighlightTargetTiles()

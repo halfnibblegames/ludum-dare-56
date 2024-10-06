@@ -84,18 +84,28 @@ public abstract class Piece : Node2D, IHelpable
 
         if (isHovered && nextMovePreview is null)
         {
-            previewMove();
+            SpawnMovePreview(NextMove);
         }
     }
 
-    private void previewMove()
+    public void SpawnMovePreview(Move move)
     {
+        EndMovePreview();
+
         var clone = (Piece) Duplicate();
         GetParent().AddChild(clone);
         clone.Modulate = new Color(1, 1, 1, 0.4f);
-        var anim = new MoveAnimation(NextMove!.From.Position, NextMove.To.Position, clone);
+        var anim = new MoveAnimation(move.From.Position, move.To.Position, clone);
         GetParent().AddChild(anim);
         nextMovePreview = new NextMovePreview(clone, anim);
+    }
+
+    public void EndMovePreview()
+    {
+        if (nextMovePreview is not null)
+        {
+            finishPreviewAnimation();
+        }
     }
 
     public void StartHover()
@@ -108,7 +118,10 @@ public abstract class Piece : Node2D, IHelpable
     {
         if (!isHovered) return;
         isHovered = false;
-        finishPreviewAnimation();
+        if (IsEnemy)
+        {
+            finishPreviewAnimation();
+        }
     }
 
     private void finishPreviewAnimation()
