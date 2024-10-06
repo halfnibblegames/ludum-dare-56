@@ -14,13 +14,31 @@ public sealed class Dragonfly : Piece
 
     public override int Value => 5;
 
-    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board) =>
-        Enumerable.Empty<ReachableTile>()
-            .Concat(
-                currentTile.EnumerateDiagonal()
-                    .Where(c => board[c].Piece is null)
-                    .Select(t => t.MoveTo()))
-            .Concat(potentialCaptures(board, currentTile));
+    public override IEnumerable<ReachableTile> ReachableTiles(TileCoord currentTile, Board board)
+    {
+        foreach (var dir in TileCoordExtensions.DiagonalSteps)
+        {
+            var current = currentTile + dir;
+
+            while (current.IsValid() && !ContainsSameColorPiece(board[current]))
+            {
+                var tile = board[current];
+                if (tile.Piece is null)
+                {
+                    yield return current.MoveTo();
+                    current += dir;
+                    continue;
+                }
+
+                var next = current + dir;
+                if (next.IsValid() && board[next].Piece is null)
+                {
+                    yield return next.Capture();
+                }
+                break;
+            }
+        }
+    }
 
     public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {
@@ -31,34 +49,50 @@ public sealed class Dragonfly : Piece
         if (Math.Abs(step.X) != Math.Abs(step.Y)) throw new InvalidOperationException();
 
         var distanceMoved = Math.Abs(step.X);
-
-        switch (distanceMoved)
+        if (distanceMoved <= 1)
         {
-            case 1:
-                return;
-            case 2:
-                var intermediateTileCoord = move.From.Coord + new Step(Math.Sign(step.X), Math.Sign(step.Y));
-                var intermediateTile = move.Board[intermediateTileCoord];
-                sideEffects.CapturePiece(intermediateTile);
-                break;
-            default:
-                throw new InvalidOperationException("Dragonfly did illegal move");
+            return;
         }
+
+        var dir = new Step(Math.Sign(step.X), Math.Sign(step.Y));
+        var lastTile = move.To.Coord - dir;
+        if (move.Board[lastTile].Piece is null)
+        {
+            return;
+        }
+
+        sideEffects.CapturePiece(move.Board[lastTile]);
 
         // See if there are any turn continuations
-        var potentialNewCaptures = potentialCaptures(move.Board, move.To.Coord).ToList();
-        if (potentialNewCaptures.Count > 0)
+        var newMoves = new List<TileCoord>();
+        foreach (var nextDir in TileCoordExtensions.DiagonalSteps)
         {
-            sideEffects.AllowContinuation(potentialNewCaptures);
-        }
-    }
+            // Cannot move backwards
+            if (nextDir == -dir) continue;
 
-    private IEnumerable<ReachableTile> potentialCaptures(Board board, TileCoord from)
-    {
-        return TileCoordExtensions.DiagonalSteps
-            .Where(s => (from + s).IsValid() && (from + 2 * s).IsValid())
-            .Where(s => board[from + s].Piece is { } piece && piece.IsEnemy != IsEnemy)
-            .Select(s => from + 2 * s)
-            .Select(t => t.Capture());
+            var current = move.To.Coord + nextDir;
+
+            while (current.IsValid() && !ContainsSameColorPiece(move.Board[current]))
+            {
+                var tile = move.Board[current];
+                if (tile.Piece is null)
+                {
+                    current += nextDir;
+                    continue;
+                }
+
+                var next = current + nextDir;
+                if (next.IsValid() && move.Board[next].Piece is null)
+                {
+                    newMoves.Add(next);
+                }
+                break;
+            }
+        }
+
+        if (newMoves.Count > 0)
+        {
+            sideEffects.AllowContinuation(newMoves.Select(t => t.Capture()).ToList());
+        }
     }
 }

@@ -15,11 +15,11 @@ public sealed class GameLoop : Node2D
     private static readonly Func<List<PackedScene>> pieceTypesFactory = () =>
         new List<PackedScene>
         {
-            Global.Prefabs.Ant!,
+            // Global.Prefabs.Ant!,
             Global.Prefabs.Dragonfly!,
-            Global.Prefabs.Grasshopper!,
-            Global.Prefabs.HornedBeetle!,
-            Global.Prefabs.PrayingMantis!
+            // Global.Prefabs.Grasshopper!,
+            // Global.Prefabs.HornedBeetle!,
+            // Global.Prefabs.PrayingMantis!
         };
 
     private readonly Random random;

@@ -25,6 +25,7 @@ public readonly struct TileCoord : IEquatable<TileCoord>
     public static bool operator !=(TileCoord left, TileCoord right) => !left.Equals(right);
 
     public static TileCoord operator +(TileCoord coord, Step step) => new(coord.X + step.X, coord.Y + step.Y);
+    public static TileCoord operator -(TileCoord coord, Step step) => new(coord.X - step.X, coord.Y - step.Y);
     public static Step operator -(TileCoord left, TileCoord right) => new(left.X - right.X, left.Y - right.Y);
 
     public int Manhattan(TileCoord other) => Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
