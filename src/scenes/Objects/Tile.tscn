@@ -57,7 +57,7 @@ animation = "Light"
 centered = false
 __meta__ = {
 "_aseprite_wizard_config_": {
-"layer": "",
+"layer": "Tiles",
 "o_ex_p": "",
 "o_folder": "res://assets",
 "o_name": "",

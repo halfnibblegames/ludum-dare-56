@@ -7,11 +7,11 @@ load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = SubResource( 1 )
-region = Rect2( 85, 0, 19, 20 )
+region = Rect2( 84, 0, 16, 19 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = SubResource( 1 )
-region = Rect2( 19, 0, 19, 20 )
+region = Rect2( 18, 0, 16, 19 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
@@ -34,7 +34,7 @@ frames = SubResource( 4 )
 animation = "Light"
 __meta__ = {
 "_aseprite_wizard_config_": {
-"layer": "",
+"layer": "bugs",
 "o_ex_p": "",
 "o_folder": "res://assets",
 "o_name": "",

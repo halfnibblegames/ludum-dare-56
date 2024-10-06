@@ -7,11 +7,11 @@ load_path = "res://.import/bugs.png-76600cefe968c781ce753eb78a2671c2.stex"
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = SubResource( 1 )
-region = Rect2( 66, 18, 19, 16 )
+region = Rect2( 66, 18, 15, 13 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = SubResource( 1 )
-region = Rect2( 0, 18, 19, 16 )
+region = Rect2( 0, 18, 15, 13 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
