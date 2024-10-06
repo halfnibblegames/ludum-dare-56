@@ -79,7 +79,6 @@ sealed class EnemyBrain
 
             yield return candidateMove.Move;
             occupiedTiles.Add(candidateMove.Move.To.Coord);
-            piece.Piece.IsPrimed = true;
 
             pieceLimit--;
             if (pieceLimit == 0) break;

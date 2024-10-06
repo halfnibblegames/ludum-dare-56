@@ -183,7 +183,12 @@ public sealed class GameLoop : Node2D
 
     private void determineEnemyMove()
     {
-        enemyMoves.AddRange(enemyBrain.PlanMoves());
+        var plannedMoves = enemyBrain.PlanMoves().ToList();
+        enemyMoves.AddRange(plannedMoves);
+        foreach (var m in plannedMoves)
+        {
+            m.Piece.IsPrimed = true;
+        }
     }
 
     private enum GameLoopState
