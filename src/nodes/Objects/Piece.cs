@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
@@ -87,11 +88,19 @@ public abstract class Piece : Node2D, IHelpable
 
         var clone = (Piece) Duplicate();
         clone.ZIndex += 2;
-        GetParent().AddChild(clone);
         clone.Modulate = new Color(1, 1, 1, 0.4f);
         var anim = new MoveAnimation(move.From.Position, move.To.Position, clone);
-        GetParent().AddChild(anim);
         nextMovePreview = new NextMovePreview(clone, anim);
+        _ = startMovePreviewDelayed(nextMovePreview);
+    }
+
+    private async Task startMovePreviewDelayed(NextMovePreview expectedPreview)
+    {
+        await Task.Delay(200);
+
+        if (expectedPreview != nextMovePreview) return;
+        GetParent().AddChild(nextMovePreview.Piece);
+        GetParent().AddChild(nextMovePreview.Animation);
     }
 
     public void EndMovePreview()
