@@ -113,7 +113,7 @@ sealed class EnemyBrain
             var wasThreatened = threatenedTiles.Contains(Move.From.Coord) ? 1 : 0;
             var isThreatened = threatenedTiles.Contains(Move.To.Coord) ? 1 : 0;
 
-            return (wasThreatened - isThreatened) * Move.Piece.Value;
+            return (wasThreatened - isThreatened) * Move.Piece.Value * (1 + Result.StunTime);
         }
 
         private int distanceToQueenImprovement(TileCoord queenBeePos)

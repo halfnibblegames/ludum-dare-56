@@ -14,6 +14,7 @@ public abstract class Piece : Node2D
 
     private bool isHovered;
     private NextMovePreview? nextMovePreview;
+    private int stunnedTurnsLeft;
 
     private bool isEnemy;
     public bool IsEnemy
@@ -26,7 +27,7 @@ public abstract class Piece : Node2D
         }
     }
 
-    public bool IsStunned { get; protected set; }
+    public bool IsStunned { get; private set; }
     public bool IsDead { get; private set; }
 
     public event PieceDestroyedEventHandler? Destroyed;
@@ -48,7 +49,17 @@ public abstract class Piece : Node2D
         }
     }
 
-    public virtual void OnTurnStart() { }
+    public void OnTurnStart()
+    {
+        if (stunnedTurnsLeft == 0)
+        {
+            IsStunned = false;
+        }
+        else
+        {
+            stunnedTurnsLeft--;
+        }
+    }
 
     public override void _Process(float delta)
     {
@@ -102,6 +113,12 @@ public abstract class Piece : Node2D
             nextMovePreview.Animation.QueueFree();
         }
         nextMovePreview = null;
+    }
+
+    public void Stun(int stunnedTurns)
+    {
+        stunnedTurnsLeft = stunnedTurns;
+        IsStunned = true;
     }
 
     public void Destroy()

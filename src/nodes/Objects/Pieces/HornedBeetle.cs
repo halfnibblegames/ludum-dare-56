@@ -9,8 +9,6 @@ public sealed class HornedBeetle : Piece
 {
     public override int Value => 4;
 
-    private int stunnedTurnsLeft;
-
     private static readonly Step[] validSteps = { Step.Up, Step.Left, Step.Right, Step.Down };
 
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>
@@ -37,20 +35,7 @@ public sealed class HornedBeetle : Piece
 
         if (captured)
         {
-            stunnedTurnsLeft = 2;
-            IsStunned = true;
-        }
-    }
-
-    public override void OnTurnStart()
-    {
-        if (stunnedTurnsLeft == 0)
-        {
-            IsStunned = false;
-        }
-        else
-        {
-            stunnedTurnsLeft--;
+            sideEffects.Stun(2);
         }
     }
 }
