@@ -26,6 +26,11 @@ public abstract class Piece : Node2D
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 
+    public virtual bool InterruptMove(Move move, MoveSideEffects sideEffects)
+    {
+        return false;
+    }
+
     public virtual void OnMove(Move move, MoveSideEffects sideEffects)
     {
         if (move.To.Piece is { } piece && piece.IsEnemy != IsEnemy)

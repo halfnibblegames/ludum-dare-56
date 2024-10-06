@@ -9,7 +9,7 @@ public static class TileCoordExtensions
         { Step.Right, Step.Up, Step.Left, Step.Down };
     public static readonly Step[] DiagonalSteps =
         { Step.UpRight, Step.UpLeft, Step.DownLeft, Step.DownRight };
-    private static readonly Step[] ccwSteps =
+    public static readonly Step[] Steps =
         { Step.Right, Step.UpRight, Step.Up, Step.UpLeft, Step.Left, Step.DownLeft, Step.Down, Step.DownRight };
 
     public static IEnumerable<TileCoord> WhereValid(this IEnumerable<TileCoord> coords) =>
