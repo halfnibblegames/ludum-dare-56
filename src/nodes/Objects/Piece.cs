@@ -4,7 +4,7 @@ using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
 
-public abstract class Piece : Node2D
+public abstract class Piece : Node2D, IHelpable
 {
     public delegate void PieceDestroyedEventHandler();
 
@@ -35,6 +35,9 @@ public abstract class Piece : Node2D
     public abstract int Value { get; }
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
+
+    public abstract string Name { get; }
+    public abstract string HelpText { get; }
 
     public virtual MoveOverride? InterruptMove(Move move)
     {

@@ -1,5 +1,7 @@
 ﻿using System;
 using Godot;
+using HalfNibbleGame.Autoload;
+using HalfNibbleGame.Systems;
 using Object = Godot.Object;
 
 namespace HalfNibbleGame.Objects;
@@ -89,6 +91,14 @@ public sealed class Tile : Area2D
         if (@event is InputEventMouseMotion)
         {
             cursor.MoveToTile(this);
+            if (piece is not null)
+            {
+                Global.Services.Get<HelpService>().ShowHelp(piece);
+            }
+            else
+            {
+                Global.Services.Get<HelpService>().ClearHelp();
+            }
         }
 
         if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: 1 })

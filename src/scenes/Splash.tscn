@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/goofy_ahh_bite.mp3" type="AudioStream" id=1]
 [ext_resource path="res://nodes/Splash.cs" type="Script" id=2]
-[ext_resource path="res://assets/Monocons.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/monogram.tres" type="DynamicFont" id=3]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/strawberry_bite.png-2cc8704db917175623d7366ba3758927.stex"

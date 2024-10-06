@@ -8,6 +8,8 @@ namespace HalfNibbleGame.Objects.Pieces;
 
 public sealed class PrayingMantis : Piece
 {
+    public override string Name => "Praying Mantis";
+    public override string HelpText => "* Moves up to one neighbor space.\n* Captures by swiping three tiles at once.\n* Kind of a bully.";
     public override int Value => 3;
 
     public override IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board) =>

@@ -15,4 +15,7 @@ public sealed class Ant : Piece
             .Concat(
                 currentTile.EnumerateDiagonal().Where(t => board[t].Piece is { IsEnemy: true }));
     }
+
+    public override string Name => "Ant";
+    public override string HelpText => "* Moves up to one adjacent space.\n* Can only capture diagonally.\n* Lifts heavy weights to suppress the voices in their head.";
 }
