@@ -78,11 +78,13 @@ public abstract class Piece : Node2D
 
     public void StartHover()
     {
+        if (isHovered) return;
         isHovered = true;
     }
 
     public void EndHover()
     {
+        if (!isHovered) return;
         isHovered = false;
         finishPreviewAnimation();
     }
