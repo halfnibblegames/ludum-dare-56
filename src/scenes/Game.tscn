@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/World.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/NoJamChunky.tres" type="DynamicFont" id=2]
 [ext_resource path="res://nodes/Chronometer.cs" type="Script" id=3]
 [ext_resource path="res://assets/side_panel.png" type="Texture" id=4]
 [ext_resource path="res://assets/PIxeloids.tres" type="DynamicFont" id=5]
-[ext_resource path="res://scenes/Controls/MasterVolumeSlider.tscn" type="PackedScene" id=6]
 
 [node name="Node2D" type="Node2D"]
 
@@ -42,10 +41,24 @@ patch_margin_right = 2
 patch_margin_bottom = 2
 
 [node name="Label" type="Label" parent="ViewportContainer/UI/LeftPanel"]
-margin_left = 3.0
-margin_right = 63.0
-margin_bottom = 14.0
+margin_left = 5.25
+margin_top = 5.0
+margin_right = 65.25
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
 custom_fonts/font = ExtResource( 2 )
+text = "Captures
+Pieces"
+
+[node name="Label2" type="Label" parent="ViewportContainer/UI/LeftPanel"]
+margin_left = 5.25
+margin_top = 72.5
+margin_right = 65.25
+margin_bottom = 91.5
+rect_pivot_offset = Vector2( 33.75, 14 )
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Objectives"
 
 [node name="RightPanel" type="NinePatchRect" parent="ViewportContainer/UI"]
 anchor_left = 1.0
@@ -61,6 +74,24 @@ patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
 
+[node name="Label2" type="Label" parent="ViewportContainer/UI/RightPanel"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 65.0
+margin_bottom = 13.0
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Abilities"
+
+[node name="Label3" type="Label" parent="ViewportContainer/UI/RightPanel"]
+margin_left = 6.75
+margin_top = 68.0
+margin_right = 66.75
+margin_bottom = 77.0
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Help"
+
 [node name="Chronometer" type="Label" parent="ViewportContainer/UI"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -75,11 +106,3 @@ text = "00:00"
 align = 2
 valign = 1
 script = ExtResource( 3 )
-
-[node name="VolumeController" parent="." instance=ExtResource( 6 )]
-margin_left = 50.0
-margin_top = 33.0
-margin_right = 157.0
-margin_bottom = 49.0
-rect_scale = Vector2( 2, 2 )
-size_flags_stretch_ratio = 2.0
