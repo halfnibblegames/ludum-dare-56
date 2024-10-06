@@ -52,8 +52,6 @@ public sealed class Board : Node2D
                 tile.Color = (TileColor) ((x + y) % 2);
                 tile.Coord = new TileCoord(x, y);
                 tiles[toIndex(x, y)] = tile;
-
-                tile.Clicked += () => input.HandleTileClick(this, tile);
             }
         }
     }

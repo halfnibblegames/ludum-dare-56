@@ -9,7 +9,6 @@ namespace HalfNibbleGame.Objects;
 public sealed class Tile : Area2D
 {
     private readonly Vector2 origin = 0.5f * size + (Board.Height - 1) * size.y * Vector2.Down;
-    public delegate void TileClickedEventHandler();
 
     private const float width = 16;
     private const float height = 16;
@@ -76,18 +75,15 @@ public sealed class Tile : Area2D
         }
     }
 
-    private Cursor cursor = default!;
-
-    public event TileClickedEventHandler? Clicked;
-
     public override void _Ready()
     {
         updateAnimation();
-        cursor = GetParent<Board>().GetNode<Cursor>("Cursor");
     }
 
     public override void _InputEvent(Object viewport, InputEvent @event, int shapeIdx)
     {
+        var cursor = Global.Services.Get<Cursor>();
+
         if (@event is InputEventMouseMotion)
         {
             cursor.MoveToTile(this);
@@ -104,7 +100,6 @@ public sealed class Tile : Area2D
         if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: 1 })
         {
             cursor.Confirm();
-            Clicked?.Invoke();
         }
     }
 

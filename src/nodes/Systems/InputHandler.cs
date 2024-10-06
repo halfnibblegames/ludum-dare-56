@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
@@ -8,6 +9,7 @@ public sealed class InputHandler
 {
     private readonly GameLoop gameLoop;
 
+    private Cursor? cursor;
     private SelectedPiece? selectedPiece;
     private bool isSelectionLocked;
     private bool isActive;
@@ -20,11 +22,20 @@ public sealed class InputHandler
     public void Activate()
     {
         isActive = true;
+        if (cursor is null)
+        {
+            cursor = Global.Services.Get<Cursor>();
+            cursor.TileHovered += handleTileHover;
+            cursor.TileClicked += handleTileClick;
+        }
+
+        cursor.Activate();
     }
 
     public void Deactivate()
     {
         isActive = false;
+        cursor?.Deactivate();
     }
 
     public void SetContinuation(Board board, MoveContinuation continuation)
@@ -35,7 +46,12 @@ public sealed class InputHandler
         isSelectionLocked = true;
     }
 
-    public void HandleTileClick(Board board, Tile tile)
+    private void handleTileHover(Board board, Tile tile)
+    {
+        if (!isActive) return;
+    }
+
+    private void handleTileClick(Board board, Tile tile)
     {
         if (!isActive) return;
 

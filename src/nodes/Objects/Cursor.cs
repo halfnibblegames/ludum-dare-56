@@ -6,22 +6,43 @@ namespace HalfNibbleGame.Objects;
 
 sealed class Cursor : AnimatedSprite
 {
+    public delegate void TileEventHandler(Board board, Tile tile);
+
     private const float transitionDuration = 0.05f;
+
+    private Board board = null!;
 
     private Vector2 startPos;
     private float timeSinceStart;
     private Tile? targetTile;
 
+    public event TileEventHandler? TileClicked;
+    public event TileEventHandler? TileHovered;
+
     public override void _Ready()
     {
+        Global.Services.ProvideInScene(this);
         Play("Highlight");
+        board = GetParent<Board>();
+    }
+
+    public void Activate()
+    {
+        if (targetTile != null)
+        {
+            startPos = targetTile.Position;
+        }
+        Visible = true;
+    }
+
+    public void Deactivate()
+    {
+        Visible = false;
     }
 
     public void MoveToTile(Tile tile)
     {
         if (tile == targetTile) return;
-
-        Visible = true;
 
         if (targetTile != null)
         {
@@ -36,11 +57,15 @@ sealed class Cursor : AnimatedSprite
         targetTile = tile;
         timeSinceStart = 0;
         tile.StartHover();
+        TileHovered?.Invoke(board, tile);
     }
 
     public void Confirm()
     {
+        if (targetTile is null) return;
+
         Play("Confirm");
+        TileClicked?.Invoke(board, targetTile);
 
         if (targetTile?.Piece is { IsEnemy: false })
         {
