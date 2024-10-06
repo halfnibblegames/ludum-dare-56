@@ -56,7 +56,6 @@ visible = false
 z_index = 5
 frames = SubResource( 8 )
 animation = "Highlight"
-frame = 6
 playing = true
 script = ExtResource( 2 )
 __meta__ = {

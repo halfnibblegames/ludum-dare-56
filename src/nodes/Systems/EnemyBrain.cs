@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using HalfNibbleGame.Objects;
+using HalfNibbleGame.Objects.Pieces;
 
 namespace HalfNibbleGame.Systems;
 
 sealed class EnemyBrain
 {
+    // Heuristic weights
+    private const int captureWeight = 100;
+    private const int threatenedWeight = 40;
+    private const int approachQueenWeight = 1;
+
     private readonly Board board;
     private readonly Random random;
 
@@ -21,18 +27,21 @@ sealed class EnemyBrain
         var pieces = enumeratePieces().ToList();
         if (pieces.Count == 0) yield break;
 
+        var ctx = makeContext();
+
         var bestMovePerPiece = pieces.ToDictionary(
             piece => piece,
             piece =>
             {
                 var moves = enumerateMoves(piece);
-                var bestMove = moves.OrderByDescending(m => m.HeuristicScore).FirstOrDefault();
+                var bestMove =
+                    moves.OrderByDescending(m => m.HeuristicScore(ctx)).FirstOrDefault();
                 return bestMove;
             });
 
         var orderedPieces = pieces
             .Where(p => bestMovePerPiece[p] is not null)
-            .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore)
+            .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore(ctx))
             .ToList();
 
         // 25% chance of moving two pieces.
@@ -53,6 +62,19 @@ sealed class EnemyBrain
             numberOfPieces--;
             if (numberOfPieces == 0) break;
         }
+    }
+
+    private MoveContext makeContext()
+    {
+        var queenBeePos = board.Tiles
+                .FirstOrDefault(t => t.Piece is QueenBee { IsEnemy: false })?.Coord ??
+            new TileCoord(4, 0); // Default to the bottom center
+        var threatenedTiles = board.Tiles
+            .Where(t => t.Piece is { IsEnemy: false })
+            .SelectMany(t => t.Piece!.ReachableTiles(t.Coord, board))
+            .ToHashSet();
+
+        return new MoveContext(queenBeePos, threatenedTiles);
     }
 
     private IEnumerable<PlacedPiece> enumeratePieces()
@@ -81,6 +103,27 @@ sealed class EnemyBrain
 
     private sealed record MoveCandidate(Move Move, IMoveResult Result)
     {
-        public int HeuristicScore => Result.PiecesCaptured.Sum(p => p.Value);
+        public int HeuristicScore(MoveContext context) =>
+            captureWeight * Result.PiecesCaptured.Sum(p => p.Value) +
+            threatenedWeight * threatenedOccupationImprovement(context.ThreatenedTiles) +
+            approachQueenWeight * distanceToQueenImprovement(context.QueenBeePos);
+
+        private int threatenedOccupationImprovement(HashSet<TileCoord> threatenedTiles)
+        {
+            var wasThreatened = threatenedTiles.Contains(Move.From.Coord) ? 1 : 0;
+            var isThreatened = threatenedTiles.Contains(Move.To.Coord) ? 1 : 0;
+
+            return (wasThreatened - isThreatened) * Move.Piece.Value;
+        }
+
+        private int distanceToQueenImprovement(TileCoord queenBeePos)
+        {
+            var oldDistance = queenBeePos.Manhattan(Move.From.Coord);
+            var newDistance = queenBeePos.Manhattan(Move.To.Coord);
+
+            return oldDistance - newDistance;
+        }
     }
+
+    private sealed record MoveContext(TileCoord QueenBeePos, HashSet<TileCoord> ThreatenedTiles);
 }
