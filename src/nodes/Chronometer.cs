@@ -1,6 +1,10 @@
-using Godot;
 using System;
+using Godot;
+using JetBrains.Annotations;
 
+namespace HalfNibbleGame;
+
+[UsedImplicitly]
 public sealed class Chronometer : Label
 {
     private TimeSpan elapsedTime = TimeSpan.Zero;
