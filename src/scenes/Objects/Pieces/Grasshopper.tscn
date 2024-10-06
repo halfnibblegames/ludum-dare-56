@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://nodes/Objects/Pieces/Grasshopper.cs" type="Script" id=1]
 
@@ -26,6 +26,60 @@ animations = [ {
 "speed": 10.0
 } ]
 
+[sub_resource type="StreamTexture" id=5]
+load_path = "res://.import/swipe_up_down.png-60a246d9d0768b01057b3f2fe0135ef2.stex"
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = SubResource( 5 )
+region = Rect2( 0, 0, 52, 25 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = SubResource( 5 )
+region = Rect2( 52, 0, 52, 25 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = SubResource( 5 )
+region = Rect2( 0, 25, 52, 25 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = SubResource( 5 )
+region = Rect2( 52, 25, 52, 25 )
+
+[sub_resource type="SpriteFrames" id=10]
+animations = [ {
+"frames": [ SubResource( 6 ), SubResource( 7 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ],
+"loop": true,
+"name": "default",
+"speed": 17.0
+} ]
+
+[sub_resource type="StreamTexture" id=11]
+load_path = "res://.import/swipe_diagonal.png-1c70065e1c9c548afbb4e53ac67599c6.stex"
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = SubResource( 11 )
+region = Rect2( 0, 0, 46, 25 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = SubResource( 11 )
+region = Rect2( 46, 0, 46, 25 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = SubResource( 11 )
+region = Rect2( 0, 25, 46, 25 )
+
+[sub_resource type="AtlasTexture" id=15]
+atlas = SubResource( 11 )
+region = Rect2( 46, 25, 46, 25 )
+
+[sub_resource type="SpriteFrames" id=16]
+animations = [ {
+"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ) ],
+"loop": true,
+"name": "default",
+"speed": 17.0
+} ]
+
 [node name="Grasshopper" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -42,5 +96,41 @@ __meta__ = {
 "op_exp": false,
 "slice": "grasshopper",
 "source": "res://assets/bugs.aseprite"
+}
+}
+
+[node name="AnimationRoot" type="Node2D" parent="."]
+
+[node name="HorizontalSwipe" type="AnimatedSprite" parent="AnimationRoot"]
+rotation = 1.5708
+frames = SubResource( 10 )
+frame = 4
+offset = Vector2( 0, -20 )
+__meta__ = {
+"_aseprite_wizard_config_": {
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"slice": "",
+"source": "res://assets/swipe_up_down.aseprite"
+}
+}
+
+[node name="DiagonalSwipe" type="AnimatedSprite" parent="AnimationRoot"]
+frames = SubResource( 16 )
+offset = Vector2( 20, -20 )
+__meta__ = {
+"_aseprite_wizard_config_": {
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"slice": "",
+"source": "res://assets/swipe_diagonal.aseprite"
 }
 }
