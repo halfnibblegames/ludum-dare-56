@@ -23,7 +23,6 @@ sealed class OneOffParticleEffect : Node2D
         if (timePassed >= Duration)
         {
             QueueFree();
-            GD.Print("bye");
         }
     }
 }

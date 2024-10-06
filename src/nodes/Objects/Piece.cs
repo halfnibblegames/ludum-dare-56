@@ -139,11 +139,6 @@ public abstract class Piece : Node2D, IHelpable
         {
             node.Position = Position;
             GetParent().AddChild(node);
-            GD.Print("yush");
-        }
-        else
-        {
-            GD.Print("yikes");
         }
         Global.Services.Get<Boombox>().Play(Boombox.SoundEffect.Capture);
         QueueFree();
