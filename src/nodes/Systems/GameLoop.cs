@@ -52,6 +52,7 @@ public sealed class GameLoop : Node2D
 
     private void startGame()
     {
+        board.Reset();
         deployPieces();
         startTurn();
     }
@@ -233,6 +234,7 @@ public sealed class GameLoop : Node2D
 
     private enum GameLoopState
     {
+        Opening,
         AwaitingInput,
         PlayerMove,
         EnemyMove,

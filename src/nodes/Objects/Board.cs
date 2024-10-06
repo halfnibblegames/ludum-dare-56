@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
@@ -30,7 +31,6 @@ public sealed class Board : Node2D
     public override void _Ready()
     {
         GetNode("EditorRect").QueueFree();
-        setUp();
     }
 
     public void Reset()
@@ -76,6 +76,9 @@ public sealed class Board : Node2D
                 tiles[toIndex(x, y)] = tile;
             }
         }
+
+        var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7);
+        AddChild(anim);
     }
 
     public void AddPiece(Piece piece, TileCoord tileCoord)
