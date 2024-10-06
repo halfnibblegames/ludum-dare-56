@@ -10,7 +10,7 @@ public sealed class Grasshopper : Piece
         currentTile.EnumerateKnightMoves()
             .Where(c => !ContainsSameColorPiece(board[c]));
 
-    public override void OnMove(Move move, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {
         base.OnMove(move, sideEffects);
         if (move.PreviousMovesInTurn == 0)

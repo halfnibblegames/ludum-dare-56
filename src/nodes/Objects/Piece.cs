@@ -34,12 +34,12 @@ public abstract class Piece : Node2D
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 
-    public virtual Task<MoveContinuation?>? InterruptMove(Move move, MoveSideEffects sideEffects)
+    public virtual MoveOverride? InterruptMove(Move move)
     {
         return null;
     }
 
-    public virtual void OnMove(Move move, MoveSideEffects sideEffects)
+    public virtual void OnMove(Move move, IMoveSideEffects sideEffects)
     {
         if (move.To.Piece is { } piece && piece.IsEnemy != IsEnemy)
         {

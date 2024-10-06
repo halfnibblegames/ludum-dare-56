@@ -13,7 +13,7 @@ public sealed class Dragonfly : Piece
                 currentTile.EnumerateDiagonal().Where(c => board[c].Piece is null))
             .Concat(potentialCaptures(board, currentTile));
 
-    public override void OnMove(Move move, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {
         base.OnMove(move, sideEffects);
         var step = move.To.Coord - move.From.Coord;

@@ -16,7 +16,7 @@ public sealed class HornedBeetle : Piece
             currentTile.EnumerateDirection(step)
                 .TakeWhile(c => !ContainsSameColorPiece(board[c])));
 
-    public override void OnMove(Move move, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {
         var diff = move.To.Coord - move.From.Coord;
         var singleStep = new Step(Math.Sign(diff.X), Math.Sign(diff.Y));

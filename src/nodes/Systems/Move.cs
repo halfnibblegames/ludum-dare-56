@@ -30,9 +30,11 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
     {
         var sideEffects = new MoveSideEffects(this);
 
-        if (Piece.InterruptMove(this, sideEffects) is { } task)
+        if (Piece.InterruptMove(this) is { } moveOverride)
         {
-            return await task;
+            await moveOverride.Animation;
+            moveOverride.Execute(this, sideEffects);
+            return sideEffects.Continuation;
         }
 
         var anim = new MoveAnimation(From.Position, To.Position, Piece);
@@ -44,6 +46,19 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
         doLogic(sideEffects);
         return sideEffects.Continuation;
+    }
+
+    public IMoveResult Preview()
+    {
+        var sideEffects = new MoveSideEffectsPreview(this);
+        if (Piece.InterruptMove(this) is { } moveOverride)
+        {
+            moveOverride.Execute(this, sideEffects);
+            return sideEffects;
+        }
+
+        Piece.OnMove(this, sideEffects);
+        return sideEffects;
     }
 
     private void doLogic(MoveSideEffects sideEffects)

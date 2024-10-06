@@ -12,7 +12,7 @@ public sealed class PrayingMantis : Piece
         currentTile.EnumerateAdjacent()
             .Where(c => !ContainsSameColorPiece(board[c]));
 
-    public override Task<MoveContinuation?>? InterruptMove(Move move, MoveSideEffects sideEffects)
+    public override MoveOverride? InterruptMove(Move move)
     {
         if (move.To.Piece is null)
         {
@@ -29,20 +29,21 @@ public sealed class PrayingMantis : Piece
         var nextTile = move.Board[move.From.Coord + nextStep];
         var prevTile = move.Board[move.From.Coord + prevStep];
 
-        foreach (var tile in new[] { move.To, nextTile, prevTile })
+        return new MoveOverride(Task.CompletedTask, execute);
+
+        void execute(Move m, IMoveSideEffects sideEffects)
         {
-            if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
+            foreach (var tile in new[] { m.To, nextTile, prevTile })
             {
-                sideEffects.CapturePiece(tile);
+                if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
+                {
+                    sideEffects.CapturePiece(tile);
+                }
             }
         }
-
-        // TODO: play animation
-
-        return Task.FromResult<MoveContinuation?>(null);
     }
 
-    public override void OnMove(Move move, MoveSideEffects sideEffects)
+    public override void OnMove(Move move, IMoveSideEffects sideEffects)
     {
         sideEffects.Ripple(move.Board, move.To, 2);
     }
