@@ -9,7 +9,6 @@ public interface IMoveSideEffects
 {
     void CapturePiece(Tile tile);
     void Stun(int turnCount);
-    void Ripple(Board board, Tile origin, int rippleRadius);
     void AllowContinuation(List<ReachableTile> continuationTiles);
     void PlaySound(Boombox.SoundEffect soundEffect);
 }
@@ -36,7 +35,6 @@ public abstract class MoveSideSideEffectsBase : IMoveSideEffects
 
     public abstract void Stun(int turnCount);
 
-    public abstract void Ripple(Board board, Tile origin, int rippleRadius);
     public abstract void PlaySound(Boombox.SoundEffect soundEffect);
 
     public void AllowContinuation(List<ReachableTile> continuationTiles)
@@ -61,11 +59,6 @@ public sealed class MoveSideEffects : MoveSideSideEffectsBase
     public override void Stun(int turnCount)
     {
         Move.Piece.Stun(turnCount);
-    }
-
-    public override void Ripple(Board board, Tile origin, int rippleRadius)
-    {
-        origin.AddChild(new BoardRippleAnimation(board, origin, rippleRadius));
     }
 
     public override void PlaySound(Boombox.SoundEffect soundEffect)
@@ -97,6 +90,5 @@ sealed class MoveSideEffectsPreview : MoveSideSideEffectsBase, IMoveResult
         StunTime = turnCount;
     }
 
-    public override void Ripple(Board board, Tile origin, int rippleRadius) { }
     public override void PlaySound(Boombox.SoundEffect soundEffect) { }
 }
