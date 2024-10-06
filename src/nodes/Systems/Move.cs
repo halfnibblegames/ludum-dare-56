@@ -42,6 +42,10 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
         var signal = Piece.ToSignal(anim, nameof(MoveAnimation.Finished));
         Piece.AddChild(anim);
 
+        if (!Piece.IsEnemy)
+        {
+            sideEffects.PlaySound(Piece.MovementEffect);
+        }
         await signal;
 
         doLogic(sideEffects);

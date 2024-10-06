@@ -1,4 +1,5 @@
 ﻿using Godot;
+using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
@@ -35,6 +36,11 @@ sealed class Cursor : AnimatedSprite
     public void Confirm()
     {
         Play("Confirm");
+
+        if (targetTile?.Piece is { IsEnemy: false })
+        {
+            Global.Services.Get<Boombox>().Play(Boombox.SoundEffect.Select);
+        }
     }
 
     public override void _Process(float delta)

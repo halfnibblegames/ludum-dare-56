@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Godot;
+using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
@@ -35,6 +36,8 @@ public abstract class Piece : Node2D, IHelpable
     public abstract int Value { get; }
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
+
+    public Boombox.SoundEffect MovementEffect { get; protected set; } = Boombox.SoundEffect.Walk;
 
     public abstract string Name { get; }
     public abstract string HelpText { get; }
@@ -127,6 +130,7 @@ public abstract class Piece : Node2D, IHelpable
     public void Destroy()
     {
         if (isHovered) EndHover();
+        Global.Services.Get<Boombox>().Play(Boombox.SoundEffect.Capture);
         QueueFree();
         Destroyed?.Invoke();
         IsDead = true;

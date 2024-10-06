@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/World.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/NoJamChunky.tres" type="DynamicFont" id=2]
@@ -8,6 +8,11 @@
 [ext_resource path="res://assets/monogram_title.tres" type="DynamicFont" id=6]
 [ext_resource path="res://assets/monogram.tres" type="DynamicFont" id=7]
 [ext_resource path="res://nodes/Systems/HelpService.cs" type="Script" id=8]
+[ext_resource path="res://assets/select-2.wav" type="AudioStream" id=9]
+[ext_resource path="res://nodes/Boombox.cs" type="Script" id=10]
+[ext_resource path="res://assets/jump.wav" type="AudioStream" id=11]
+[ext_resource path="res://assets/death.wav" type="AudioStream" id=12]
+[ext_resource path="res://assets/swipe.wav" type="AudioStream" id=13]
 
 [node name="Node2D" type="Node2D"]
 
@@ -161,3 +166,21 @@ text = "Praying Mantis"
 
 [node name="HelpService" type="Node" parent="."]
 script = ExtResource( 8 )
+
+[node name="Boombox" type="Node" parent="."]
+script = ExtResource( 10 )
+
+[node name="Select" type="AudioStreamPlayer" parent="Boombox"]
+stream = ExtResource( 9 )
+volume_db = -31.69
+
+[node name="Capture" type="AudioStreamPlayer" parent="Boombox"]
+stream = ExtResource( 12 )
+volume_db = -30.0
+
+[node name="Swipe" type="AudioStreamPlayer" parent="Boombox"]
+stream = ExtResource( 13 )
+
+[node name="Walk" type="AudioStreamPlayer" parent="Boombox"]
+stream = ExtResource( 11 )
+volume_db = -10.0
