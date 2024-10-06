@@ -96,7 +96,7 @@ public abstract class Piece : Node2D, IHelpable
 
     private async Task startMovePreviewDelayed(NextMovePreview expectedPreview)
     {
-        await Task.Delay(200);
+        await Task.Delay(150);
 
         if (expectedPreview != nextMovePreview) return;
         GetParent().AddChild(nextMovePreview.Piece);
