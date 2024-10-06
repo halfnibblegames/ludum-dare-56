@@ -103,6 +103,7 @@ public abstract class Piece : Node2D
 
     public void Destroy()
     {
+        if (isHovered) EndHover();
         QueueFree();
         Destroyed?.Invoke();
         IsDead = true;
