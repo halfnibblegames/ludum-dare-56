@@ -50,8 +50,22 @@ public sealed class InputHandler
     {
         if (!isActive) return;
 
-        selectedPiece?.EndMovePreview();
-        selectedPiece?.TryShowMovePreview(tile);
+        if (selectedPiece is not null)
+        {
+            selectedPiece.EndMovePreview();
+            selectedPiece.TryShowMovePreview(tile);
+        }
+        else
+        {
+            board.ResetHighlightedTiles();
+            if (tile.Piece is { } piece)
+            {
+                foreach (var t in piece.ReachableTiles(tile.Coord, board))
+                {
+                    board[t.Coord].ShowAction(t.Action);
+                }
+            }
+        }
     }
 
     private void handleTileClick(Board board, Tile tile)
