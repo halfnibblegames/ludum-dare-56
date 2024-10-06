@@ -14,6 +14,7 @@ public abstract class Piece : Node2D
     private AnimatedSprite sprite => GetNode<AnimatedSprite>("AnimatedSprite");
 
     private bool isHovered;
+    private NextMovePreview? nextMovePreview;
 
     private bool isEnemy;
     public bool IsEnemy
@@ -58,6 +59,21 @@ public abstract class Piece : Node2D
 
         var offset = 0.5f + 0.5f * Mathf.Sin(0.03f * OS.GetTicksMsec());
         sprite.Position = offset * Vector2.Right;
+
+        if (isHovered && nextMovePreview is null)
+        {
+            previewMove();
+        }
+    }
+
+    private void previewMove()
+    {
+        var clone = (Piece) Duplicate();
+        GetParent().AddChild(clone);
+        clone.Modulate = new Color(1, 1, 1, 0.4f);
+        var anim = new MoveAnimation(NextMove!.From.Position, NextMove.To.Position, clone);
+        GetParent().AddChild(anim);
+        nextMovePreview = new NextMovePreview(clone, anim);
     }
 
     public void StartHover()
@@ -68,6 +84,21 @@ public abstract class Piece : Node2D
     public void EndHover()
     {
         isHovered = false;
+        finishPreviewAnimation();
+    }
+
+    private void finishPreviewAnimation()
+    {
+        if (nextMovePreview is null) return;
+        if (IsInstanceValid(nextMovePreview.Piece))
+        {
+            nextMovePreview.Piece.QueueFree();
+        }
+        if (IsInstanceValid(nextMovePreview.Animation))
+        {
+            nextMovePreview.Animation.QueueFree();
+        }
+        nextMovePreview = null;
     }
 
     public void Destroy()
@@ -81,4 +112,6 @@ public abstract class Piece : Node2D
     {
         return tile.Piece is { } piece && piece.IsEnemy == IsEnemy;
     }
+
+    private sealed record NextMovePreview(Piece Piece, MoveAnimation Animation);
 }

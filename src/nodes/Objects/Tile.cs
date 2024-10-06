@@ -115,10 +115,12 @@ public sealed class Tile : Area2D
     public void StartHover()
     {
         isHovered = true;
+        Piece?.StartHover();
     }
 
     public void EndHover()
     {
+        Piece?.EndHover();
         isHovered = false;
     }
 

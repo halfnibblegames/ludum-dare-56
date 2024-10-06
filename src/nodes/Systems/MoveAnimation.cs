@@ -28,6 +28,11 @@ public sealed class MoveAnimation : Node
 
     public override void _Process(float delta)
     {
+        if (!IsInstanceValid(target))
+        {
+            return;
+        }
+
         passedTime += delta;
         target.Position = linearComponent + jumpComponent;
 
