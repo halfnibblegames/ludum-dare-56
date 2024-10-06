@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects.Pieces;
@@ -11,11 +12,11 @@ public sealed class PrayingMantis : Piece
         currentTile.EnumerateAdjacent()
             .Where(c => !ContainsSameColorPiece(board[c]));
 
-    public override bool InterruptMove(Move move, MoveSideEffects sideEffects)
+    public override Task<MoveContinuation?>? InterruptMove(Move move, MoveSideEffects sideEffects)
     {
         if (move.To.Piece is null)
         {
-            return false;
+            return null;
         }
 
         var step = move.To.Coord - move.From.Coord;
@@ -38,7 +39,7 @@ public sealed class PrayingMantis : Piece
 
         // TODO: play animation
 
-        return true;
+        return Task.FromResult<MoveContinuation?>(null);
     }
 
     public override void OnMove(Move move, MoveSideEffects sideEffects)

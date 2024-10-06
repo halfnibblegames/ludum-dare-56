@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Systems;
 
@@ -26,9 +27,9 @@ public abstract class Piece : Node2D
 
     public abstract IEnumerable<TileCoord> ReachableTiles(TileCoord currentTile, Board board);
 
-    public virtual bool InterruptMove(Move move, MoveSideEffects sideEffects)
+    public virtual Task<MoveContinuation?>? InterruptMove(Move move, MoveSideEffects sideEffects)
     {
-        return false;
+        return null;
     }
 
     public virtual void OnMove(Move move, MoveSideEffects sideEffects)

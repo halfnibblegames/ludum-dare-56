@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Godot;
 using HalfNibbleGame.Objects;
 
 namespace HalfNibbleGame.Systems;
@@ -29,6 +28,13 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
     public async Task<MoveContinuation?> Execute()
     {
+        var sideEffects = new MoveSideEffects(this);
+
+        if (Piece.InterruptMove(this, sideEffects) is { } task)
+        {
+            return await task;
+        }
+
         var anim = new MoveAnimation(From.Position, To.Position, Piece);
 
         var signal = Piece.ToSignal(anim, nameof(MoveAnimation.Finished));
@@ -36,7 +42,6 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
         await signal;
 
-        var sideEffects = new MoveSideEffects(this);
         doLogic(sideEffects);
         return sideEffects.Continuation;
     }
