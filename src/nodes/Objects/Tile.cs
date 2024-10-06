@@ -90,7 +90,7 @@ public sealed class Tile : Area2D
     {
         var cursor = Global.Services.Get<Cursor>();
 
-        if (@event is InputEventMouseMotion)
+        if (@event is InputEventMouseMotion or InputEventScreenTouch)
         {
             cursor.MoveToTile(this);
             if (piece is not null)
@@ -103,7 +103,8 @@ public sealed class Tile : Area2D
             }
         }
 
-        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: 1 })
+        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: 1 }
+            or InputEventScreenTouch { Pressed: true })
         {
             cursor.Confirm();
         }
