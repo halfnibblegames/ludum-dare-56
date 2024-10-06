@@ -29,7 +29,7 @@ public sealed class PrayingMantis : Piece
         var nextTile = move.Board[move.From.Coord + nextStep];
         var prevTile = move.Board[move.From.Coord + prevStep];
 
-        foreach (var tile in new[] { move.From, nextTile, prevTile })
+        foreach (var tile in new[] { move.To, nextTile, prevTile })
         {
             if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
             {
