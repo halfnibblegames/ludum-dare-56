@@ -198,24 +198,31 @@ public sealed class GameLoop : Node2D
 
     private void startTurn()
     {
+        GD.Print("Starting new turn");
         state = GameLoopState.AwaitingInput;
         determineEnemyMove();
-        foreach (var piece in GetNode<Board>("Board").Pieces)
+        GD.Print("Applying turn start to pieces");
+        foreach (var piece in board.Pieces)
         {
             piece.OnTurnStart();
         }
+        GD.Print("Turn started, activating input");
         Input.Activate();
     }
 
     private void continueTurn(MoveContinuation continuation)
     {
+        GD.Print("Continuing turn");
         state = GameLoopState.AwaitingInput;
+        GD.Print("Activating input");
         Input.Activate();
+        GD.Print("Forcing input to use continuation");
         Input.SetContinuation(board, continuation);
     }
 
     private void determineEnemyMove()
     {
+        GD.Print("Determining enemy turn");
         var plannedMoves = enemyBrain.PlanMoves().ToList();
         enemyMoves.AddRange(plannedMoves);
         foreach (var m in plannedMoves)

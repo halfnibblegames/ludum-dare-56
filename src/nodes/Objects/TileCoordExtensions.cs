@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HalfNibbleGame.Objects;
@@ -50,6 +51,7 @@ public static class TileCoordExtensions
 
     public static IEnumerable<TileCoord> EnumerateDirection(this TileCoord c, Step step)
     {
+        if (step is { X: 0, Y: 0 }) throw new ArgumentOutOfRangeException(nameof(step));
         var t = c + step;
         while (t.IsValid())
         {
