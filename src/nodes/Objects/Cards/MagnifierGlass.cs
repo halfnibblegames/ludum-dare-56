@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects.Cards;
 
@@ -23,7 +24,9 @@ public sealed class MagnifierGlass : CardWithTarget
     {
         foreach (var coordinate in target.Coord.Yield().Concat(target.Coord.EnumerateAdjacent()))
         {
-            board[coordinate].Piece?.Destroy();
+            var tile = board[coordinate];
+            tile.Piece?.Destroy();
+            tile.Piece = null;
         }
 
         return Task.CompletedTask;

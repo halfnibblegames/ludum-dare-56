@@ -46,6 +46,7 @@ public sealed class Feature : CardWithTarget
         );
 
         target.Piece?.Destroy();
+        target.Piece = null;
 
         // A new piece takes its place.
         var randomPiece = possiblePieces[random.Next(possiblePieces.Count)].Instance<Piece>();

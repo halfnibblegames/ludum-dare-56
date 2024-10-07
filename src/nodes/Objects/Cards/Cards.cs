@@ -9,7 +9,7 @@ public static class Cards
     
     public static readonly Card[] AllCards = 
     {
-        new Sugar(),
+        // new Sugar(),
         new Feature(),
         new RoyalGuard(),
         new MagnifierGlass(),
