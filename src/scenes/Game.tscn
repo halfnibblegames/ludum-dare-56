@@ -258,6 +258,53 @@ custom_fonts/font = ExtResource( 2 )
 text = "or"
 align = 1
 
+[node name="GameOver" type="Control" parent="ViewportContainer/UI"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 0.25
+margin_bottom = 0.25
+
+[node name="YouWon" type="Label" parent="ViewportContainer/UI/GameOver"]
+margin_left = 96.5
+margin_top = 26.5
+margin_right = 223.5
+margin_bottom = 34.5
+rect_pivot_offset = Vector2( 33.75, 14 )
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_colors/font_color_shadow = Color( 0.776471, 0.239216, 0.478431, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "You won!"
+align = 1
+autowrap = true
+
+[node name="TimeLabel" type="Label" parent="ViewportContainer/UI/GameOver"]
+margin_left = 100.0
+margin_top = 44.5
+margin_right = 222.0
+margin_bottom = 129.5
+custom_colors/font_color = Color( 0.764706, 0.784314, 0.698039, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "You kept the queen
+safe. She can now
+continue to send
+her minions out to
+find flowers and
+lemonade.
+
+Thanks for playing!"
+
+[node name="Button" type="Button" parent="ViewportContainer/UI/GameOver"]
+margin_left = 120.25
+margin_top = 138.75
+margin_right = 199.25
+margin_bottom = 152.75
+custom_colors/font_color = Color( 0.427451, 0.521569, 0.427451, 1 )
+custom_colors/font_color_hover = Color( 0.776471, 0.239216, 0.478431, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Play again"
+flat = true
+
 [node name="HelpedItemDescription" type="RichTextLabel" parent="."]
 margin_left = 945.0
 margin_top = 382.0
@@ -333,3 +380,5 @@ custom_fonts/font = ExtResource( 18 )
 text = "Allies"
 align = 2
 valign = 1
+
+[connection signal="pressed" from="ViewportContainer/UI/GameOver/Button" to="ViewportContainer/Viewport/World" method="OnRestartButtonPressed"]

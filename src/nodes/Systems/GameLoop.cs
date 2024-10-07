@@ -195,7 +195,12 @@ public sealed class GameLoop : Node2D
                 startGame();
                 break;
             case GameLoopState.YouAreWinner:
-                // TODO: a thing
+                var chronometer = Global.Services.Get<Chronometer>();
+                chronometer.Stop();
+                var gameOver = chronometer.GetNode<Control>("../GameOver");
+                gameOver.Visible = true;
+                chronometer.GetNode<Control>("../../../Them").Visible = false;
+                chronometer.GetNode<Control>("../../../Them2").Visible = false;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -329,6 +334,12 @@ public sealed class GameLoop : Node2D
         }
     }
 
+    public void OnRestartButtonPressed()
+    {
+        end = GameEnd.Loss;
+        endGame();
+    }
+
     private void resetProgress()
     {
         currentLevel = 0;
@@ -342,6 +353,10 @@ public sealed class GameLoop : Node2D
         if (Global.Services.TryGet<Chronometer>(out var chronometer))
         {
             chronometer.ResetTime();
+            var gameOver = chronometer.GetNode<Control>("../GameOver");
+            gameOver.Visible = false;
+            chronometer.GetNode<Control>("../../../Them").Visible = true;
+            chronometer.GetNode<Control>("../../../Them2").Visible = true;
         }
     }
 
