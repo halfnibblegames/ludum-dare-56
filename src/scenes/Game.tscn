@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scenes/World.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/NoJamChunky.tres" type="DynamicFont" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://scenes/Objects/CardPanel.tscn" type="PackedScene" id=14]
 [ext_resource path="res://scenes/Objects/ChoicePanel.tscn" type="PackedScene" id=15]
 [ext_resource path="res://nodes/Objects/ChoicesScreen.cs" type="Script" id=16]
+[ext_resource path="res://assets/louder_lead.wav" type="AudioStream" id=17]
 
 [sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 7 )
@@ -267,3 +268,8 @@ stream = ExtResource( 13 )
 [node name="Walk" type="AudioStreamPlayer" parent="Boombox"]
 stream = ExtResource( 11 )
 volume_db = -10.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 17 )
+volume_db = -20.0
+autoplay = true
