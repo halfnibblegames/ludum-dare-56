@@ -309,7 +309,7 @@ volume_db = -10.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 17 )
-volume_db = -20.0
+volume_db = -10.0
 autoplay = true
 
 [node name="Them" type="Label" parent="."]

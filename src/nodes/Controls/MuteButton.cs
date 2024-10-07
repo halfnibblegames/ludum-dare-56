@@ -26,7 +26,7 @@ public class MuteButton : TextureButton
         Muted = newVolume == 0.0f;
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _GuiInput(InputEvent @event)
     {
         base._Input(@event);
 

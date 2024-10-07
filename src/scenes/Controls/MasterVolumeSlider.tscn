@@ -44,3 +44,5 @@ custom_icons/grabber = ExtResource( 4 )
 custom_styles/slider = SubResource( 1 )
 custom_styles/grabber_area_highlight = SubResource( 2 )
 script = ExtResource( 1 )
+
+[connection signal="value_changed" from="MasterVolumeSlider" to="MasterVolumeSlider" method="OnValueChanged"]
