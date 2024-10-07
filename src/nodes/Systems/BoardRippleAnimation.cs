@@ -10,18 +10,15 @@ public sealed class BoardRippleAnimation : Node
 {
     [Signal] public delegate void Finished();
 
-    private const float duration = 0.2f;
+    private const float rippleDuration = 7 * distanceOffset;
+    private const float distanceOffset = 0.1f;
     private const float tileDisplacementInPixels = 4f;
 
     private readonly Dictionary<TileCoord, int> tilesWithDistance = new();
 
-    private float t => Mathf.Clamp(passedTime / duration, 0, 1);
-
     private float passedTime;
     private readonly Board board;
-
-    public BoardRippleAnimation(Board board, TileCoord origin, int radius)
-        : this(board, new[] { origin }, radius) { }
+    private readonly float duration;
 
     public BoardRippleAnimation(Board board, IEnumerable<TileCoord> startTiles, int distance)
     {
@@ -29,6 +26,7 @@ public sealed class BoardRippleAnimation : Node
             throw new InvalidOperationException("Distance must be at least 0 for self");
 
         this.board = board;
+        duration = rippleDuration + distance * distanceOffset;
 
         var q = new Queue<TileCoord>();
         foreach (var startTile in startTiles)
@@ -45,6 +43,7 @@ public sealed class BoardRippleAnimation : Node
             foreach (var nextTile in tile.EnumerateAdjacent().Where(t => !tilesWithDistance.ContainsKey(t)))
             {
                 tilesWithDistance.Add(nextTile, d + 1);
+                q.Enqueue(nextTile);
             }
         }
     }
@@ -56,7 +55,11 @@ public sealed class BoardRippleAnimation : Node
         foreach (var kvp in tilesWithDistance)
         {
             var tile = board[kvp.Key];
-            tile.HeightOffsetInPixels = tileDisplacementInPixels * Mathf.Sin(t * kvp.Value * Mathf.Pi);
+            var distance = kvp.Value;
+            var startTime = distance * distanceOffset;
+            var timeSinceStart = passedTime - startTime;
+            var t = Mathf.Clamp(timeSinceStart / rippleDuration, 0f, 1f);
+            tile.HeightOffsetInPixels = tileDisplacementInPixels * Mathf.Sin(t * Mathf.Pi);
         }
 
         if (passedTime >= duration)
