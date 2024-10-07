@@ -16,6 +16,11 @@ public sealed class Prefabs : Node
     [Export] public PackedScene? HornedBeetle;
     [Export] public PackedScene? PrayingMantis;
 
+    // Card art
+    [Export] public Texture? Feature;
+    [Export] public Texture? RoyalGuard;
+    [Export] public Texture? Sugar;
+
     // Effects
     [Export] public PackedScene? CaptureExplosion;
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
+using HalfNibbleGame.Objects.Cards;
 using HalfNibbleGame.Objects.Pieces;
 
 namespace HalfNibbleGame.Systems;
@@ -54,6 +55,16 @@ public sealed class GameLoop : Node2D
     {
         board.Reset();
         deployPieces();
+
+        // TODO: Use proper card giving mechanisms, at some point.
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            Global.Services.Get<CardService>().AddCardToSlot( new Sugar(), CardService.Slot.One);
+            Global.Services.Get<CardService>().AddCardToSlot( new RoyalGuard(), CardService.Slot.Two);
+            Global.Services.Get<CardService>().AddCardToSlot( new Feature(), CardService.Slot.Three);
+        });
+
         startTurn();
     }
 

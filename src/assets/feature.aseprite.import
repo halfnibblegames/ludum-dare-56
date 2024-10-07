@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/feature.aseprite-044cf5b4e0562fcb43fc7c9a4b829b16.res"
+
+[deps]
+
+source_file="res://assets/feature.aseprite"
+dest_files=[ "res://.import/feature.aseprite-044cf5b4e0562fcb43fc7c9a4b829b16.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

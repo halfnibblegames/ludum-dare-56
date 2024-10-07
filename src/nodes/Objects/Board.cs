@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Systems;
@@ -81,7 +82,7 @@ public sealed class Board : Node2D
         AddChild(anim);
     }
 
-    public void AddPiece(Piece piece, TileCoord tileCoord)
+    public Task AddPiece(Piece piece, TileCoord tileCoord)
     {
         pieces.Add(piece);
         AddChild(piece);
@@ -89,6 +90,7 @@ public sealed class Board : Node2D
         piece.Position = tile.Position;
         tile.Piece = piece;
         piece.Destroyed += () => pieces.Remove(piece);
+        return Task.CompletedTask;
     }
 
     public void ResetHighlightedTiles()

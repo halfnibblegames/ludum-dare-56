@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/sugar_cube.aseprite-bd3922f81779595916c78ba899b78996.res"
+
+[deps]
+
+source_file="res://assets/sugar_cube.aseprite"
+dest_files=[ "res://.import/sugar_cube.aseprite-bd3922f81779595916c78ba899b78996.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"
