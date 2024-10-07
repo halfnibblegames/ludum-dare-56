@@ -85,7 +85,7 @@ public sealed class GameLoop : Node2D
         }
         await deployPiecesOnBoard(enemyPieces);
 
-        Global.Services.Get<TurnCounterService>().OnBattleStart();
+        Global.Services.Get<TurnCounterService>().OnBattleStart(level);
     }
 
     private static readonly int[] deployOrderInRow = { 3, 4, 2, 5, 1, 6, 0, 7 };
@@ -234,13 +234,11 @@ public sealed class GameLoop : Node2D
         if (!groupedPieces[true].Any())
         {
             end = GameEnd.Win;
-            Global.Services.Get<TurnCounterService>().Reset();
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
             end = GameEnd.Loss;
-            Global.Services.Get<TurnCounterService>().Reset();
         }
     }
 
@@ -337,6 +335,10 @@ public sealed class GameLoop : Node2D
         playerArmy.Clear();
         playerArmy.AddRange(levels.InitialArmy);
         Global.Services.Get<CardService>().ResetCards();
+        if (Global.Services.TryGet<TurnCounterService>(out var svc))
+        {
+            svc.Reset();
+        }
         if (Global.Services.TryGet<Chronometer>(out var chronometer))
         {
             chronometer.ResetTime();

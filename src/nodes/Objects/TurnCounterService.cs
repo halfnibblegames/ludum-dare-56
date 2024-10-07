@@ -1,5 +1,6 @@
 ﻿using Godot;
 using HalfNibbleGame.Autoload;
+using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects;
 
@@ -26,10 +27,10 @@ public sealed class TurnCounterService : Node
         turnLabel.Text = $"Turn {CurrentTurn}";
     }
 
-    public void OnBattleStart()
+    public void OnBattleStart(Levels.Level level)
     {
         CurrentWave++;
-        waveLabel.Text = $"Wave {CurrentWave}";
+        waveLabel.Text = $"Wave {level.Number}";
 
         CurrentTurn = 1;
         turnLabel.Text = $"Turn {CurrentTurn}";

@@ -5,7 +5,7 @@ using static HalfNibbleGame.Autoload.Global;
 
 namespace HalfNibbleGame.Systems;
 
-sealed class Levels
+public sealed class Levels
 {
     public Level[] All { get; } =
     {
