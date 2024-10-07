@@ -34,14 +34,24 @@ public sealed class PrayingMantis : Piece
         var stepCount = TileCoordExtensions.Steps.Length;
         var nextStep = TileCoordExtensions.Steps[(index + 1) % stepCount];
         var prevStep = TileCoordExtensions.Steps[(stepCount + index - 1) % stepCount];
-        var nextTile = move.Board[move.From.Coord + nextStep];
-        var prevTile = move.Board[move.From.Coord + prevStep];
+        var nextTile = move.From.Coord + nextStep;
+        var prevTile = move.From.Coord + prevStep;
+
+        var tiles = new List<Tile> { move.To };
+        if (nextTile.IsValid())
+        {
+            tiles.Add(move.Board[nextTile]);
+        }
+        if (prevTile.IsValid())
+        {
+            tiles.Add(move.Board[prevTile]);
+        }
 
         return new MoveOverride(createAnimation(step), execute);
 
         void execute(Move m, IMoveSideEffects sideEffects)
         {
-            foreach (var tile in new[] { m.To, nextTile, prevTile })
+            foreach (var tile in tiles)
             {
                 if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
                 {

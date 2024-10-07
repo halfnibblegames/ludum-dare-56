@@ -114,7 +114,6 @@ sealed class EnemyBrain
 
     private IEnumerable<MoveCandidate> enumerateMoves(PlacedPiece piece)
     {
-        GD.Print($"Enumerating all moves from {piece.Piece.DisplayName}");
         foreach (var t in piece.ReachableTiles)
         {
             var move = board.PreviewMove(piece.Piece, piece.Tile, board[t.Coord], 0);
