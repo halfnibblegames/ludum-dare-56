@@ -65,7 +65,7 @@ public sealed class InputHandler
         else
         {
             board.ResetHighlightedTiles();
-            if (tile.Piece is { } piece)
+            if (tile.Piece is { IsStunned: false } piece)
             {
                 foreach (var t in piece.ReachableTiles(tile.Coord, board))
                 {
