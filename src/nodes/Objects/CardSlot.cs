@@ -12,9 +12,9 @@ public class CardSlot : TextureButton
     {
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _GuiInput(InputEvent @event)
     {
-        base._Input(@event);
+        base._GuiInput(@event);
 
         if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: (int) ButtonList.Left })
             return;
