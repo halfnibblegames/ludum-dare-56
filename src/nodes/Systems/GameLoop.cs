@@ -28,7 +28,7 @@ public sealed class GameLoop : Node2D
 
     private Board board = default!;
     private EnemyBrain enemyBrain = default!;
-    private GameLoopState state = GameLoopState.AwaitingInput;
+    private GameLoopState state = GameLoopState.Opening;
 
     public InputHandler Input { get; }
 
@@ -42,19 +42,21 @@ public sealed class GameLoop : Node2D
     {
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);
-        startGame();
+        _ = startGame();
     }
 
-    private void restartGame()
+    private async Task restartGame()
     {
         endGame();
-        startGame();
+        await startGame();
     }
 
-    private void startGame()
+    private async Task startGame()
     {
-        board.Reset();
-        deployPieces();
+        state = GameLoopState.Opening;
+
+        await board.Reset();
+        await deployPieces();
 
         // TODO: Use proper card giving mechanisms, at some point.
         Task.Run(async () =>
@@ -70,11 +72,12 @@ public sealed class GameLoop : Node2D
 
     private void endGame()
     {
-        board.Reset();
+        state = GameLoopState.Ended;
+        Input.Deactivate();
         Input.Reset();
     }
 
-    private void deployPieces()
+    private async Task deployPieces()
     {
         const int playerPieceCount = 3;
         const int enemyPieceCount = 6;
@@ -92,7 +95,7 @@ public sealed class GameLoop : Node2D
             playerPieces.Add(pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>());
         }
 
-        deployPiecesOnBoard(playerPieces, 0, 1);
+        await deployPiecesOnBoard(playerPieces, 0, 1);
 
         // Enemy pieces
         var enemyPieces = new List<Piece>();
@@ -104,28 +107,32 @@ public sealed class GameLoop : Node2D
             enemyPieces.Add(piece);
         }
 
-        deployPiecesOnBoard(enemyPieces, 7, -1);
+        await deployPiecesOnBoard(enemyPieces, 7, -1);
     }
 
     private static readonly int[] deployOrderInRow = { 3, 4, 2, 5, 1, 6, 0, 7 };
 
-    private void deployPiecesOnBoard(IEnumerable<Piece> pieces, int startRow, int yUp)
+    private async Task deployPiecesOnBoard(IEnumerable<Piece> pieces, int startRow, int yUp)
     {
         var sortedPieces = pieces.OrderByDescending(p => p.Value).ThenBy(p => p.DisplayName).ToList();
 
         var row = startRow;
         var i = 0;
 
+        var pieceAnimations = new List<Task>();
+
         foreach (var p in sortedPieces)
         {
             var coord = new TileCoord(deployOrderInRow[i++], row);
-            board.AddPiece(p, coord);
+            pieceAnimations.Add(board.AddPiece(p, coord));
             if (i >= deployOrderInRow.Length)
             {
                 row += yUp;
                 i = 0;
             }
         }
+
+        await Task.WhenAll(pieceAnimations);
     }
 
     public override void _Process(float delta)
@@ -137,25 +144,27 @@ public sealed class GameLoop : Node2D
     {
         if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
         {
-            restartGame();
+            _ = restartGame();
         }
     }
 
     private void checkGameEnd()
     {
+        if (state != GameLoopState.AwaitingInput) return;
+
         var groupedPieces = board.Pieces.ToLookup(p => p.IsEnemy);
 
         // Check victory
         if (!groupedPieces[true].Any())
         {
             // Win!
-            restartGame();
+            _ = restartGame();
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
             // Loss!
-            restartGame();
+            _ = restartGame();
         }
     }
 
@@ -249,5 +258,6 @@ public sealed class GameLoop : Node2D
         AwaitingInput,
         PlayerMove,
         EnemyMove,
+        Ended
     }
 }

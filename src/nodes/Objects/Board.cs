@@ -34,10 +34,10 @@ public sealed class Board : Node2D
         GetNode("EditorRect").QueueFree();
     }
 
-    public void Reset()
+    public async Task Reset()
     {
         cleanUp();
-        setUp();
+        await setUp();
     }
 
     private void cleanUp()
@@ -54,7 +54,7 @@ public sealed class Board : Node2D
         tiles = Array.Empty<Tile>();
     }
 
-    private void setUp()
+    private async Task setUp()
     {
         // Make the origin be bottom left.
         tiles = new Tile[Width * Height];
@@ -79,10 +79,12 @@ public sealed class Board : Node2D
         }
 
         var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7, FadeCurve.FadeIn);
+        var signal = ToSignal(anim, nameof(BoardRippleAnimation.Finished));
         AddChild(anim);
+        await signal;
     }
 
-    public Task AddPiece(Piece piece, TileCoord tileCoord)
+    public async Task AddPiece(Piece piece, TileCoord tileCoord)
     {
         pieces.Add(piece);
         AddChild(piece);
@@ -90,7 +92,20 @@ public sealed class Board : Node2D
         piece.Position = tile.Position;
         tile.Piece = piece;
         piece.Destroyed += () => pieces.Remove(piece);
-        return Task.CompletedTask;
+        await fadeInPiece(piece,
+            Math.Min(tileCoord.Manhattan(new TileCoord(3, 0)), tileCoord.Manhattan(new TileCoord(3, 7))));
+    }
+
+    private async Task fadeInPiece(Piece piece, int distance)
+    {
+        const int delayPerDistance = 100;
+
+        piece.Modulate = new Color(1, 1, 1, 0);
+        await Task.Delay(delayPerDistance * distance);
+        var anim = new FadeAnimation(FadeCurve.FadeIn, piece);
+        var signal = ToSignal(anim, nameof(FadeAnimation.Finished));
+        AddChild(anim);
+        await signal;
     }
 
     public void ResetHighlightedTiles()
