@@ -54,15 +54,6 @@ public sealed class GameLoop : Node2D
     {
         await board.Reset();
         await deployPieces(level);
-
-        // TODO: Use proper card giving mechanisms, at some point.
-        Task.Run(async () =>
-        {
-            await Task.Delay(1000);
-            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.One);
-            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Two);
-            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Three);
-        });
     }
 
     private void endGame()
@@ -174,15 +165,25 @@ public sealed class GameLoop : Node2D
 
                 if (end == GameEnd.Win)
                 {
-                    startChoices();
+                    showChoices();
                     break;
                 }
 
                 resetProgress();
                 startGame();
                 break;
-            case GameLoopState.ChoosePowerUp:
+            case GameLoopState.ShowChoices:
+                if (stillWaiting()) break;
 
+                startChoice();
+                break;
+            case GameLoopState.AwaitingChoice:
+                if (stillWaiting()) break;
+
+                startGame();
+                break;
+            case GameLoopState.YouAreWinner:
+                // TODO: a thing
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -285,12 +286,20 @@ public sealed class GameLoop : Node2D
         }
     }
 
-    private void startChoices()
+    private void showChoices()
     {
-        state = GameLoopState.ChoosePowerUp;
-        // TODO: card choice
+        state = GameLoopState.ShowChoices;
         currentLevel++;
-        startGame();
+    }
+
+    private void startChoice()
+    {
+        state = GameLoopState.AwaitingChoice;
+
+        // TODO: proper card choice
+        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.One);
+        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Two);
+        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Three);
     }
 
     private void resetProgress()
@@ -301,6 +310,12 @@ public sealed class GameLoop : Node2D
         Global.Services.Get<CardService>().ResetCards();
     }
 
+    private void winGame()
+    {
+        state = GameLoopState.YouAreWinner;
+        // TODO: fireworks or something?
+    }
+
     private enum GameLoopState
     {
         Opening,
@@ -308,7 +323,9 @@ public sealed class GameLoop : Node2D
         PlayerMove,
         EnemyMove,
         Ended,
-        ChoosePowerUp
+        ShowChoices,
+        AwaitingChoice,
+        YouAreWinner
     }
 
     private enum GameEnd
