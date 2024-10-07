@@ -11,15 +11,16 @@ sealed class Levels
     {
         new(
             1,
+            pieceChoice(null, null),
             army(
                 enemy(Prefabs.PrayingMantis, 3, 7),
                 enemy(Prefabs.PrayingMantis, 4, 7),
                 enemy(Prefabs.Ant, 2, 7),
                 enemy(Prefabs.Ant, 5, 7)
-            )
-        ),
+            )),
         new(
             2,
+            pieceChoice(Prefabs.Grasshopper, Prefabs.Dragonfly),
             army(
                 enemy(Prefabs.Dragonfly, 3, 7),
                 enemy(Prefabs.Dragonfly, 4, 7),
@@ -27,10 +28,10 @@ sealed class Levels
                 enemy(Prefabs.PrayingMantis, 5, 7),
                 enemy(Prefabs.Ant, 3, 6),
                 enemy(Prefabs.Ant, 4, 6)
-            )
-        ),
+            )),
         new(
             3,
+            pieceChoice(Prefabs.Dragonfly, Prefabs.PrayingMantis),
             army(
                 enemy(Prefabs.HornedBeetle, 2, 7),
                 enemy(Prefabs.HornedBeetle, 5, 7),
@@ -40,8 +41,7 @@ sealed class Levels
                 enemy(Prefabs.Ant, 6, 7),
                 enemy(Prefabs.Ant, 2, 6),
                 enemy(Prefabs.Ant, 5, 6)
-            )
-        )
+            ))
     };
 
     public IReadOnlyList<PackedScene> InitialArmy { get; } = army(
@@ -54,7 +54,9 @@ sealed class Levels
     private static IReadOnlyList<PackedScene> army(params PackedScene[] units) => units;
     private static IReadOnlyList<Enemy> army(params Enemy[] units) => units;
     private static Enemy enemy(PackedScene? unit, int x, int y) => new(unit!, new TileCoord(x, y));
+    private static IReadOnlyList<PackedScene> pieceChoice(PackedScene? left, PackedScene? right) =>
+        new[] { left!, right! };
 
-    public sealed record Level(int Number, IReadOnlyList<Enemy> EnemyForce);
+    public sealed record Level(int Number, IReadOnlyList<PackedScene> PieceChoices, IReadOnlyList<Enemy> EnemyForce);
     public sealed record Enemy(PackedScene Prefab, TileCoord Location);
 }

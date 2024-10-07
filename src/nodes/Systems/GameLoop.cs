@@ -301,8 +301,11 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.AwaitingChoice;
 
-        var leftChoice = new Choice(Global.Prefabs.Dragonfly!, Cards.GetRandomCard());
-        var rightChoice = new Choice(Global.Prefabs.HornedBeetle!, Cards.GetRandomCard());
+        var level = levels.All[currentLevel];
+        var cards = Cards.AllCards.OrderBy(_ => random.Next()).ToList();
+
+        var leftChoice = new Choice(level.PieceChoices[0], cards[0]);
+        var rightChoice = new Choice(level.PieceChoices[1], cards[1]);
         var tcs = new TaskCompletionSource<object?>();
         awaits.Add(tcs.Task);
 
