@@ -48,6 +48,7 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.Opening;
         end = GameEnd.None;
+        board.Visible = true;
         awaits.Add(startGameAsync(levels.All[currentLevel]));
     }
 
@@ -163,6 +164,8 @@ public sealed class GameLoop : Node2D
                 break;
             case GameLoopState.Ended:
                 if (stillWaiting()) break;
+
+                board.Visible = false;
 
                 if (end == GameEnd.Win)
                 {
