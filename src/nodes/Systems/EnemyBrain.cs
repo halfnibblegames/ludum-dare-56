@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 using HalfNibbleGame.Objects;
 using HalfNibbleGame.Objects.Pieces;
 
@@ -13,6 +12,7 @@ sealed class EnemyBrain
     private const int captureWeight = 100;
     private const int threatenedWeight = 40;
     private const int approachQueenWeight = 1;
+    private const int randomnessFactor = 35;
 
     private readonly Board board;
     private readonly Random random;
@@ -23,13 +23,16 @@ sealed class EnemyBrain
         this.random = random;
     }
 
-    public IEnumerable<Move> PlanMoves()
+    public IEnumerable<Move> PlanMoves(Levels.Level level)
     {
         var pieces = enumeratePieces().ToList();
         if (pieces.Count == 0) return Enumerable.Empty<Move>();
 
-        // 25% chance of moving two pieces.
-        var numberOfPieces = random.NextDouble() < 0.25 ? 2 : 1;
+        var numberOfPieces = 1;
+        for (var i = 0; i < level.Number; i++)
+        {
+            if (random.NextDouble() < 0.25) numberOfPieces++;
+        }
 
         return planMovesForPieces(pieces, numberOfPieces);
     }
@@ -68,7 +71,7 @@ sealed class EnemyBrain
 
         var orderedPieces = placedPieces
             .Where(p => bestMovePerPiece[p] is not null)
-            .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore(ctx))
+            .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore(ctx) + randomnessFactor * random.NextDouble())
             .ToList();
 
         var occupiedTiles = new List<TileCoord>();

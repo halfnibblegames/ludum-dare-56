@@ -30,7 +30,8 @@ public sealed class GameLoop : Node2D
 
     public GameLoop()
     {
-        random = new Random();
+        GD.Randomize();
+        random = new Random((int) GD.Randi());
         input = new InputHandler(this);
     }
 
@@ -289,7 +290,7 @@ public sealed class GameLoop : Node2D
 
     private void determineEnemyMove()
     {
-        var plannedMoves = enemyBrain.PlanMoves().ToList();
+        var plannedMoves = enemyBrain.PlanMoves(levels.All[currentLevel]).ToList();
         enemyMoves.AddRange(plannedMoves);
         foreach (var m in plannedMoves)
         {
