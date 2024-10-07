@@ -41,6 +41,7 @@ public sealed class PrayingMantis : Piece
 
         void execute(Move m, IMoveSideEffects sideEffects)
         {
+            GD.Print("Executing mantis move override");
             foreach (var tile in new[] { m.To, nextTile, prevTile })
             {
                 if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
@@ -61,6 +62,7 @@ public sealed class PrayingMantis : Piece
 
         async Task playAnimation()
         {
+            GD.Print("Starting praying mantis animation and waiting");
             sprite.RotationDegrees = rotation;
             var anim = new SpriteAnimation(sprite, "default");
             var signal = ToSignal(anim, nameof(SpriteAnimation.Finished));

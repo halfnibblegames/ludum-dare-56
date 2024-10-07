@@ -23,31 +23,7 @@ public static class TileCoordExtensions
         DiagonalSteps.Select(s => c + s * distance).WhereValid();
 
     public static IEnumerable<TileCoord> EnumerateAdjacent(this TileCoord c) =>
-        c.EnumerateAtRadius(1);
-
-    public static IEnumerable<TileCoord> EnumerateAtRadius(this TileCoord c, int distanceFromCenter)
-    {
-        // Go south-west to the correct starting point.
-        var current = c;
-        for (var i = 0; i < distanceFromCenter; i++)
-        {
-            current += Step.DownLeft;
-        }
-
-        // For each of the base directions
-        foreach (var step in ccwOrthogonalSteps)
-        {
-            // Go in that direction 2 * distanceFromCenter times
-            for (var i = 0; i < distanceFromCenter * 2; i++)
-            {
-                current += step;
-                if (current.IsValid())
-                {
-                    yield return current;
-                }
-            }
-        }
-    }
+        Steps.Select(s => c + s).WhereValid();
 
     public static IEnumerable<TileCoord> EnumerateDirection(this TileCoord c, Step step)
     {
