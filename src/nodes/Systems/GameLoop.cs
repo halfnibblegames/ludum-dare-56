@@ -165,7 +165,17 @@ public sealed class GameLoop : Node2D
 
                 if (end == GameEnd.Win)
                 {
-                    showChoices();
+                    currentLevel++;
+
+                    if (currentLevel == levels.All.Length)
+                    {
+                        winGame();
+                    }
+                    else
+                    {
+                        showChoices();
+                    }
+
                     break;
                 }
 
@@ -289,7 +299,8 @@ public sealed class GameLoop : Node2D
     private void showChoices()
     {
         state = GameLoopState.ShowChoices;
-        currentLevel++;
+
+        // TODO: show card choices
     }
 
     private void startChoice()
