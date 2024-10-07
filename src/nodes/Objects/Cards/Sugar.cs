@@ -16,4 +16,6 @@ public sealed class Sugar : CardWithTarget
     {
         throw new System.NotImplementedException();
     }
+
+    public override string HelpText => "The next time target bug moves, it gets to move twice.\n[b]- The children yearn for the sweets.[/b]";
 }

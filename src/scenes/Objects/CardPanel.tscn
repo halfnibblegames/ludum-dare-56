@@ -35,3 +35,10 @@ margin_top = 2.0
 margin_right = 63.0
 margin_bottom = 21.0
 script = ExtResource( 2 )
+
+[connection signal="mouse_entered" from="SlotOne" to="." method="OnSlotOneHoverEntered"]
+[connection signal="mouse_exited" from="SlotOne" to="." method="OnSlotHoverExited"]
+[connection signal="mouse_entered" from="SlotTwo" to="." method="OnSlotTwoHoverEntered"]
+[connection signal="mouse_exited" from="SlotTwo" to="." method="OnSlotHoverExited"]
+[connection signal="mouse_entered" from="SlotThree" to="." method="OnSlotThreeHoverEntered"]
+[connection signal="mouse_exited" from="SlotThree" to="." method="OnSlotHoverExited"]

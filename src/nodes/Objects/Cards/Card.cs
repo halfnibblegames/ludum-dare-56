@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Godot;
+using HalfNibbleGame.Systems;
 
 namespace HalfNibbleGame.Objects.Cards;
 
-public abstract class Card
+public abstract class Card : IHelpable
 {
-    public string Name { get; }
+    public string DisplayName { get; }
     public abstract Texture GetTexture();
 
     protected Card(string name)
     {
-        Name = name;
+        DisplayName = name;
     }
 
     public abstract Task Use(Board board);
+
+    public abstract string HelpText { get; }
 }
 
 public abstract class CardWithTarget : Card

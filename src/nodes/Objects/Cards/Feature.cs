@@ -47,4 +47,5 @@ public sealed class Feature : CardWithTarget
     }
 
     public override Texture GetTexture() => Global.Prefabs.Feature!;
+    public override string HelpText => "Transforms target bug into a random different bug.\n[b]- It's not a bug, I swear[/b]";
 }

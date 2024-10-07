@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects.Cards;
+using HalfNibbleGame.Systems;
 using JetBrains.Annotations;
 
 namespace HalfNibbleGame.Objects;
@@ -26,10 +27,48 @@ public sealed class CardPanel : Control
         slotThree.Slot = CardService.Slot.Three;
     }
 
-    private void OnCardListUpdated(Dictionary<CardService.Slot, Card> cards)
+    private void OnCardListUpdated()
     {
-        slotOne.SetCard(cards.TryGetValue(CardService.Slot.One, out var card) ? card : null);
-        slotTwo.SetCard(cards.TryGetValue(CardService.Slot.Two, out var cardTwo) ? cardTwo : null);
-        slotThree.SetCard(cards.TryGetValue(CardService.Slot.Three, out var cardThree) ? cardThree : null);
+        var cardService = Global.Services.Get<CardService>();
+        slotOne.SetCard(cardService.GetCardInSlotOrDefault(CardService.Slot.One));
+        slotTwo.SetCard(cardService.GetCardInSlotOrDefault(CardService.Slot.Two));
+        slotThree.SetCard(cardService.GetCardInSlotOrDefault(CardService.Slot.Three));
+    }
+    
+    [UsedImplicitly]
+    public void OnSlotOneHoverEntered()
+    {
+        HoverStarted(CardService.Slot.One);
+    }
+
+    [UsedImplicitly]
+    public void OnSlotTwoHoverEntered()
+    {
+        HoverStarted(CardService.Slot.Two);
+    }
+
+    [UsedImplicitly]
+    public void OnSlotThreeHoverEntered()
+    {
+        HoverStarted(CardService.Slot.Three);
+    }
+
+    private void HoverStarted(CardService.Slot slot)
+    {
+        var card = Global.Services.Get<CardService>().GetCardInSlotOrDefault(slot);
+        if (card is null)
+        {
+            Global.Services.Get<HelpService>().ClearHelp();
+        }
+        else
+        {
+            Global.Services.Get<HelpService>().ShowHelp(card);
+        }
+    }
+
+    [UsedImplicitly]
+    public void OnSlotHoverExited()
+    {
+        Global.Services.Get<HelpService>().ClearHelp();
     }
 }

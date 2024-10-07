@@ -7,5 +7,7 @@ public static class Cards
     public static Card[] AllCards = 
     {
         new Sugar(),
+        new Feature(),
+        new RoyalGuard()
     };
 }

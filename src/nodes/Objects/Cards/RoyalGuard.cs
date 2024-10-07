@@ -23,7 +23,7 @@ public sealed class RoyalGuard : Card
             throw new InvalidOperationException("How are you playing without a queen bee?");
         }
 
-        foreach (var adjacentTile in queenBeeTile.Coord.EnumerateAdjacent())
+        foreach (var adjacentTile in queenBeeTile.Coord.EnumerateOrthogonal())
         {
             if (board[adjacentTile].Piece is not null)
                 continue;
@@ -32,4 +32,5 @@ public sealed class RoyalGuard : Card
             await board.AddPiece(ant, adjacentTile);
         }
     }
+    public override string HelpText => "Spawns ants in all free tiles orthogonal to the queen.\n[b]- For the queen![/b]";
 }

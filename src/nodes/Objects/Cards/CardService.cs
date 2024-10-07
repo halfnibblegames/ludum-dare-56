@@ -13,10 +13,11 @@ public sealed class CardService : Node
     private Board board;
     
     public List<Slot> SlotsInUse => slots.Keys.ToList();
+    public Card? GetCardInSlotOrDefault(Slot slot) => slots.TryGetValue(slot, out var card) ? card : null;
 
     public Card? CardInUse { get; private set; }
 
-    public event Action<Dictionary<Slot, Card>> OnCardListUpdated = _ => { };
+    public event Action OnCardListUpdated = () => { };
 
     public override void _Ready()
     {
@@ -48,14 +49,14 @@ public sealed class CardService : Node
         {
             CardInUse = null;
             slots.Remove(slot);
-            OnCardListUpdated(slots);
+            OnCardListUpdated();
         }
     }
 
     public void AddCardToSlot(Card card, Slot slot)
     {
         slots[slot] = card;
-        OnCardListUpdated(slots);
+        OnCardListUpdated();
     }
 
     public enum Slot
