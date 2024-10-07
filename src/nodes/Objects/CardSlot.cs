@@ -1,9 +1,10 @@
 using Godot;
-using System;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects.Cards;
 
-public class CardSlot : TextureButton
+namespace HalfNibbleGame.Objects;
+
+public sealed class CardSlot : TextureButton
 {
     private bool hasCard;
     public CardService.Slot Slot;
@@ -15,8 +16,9 @@ public class CardSlot : TextureButton
     public override void _GuiInput(InputEvent @event)
     {
         base._GuiInput(@event);
-        
-        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: (int) ButtonList.Left })
+
+        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: (int) ButtonList.Left }
+            or InputEventScreenTouch { Pressed: true })
         {
             if (!hasCard)
                 return;

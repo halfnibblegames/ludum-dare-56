@@ -182,11 +182,6 @@ public sealed class GameLoop : Node2D
                 resetProgress();
                 startGame();
                 break;
-            case GameLoopState.ShowChoices:
-                if (stillWaiting()) break;
-
-                startChoice();
-                break;
             case GameLoopState.AwaitingChoice:
                 if (stillWaiting()) break;
 
@@ -298,19 +293,27 @@ public sealed class GameLoop : Node2D
 
     private void showChoices()
     {
-        state = GameLoopState.ShowChoices;
-
-        // TODO: show card choices
-    }
-
-    private void startChoice()
-    {
         state = GameLoopState.AwaitingChoice;
 
-        // TODO: proper card choice
-        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.One);
-        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Two);
-        Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Three);
+        var leftChoice = new Choice(Global.Prefabs.Dragonfly!, Cards.GetRandomCard());
+        var rightChoice = new Choice(Global.Prefabs.HornedBeetle!, Cards.GetRandomCard());
+        var tcs = new TaskCompletionSource<object?>();
+        awaits.Add(tcs.Task);
+
+        Global.Services.Get<ChoicesScreen>().ShowChoices(leftChoice, rightChoice, consumeChoice);
+
+        return;
+
+        void consumeChoice(Choice choice)
+        {
+            playerArmy.Add(choice.PiecePrefab);
+            var cardService = Global.Services.Get<CardService>();
+            if (cardService.FirstAvailableSlot() is { } slot)
+            {
+                cardService.AddCardToSlot(choice.Card, slot);
+            }
+            tcs.SetResult(null);
+        }
     }
 
     private void resetProgress()
@@ -334,7 +337,6 @@ public sealed class GameLoop : Node2D
         PlayerMove,
         EnemyMove,
         Ended,
-        ShowChoices,
         AwaitingChoice,
         YouAreWinner
     }

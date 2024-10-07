@@ -27,6 +27,11 @@ public sealed class CardService : Node
         board = GetNode<Board>("../Board");
     }
 
+    public Slot? FirstAvailableSlot()
+    {
+        return Enum.GetValues(typeof(Slot)).Cast<Slot?>().FirstOrDefault(s => !slots.Keys.Contains(s!.Value));
+    }
+
     public async Task UseCardInSlot(Slot slot)
     {
         var possibleCard = slots[slot];
