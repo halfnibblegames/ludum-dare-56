@@ -1,8 +1,8 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://assets/goofy_ahh_bite.mp3" type="AudioStream" id=1]
 [ext_resource path="res://nodes/Splash.cs" type="Script" id=2]
-[ext_resource path="res://assets/monogram.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/monogram-extended.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/strawberry_bite.png-2cc8704db917175623d7366ba3758927.stex"
@@ -34,6 +34,10 @@ animations = [ {
 "name": "Bite",
 "speed": 34.0
 } ]
+
+[sub_resource type="DynamicFont" id=8]
+size = 64
+font_data = ExtResource( 3 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -71,11 +75,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -182.0
+margin_left = -195.0
 margin_top = 27.0
-margin_right = 162.0
-margin_bottom = 48.0
-custom_fonts/font = ExtResource( 3 )
+margin_right = 213.0
+margin_bottom = 78.0
+custom_fonts/font = SubResource( 8 )
 text = "Half Nibble games"
 align = 1
 valign = 1
