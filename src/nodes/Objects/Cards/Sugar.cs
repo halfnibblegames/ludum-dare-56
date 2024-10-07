@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Autoload;
 
@@ -10,6 +12,12 @@ public sealed class Sugar : CardWithTarget
 
     public Sugar() : base("Sugar Cube")
     {
+    }
+
+    protected override IEnumerable<ReachableTile> GetReachableTiles(Board board)
+    {
+        return board.Tiles.Where(t => t.Piece is { IsEnemy: false })
+            .Select(t => t.Coord.MoveTo());
     }
 
     protected override Task Use(Board board, Tile target)

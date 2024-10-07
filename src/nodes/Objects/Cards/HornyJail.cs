@@ -15,13 +15,13 @@ public sealed class HornyJail : Card
 
     public override string HelpText => "Stuns all Beetles for 4 turns.\n[b]Bonk, to horny jail.[/b]";
 
-    public override Task Use(Board board)
+    public override Task<bool> Use(Board board)
     {
         foreach (var beetle in board.Pieces.OfType<HornedBeetle>())
         {
             beetle.Stun(4);
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 }

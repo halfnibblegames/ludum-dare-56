@@ -11,8 +11,7 @@ public sealed class CardService : Node
 {
     private readonly Dictionary<Slot, Card> slots = new();
     private Board board = default!;
-    
-    public List<Slot> SlotsInUse => slots.Keys.ToList();
+
     public Card? GetCardInSlotOrDefault(Slot slot) => slots.TryGetValue(slot, out var card) ? card : null;
 
     public Card? CardInUse { get; private set; }
@@ -38,23 +37,20 @@ public sealed class CardService : Node
         if (possibleCard is null)
             throw new InvalidOperationException("Trying to use empty slot");
 
+        var result = false;
         try
         {
             CardInUse = possibleCard;
-
-            if (CardInUse is CardWithTarget cardWithTarget)
-            {
-                // TODO: Pick a target properly
-                cardWithTarget.TargetTile = board.Tiles.First(x => x.Piece is not null);
-            }
-
-            await possibleCard.Use(board);
+            result = await possibleCard.Use(board);
         }
         finally
         {
             CardInUse = null;
-            slots.Remove(slot);
-            OnCardListUpdated();
+            if (result)
+            {
+                slots.Remove(slot);
+                OnCardListUpdated();
+            }
         }
     }
 

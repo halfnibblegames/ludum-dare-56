@@ -17,7 +17,7 @@ public sealed class Hivemind : Card
 
     public override Texture GetTexture() => Global.Prefabs.Hivemind!;
 
-    public override async Task Use(Board board)
+    public override async Task<bool> Use(Board board)
     {
         var queenBeeTile = board.Tiles.Single(t => t.Piece is QueenBee);
         if (queenBeeTile is null)
@@ -36,6 +36,8 @@ public sealed class Hivemind : Card
             var prefab = (random.NextDouble() >= 0.5 ? Global.Prefabs.PrayingMantis : Global.Prefabs.Grasshopper);
             await board.AddPiece(prefab!.Instance<Piece>(), adjacentTile);
         }
+
+        return true;
     }
     
     public override string HelpText => "Summons a Grasshopper or a Praying Mantis near the Queen.\n[b]- For the Queen![/b]";

@@ -15,11 +15,11 @@ public sealed class RoyalSuccession : Card
 
     public override string HelpText => "The queen re-spawns once on a random tile if it’s killed during this wave.\n[b]The Queen is Dead. Long live the Queen.[/b]";
 
-    public override Task Use(Board board)
+    public override Task<bool> Use(Board board)
     {
         var queenBee = board.Pieces.Single(x => x is QueenBee);
         queenBee.RevivesOnDeath = true;
 
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 }

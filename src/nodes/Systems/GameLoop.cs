@@ -36,6 +36,7 @@ public sealed class GameLoop : Node2D
 
     public override void _Ready()
     {
+        Global.Services.ProvideInScene(input);
         levels = new Levels();
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);

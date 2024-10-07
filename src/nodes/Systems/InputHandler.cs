@@ -2,6 +2,7 @@
 using System.Linq;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
+using HalfNibbleGame.Objects.Cards;
 
 namespace HalfNibbleGame.Systems;
 
@@ -10,7 +11,7 @@ public sealed class InputHandler
     private readonly GameLoop gameLoop;
 
     private Cursor? cursor;
-    private SelectedPiece? selectedPiece;
+    private ISelectedThing? selectedPiece;
     private bool isSelectionLocked;
     private bool isActive;
 
@@ -53,6 +54,14 @@ public sealed class InputHandler
         isSelectionLocked = true;
     }
 
+    public void SetTargetSelection(Board board, TargetSelection targeting)
+    {
+        if (selectedPiece is not null) deselectPiece(board);
+
+        selectedPiece = new SelectedTargeting(board, targeting);
+        selectedPiece.HighlightTargetTiles();
+    }
+
     private void handleTileHover(Board board, Tile tile)
     {
         if (!isActive) return;
@@ -79,9 +88,8 @@ public sealed class InputHandler
     {
         if (!isActive) return;
 
-        if (selectedPiece?.TryHandleTileClick(tile) is { } move)
+        if (selectedPiece?.TryHandleTileClick(gameLoop, tile) ?? false)
         {
-            gameLoop.SubmitMove(move);
             deselectPiece(board);
             return;
         }
@@ -108,11 +116,21 @@ public sealed class InputHandler
     {
         board.ResetHighlightedTiles();
         selectedPiece?.EndMovePreview();
+        selectedPiece?.OnDeselect();
         isSelectionLocked = false;
         selectedPiece = null;
     }
 
-    private sealed class SelectedPiece
+    private interface ISelectedThing
+    {
+        void TryShowMovePreview(Tile target);
+        void EndMovePreview();
+        void OnDeselect();
+        void HighlightTargetTiles();
+        bool TryHandleTileClick(GameLoop gameLoop, Tile clickedTile);
+    }
+
+    private sealed class SelectedPiece : ISelectedThing
     {
         private readonly Board board;
         private readonly Tile tile;
@@ -147,6 +165,8 @@ public sealed class InputHandler
             piece.EndMovePreview();
         }
 
+        public void OnDeselect() { }
+
         public void HighlightTargetTiles()
         {
             foreach (var t in targetTiles)
@@ -155,11 +175,57 @@ public sealed class InputHandler
             }
         }
 
-        public Move? TryHandleTileClick(Tile clickedTile)
+        public bool TryHandleTileClick(GameLoop gameLoop, Tile clickedTile)
         {
-            if (targetTiles.All(t => t.Coord != clickedTile.Coord)) return null;
+            if (targetTiles.All(t => t.Coord != clickedTile.Coord)) return false;
             var moveCandidate = board.PreviewMove(piece, tile, clickedTile, previousMovesInTurn);
-            return moveCandidate.Validate() ? moveCandidate : null;
+            if (!moveCandidate.Validate())
+            {
+                return false;
+            }
+            gameLoop.SubmitMove(moveCandidate);
+            return true;
+        }
+    }
+
+    private sealed class SelectedTargeting : ISelectedThing
+    {
+        private readonly Board board;
+        private readonly TargetSelection selection;
+        private bool completed;
+
+        public SelectedTargeting(Board board, TargetSelection selection)
+        {
+            this.board = board;
+            this.selection = selection;
+        }
+
+        public void TryShowMovePreview(Tile target) { }
+
+        public void EndMovePreview() { }
+
+        public void OnDeselect()
+        {
+            if (!completed)
+            {
+                selection.Cancel();
+            }
+        }
+
+        public void HighlightTargetTiles()
+        {
+            foreach (var t in selection.Tiles)
+            {
+                board[t.Coord].ShowAction(t.Action);
+            }
+        }
+
+        public bool TryHandleTileClick(GameLoop gameLoop, Tile clickedTile)
+        {
+            if (selection.Tiles.All(t => t.Coord != clickedTile.Coord)) return false;
+            selection.Consume(clickedTile);
+            completed = true;
+            return true;
         }
     }
 }

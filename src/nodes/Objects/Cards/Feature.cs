@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using HalfNibbleGame.Autoload;
@@ -12,6 +13,12 @@ public sealed class Feature : CardWithTarget
     private readonly Random random = new Random();
     public Feature() : base("It's a feature")
     {
+    }
+
+    protected override IEnumerable<ReachableTile> GetReachableTiles(Board board)
+    {
+        return board.Tiles.Where(t => t.Piece is not null and not QueenBee)
+            .Select(t => t.Coord.MoveTo());
     }
 
     protected override async Task Use(Board board, Tile target)

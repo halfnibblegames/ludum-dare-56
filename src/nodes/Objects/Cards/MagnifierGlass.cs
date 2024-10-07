@@ -14,6 +14,11 @@ public sealed class MagnifierGlass : CardWithTarget
 
     public override string HelpText => "Destroys all bugs in target tile and all tiles around it.";
 
+    protected override IEnumerable<ReachableTile> GetReachableTiles(Board board)
+    {
+        return board.Tiles.Select(t => t.Coord.Capture());
+    }
+
     protected override Task Use(Board board, Tile target)
     {
         foreach (var coordinate in target.Coord.Yield().Concat(target.Coord.EnumerateAdjacent()))

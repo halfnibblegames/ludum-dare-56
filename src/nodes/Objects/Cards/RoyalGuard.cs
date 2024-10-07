@@ -15,7 +15,7 @@ public sealed class RoyalGuard : Card
     
     public override Texture GetTexture() => Global.Prefabs.RoyalGuard!;
 
-    public override async Task Use(Board board)
+    public override async Task<bool> Use(Board board)
     {
         var queenBeeTile = board.Tiles.Single(t => t.Piece is QueenBee);
         if (queenBeeTile is null)
@@ -31,6 +31,8 @@ public sealed class RoyalGuard : Card
             var ant = Global.Prefabs.Ant!.Instance<Piece>();
             await board.AddPiece(ant, adjacentTile);
         }
+
+        return true;
     }
     public override string HelpText => "Spawns ants in all free tiles orthogonal to the queen.\n[b]- For the queen![/b]";
 }
