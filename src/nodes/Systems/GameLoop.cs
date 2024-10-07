@@ -12,38 +12,33 @@ namespace HalfNibbleGame.Systems;
 
 public sealed class GameLoop : Node2D
 {
-    // Needs to be lazily initiated
-    private static readonly Func<List<PackedScene>> pieceTypesFactory = () =>
-        new List<PackedScene>
-        {
-            Global.Prefabs.Ant!,
-            Global.Prefabs.Dragonfly!,
-            Global.Prefabs.Grasshopper!,
-            Global.Prefabs.HornedBeetle!,
-            Global.Prefabs.PrayingMantis!
-        };
-
     private readonly Random random;
     private readonly List<Move> enemyMoves = new();
     private Task<MoveContinuation?>? playerMove;
     private readonly List<Task> awaits = new();
 
+    private Levels levels = default!;
     private Board board = default!;
+    private readonly List<PackedScene> playerArmy = new();
     private EnemyBrain enemyBrain = default!;
     private GameLoopState state = GameLoopState.Opening;
 
-    public InputHandler Input { get; }
+    private int currentLevel;
+
+    private readonly InputHandler input;
 
     public GameLoop()
     {
         random = new Random();
-        Input = new InputHandler(this);
+        input = new InputHandler(this);
     }
 
     public override void _Ready()
     {
+        levels = new Levels();
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);
+        playerArmy.AddRange(levels.InitialArmy);
         startGame();
     }
 
@@ -56,13 +51,13 @@ public sealed class GameLoop : Node2D
     private void startGame()
     {
         state = GameLoopState.Opening;
-        awaits.Add(startGameAsync());
+        awaits.Add(startGameAsync(levels.All[currentLevel]));
     }
 
-    private async Task startGameAsync()
+    private async Task startGameAsync(Levels.Level level)
     {
         await board.Reset();
-        await deployPieces();
+        await deployPieces(level);
 
         // TODO: Use proper card giving mechanisms, at some point.
         Task.Run(async () =>
@@ -77,64 +72,61 @@ public sealed class GameLoop : Node2D
     private void endGame()
     {
         state = GameLoopState.Ended;
-        Input.Deactivate();
-        Input.Reset();
+        input.Deactivate();
+        input.Reset();
         enemyMoves.Clear();
     }
 
-    private async Task deployPieces()
+    private async Task deployPieces(Levels.Level level)
     {
-        const int playerPieceCount = 3;
-        const int enemyPieceCount = 6;
-
-        var pieceTypes = pieceTypesFactory();
-
         // Player pieces
-        var playerPieces = new List<Piece>();
-
-        var queen = Global.Prefabs.QueenBee!.Instance<Piece>();
-        playerPieces.Add(queen);
-
-        for (var i = 0; i < playerPieceCount; i++)
-        {
-            playerPieces.Add(pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>());
-        }
-
-        await deployPiecesOnBoard(playerPieces, 0, 1);
+        var playerPieces = playerArmy.Select(u => u.Instance<Piece>()).ToList();
+        var pieceLocations = layOutPieces(playerPieces, 0, 1);
+        await deployPiecesOnBoard(pieceLocations);
 
         // Enemy pieces
-        var enemyPieces = new List<Piece>();
-
-        for (var i = 0; i < enemyPieceCount; i++)
+        var enemyPieces = new List<PieceAndLocation>();
+        foreach (var u in level.EnemyForce)
         {
-            var piece = pieceTypes[random.Next(pieceTypes.Count)].Instance<Piece>();
+            var piece = u.Prefab.Instance<Piece>();
             piece.IsEnemy = true;
-            enemyPieces.Add(piece);
+            enemyPieces.Add(new PieceAndLocation(piece, u.Location));
         }
-
-        await deployPiecesOnBoard(enemyPieces, 7, -1);
+        await deployPiecesOnBoard(enemyPieces);
     }
 
     private static readonly int[] deployOrderInRow = { 3, 4, 2, 5, 1, 6, 0, 7 };
 
-    private async Task deployPiecesOnBoard(IEnumerable<Piece> pieces, int startRow, int yUp)
+    private IReadOnlyList<PieceAndLocation> layOutPieces(IEnumerable<Piece> pieces, int startRow, int yUp)
     {
         var sortedPieces = pieces.OrderByDescending(p => p.Value).ThenBy(p => p.DisplayName).ToList();
 
         var row = startRow;
         var i = 0;
 
-        var pieceAnimations = new List<Task>();
+        var pieceLocations = new List<PieceAndLocation>();
 
         foreach (var p in sortedPieces)
         {
             var coord = new TileCoord(deployOrderInRow[i++], row);
-            pieceAnimations.Add(board.AddPiece(p, coord));
+            pieceLocations.Add(new PieceAndLocation(p, coord));
             if (i >= deployOrderInRow.Length)
             {
                 row += yUp;
                 i = 0;
             }
+        }
+
+        return pieceLocations.AsReadOnly();
+    }
+
+    private async Task deployPiecesOnBoard(IEnumerable<PieceAndLocation> pieces)
+    {
+        var pieceAnimations = new List<Task>();
+
+        foreach (var p in pieces)
+        {
+            pieceAnimations.Add(board.AddPiece(p.Piece, p.Tile));
         }
 
         await Task.WhenAll(pieceAnimations);
@@ -154,6 +146,8 @@ public sealed class GameLoop : Node2D
                 if (!playerMove!.IsCompleted) break;
                 if (checkGameEnd() != GameEnd.None)
                 {
+                    currentLevel++;
+                    if (currentLevel == levels.All.Length) currentLevel = 0;
                     restartGame();
                     break;
                 }
@@ -199,6 +193,7 @@ public sealed class GameLoop : Node2D
 
         if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
         {
+            currentLevel = 0;
             restartGame();
         }
     }
@@ -231,7 +226,7 @@ public sealed class GameLoop : Node2D
     private void doPlayerMove(Move move)
     {
         state = GameLoopState.PlayerMove;
-        Input.Deactivate();
+        input.Deactivate();
         playerMove = move.Execute();
     }
 
@@ -260,14 +255,14 @@ public sealed class GameLoop : Node2D
         {
             piece.OnTurnStart();
         }
-        Input.Activate();
+        input.Activate();
     }
 
     private void continueTurn(MoveContinuation continuation)
     {
         state = GameLoopState.AwaitingInput;
-        Input.Activate();
-        Input.SetContinuation(board, continuation);
+        input.Activate();
+        input.SetContinuation(board, continuation);
     }
 
     private void determineEnemyMove()
@@ -297,4 +292,6 @@ public sealed class GameLoop : Node2D
         Win,
         Loss
     }
+
+    private sealed record PieceAndLocation(Piece Piece, TileCoord Tile);
 }
