@@ -18,14 +18,16 @@ public sealed class BoardRippleAnimation : Node
 
     private float passedTime;
     private readonly Board board;
+    private readonly FadeCurve fade;
     private readonly float duration;
 
-    public BoardRippleAnimation(Board board, IEnumerable<TileCoord> startTiles, int distance)
+    public BoardRippleAnimation(Board board, IEnumerable<TileCoord> startTiles, int distance, FadeCurve fade)
     {
         if (distance < 0)
             throw new InvalidOperationException("Distance must be at least 0 for self");
 
         this.board = board;
+        this.fade = fade;
         duration = rippleDuration + distance * distanceOffset;
 
         var q = new Queue<TileCoord>();
@@ -60,6 +62,7 @@ public sealed class BoardRippleAnimation : Node
             var timeSinceStart = passedTime - startTime;
             var t = Mathf.Clamp(timeSinceStart / rippleDuration, 0f, 1f);
             tile.HeightOffsetInPixels = tileDisplacementInPixels * Mathf.Sin(t * Mathf.Pi);
+            tile.Modulate = new Color(tile.Modulate.r, tile.Modulate.g, tile.Modulate.b, fade.Value(t));
         }
 
         if (passedTime >= duration)
@@ -67,5 +70,17 @@ public sealed class BoardRippleAnimation : Node
             EmitSignal(nameof(Finished));
             QueueFree();
         }
+    }
+}
+
+public sealed record FadeCurve(float Start, float End, int Steps)
+{
+    public static FadeCurve FadeIn => new(0, 1, 3);
+    public static FadeCurve FadeOut => new(1, 0, 3);
+
+    public float Value(float t)
+    {
+        var lerp = Start + t * (End - Start);
+        return Mathf.Ceil(lerp * Steps) / Steps;
     }
 }

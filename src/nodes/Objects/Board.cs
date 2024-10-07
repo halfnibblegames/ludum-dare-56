@@ -78,7 +78,7 @@ public sealed class Board : Node2D
             }
         }
 
-        var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7);
+        var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7, FadeCurve.FadeIn);
         AddChild(anim);
     }
 
