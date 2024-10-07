@@ -61,6 +61,6 @@ public class Splash : Control
     [UsedImplicitly]
     public void OnFadeEnded()
     {
-        Global.Instance.SwitchScene("res://scenes/Title.tscn");
+        Global.Instance.SwitchScene("res://scenes/Game.tscn");
     }
 }
