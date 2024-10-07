@@ -237,7 +237,6 @@ public sealed class GameLoop : Node2D
     private void doEnemyMove()
     {
         state = GameLoopState.EnemyMove;
-        GD.Print("Doing enemy move");
 
         foreach (var move in enemyBrain.ImproveMoves(enemyMoves))
         {
@@ -256,30 +255,23 @@ public sealed class GameLoop : Node2D
         GD.Print("Starting new turn");
         state = GameLoopState.AwaitingInput;
         determineEnemyMove();
-        GD.Print("Applying turn start to pieces");
         foreach (var piece in board.Pieces)
         {
             piece.OnTurnStart();
         }
-        GD.Print("Turn started, activating input");
         Input.Activate();
     }
 
     private void continueTurn(MoveContinuation continuation)
     {
-        GD.Print("Continuing turn");
         state = GameLoopState.AwaitingInput;
-        GD.Print("Activating input");
         Input.Activate();
-        GD.Print("Forcing input to use continuation");
         Input.SetContinuation(board, continuation);
     }
 
     private void determineEnemyMove()
     {
-        GD.Print("Determining enemy turn");
-        GD.PrintStack();
-        GD.Print($"Starting with {enemyMoves.Count} moves (should be 0)");
+        GD.Print($"Determining enemy moves. Starting with {enemyMoves.Count} moves (should be 0)");
         var plannedMoves = enemyBrain.PlanMoves().ToList();
         enemyMoves.AddRange(plannedMoves);
         GD.Print($"Planned {enemyMoves.Count} moves");

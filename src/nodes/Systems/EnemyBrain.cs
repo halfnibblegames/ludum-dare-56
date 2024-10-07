@@ -25,7 +25,6 @@ sealed class EnemyBrain
 
     public IEnumerable<Move> PlanMoves()
     {
-        GD.Print("Enumerating enemy pieces");
         var pieces = enumeratePieces().ToList();
         if (pieces.Count == 0) return Enumerable.Empty<Move>();
 
@@ -60,7 +59,6 @@ sealed class EnemyBrain
     {
         var ctx = makeContext();
 
-        GD.Print("Determining best moves for each enemy piece");
         var bestMovePerPiece = placedPieces.ToDictionary(
             piece => piece,
             piece =>
@@ -76,7 +74,6 @@ sealed class EnemyBrain
             .OrderByDescending(p => bestMovePerPiece[p]!.HeuristicScore(ctx))
             .ToList();
 
-        GD.Print("Choosing pieces with most promising results");
         var occupiedTiles = new List<TileCoord>();
         foreach (var piece in orderedPieces)
         {

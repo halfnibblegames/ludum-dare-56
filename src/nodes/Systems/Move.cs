@@ -58,16 +58,13 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
     public IMoveResult Preview()
     {
-        GD.Print($"Previewing move for {Piece.Name}");
         var sideEffects = new MoveSideEffectsPreview(this);
         if (Piece.InterruptMove(this) is { } moveOverride)
         {
-            GD.Print("Found a move interrupt, executing");
             moveOverride.Execute(this, sideEffects);
             return sideEffects;
         }
 
-        GD.Print("No interrupt, do normal on move");
         Piece.OnMove(this, sideEffects);
         return sideEffects;
     }
