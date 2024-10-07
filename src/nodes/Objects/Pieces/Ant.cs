@@ -16,7 +16,7 @@ public sealed class Ant : Piece
                     .Select(t => t.MoveTo()))
             .Concat(
                 currentTile.EnumerateDiagonal()
-                    .Where(t => board[t].Piece is { IsEnemy: true })
+                    .Where(t => board[t].Piece is { } piece && piece.IsEnemy != IsEnemy)
                     .Select(t => t.Capture()));
     }
 
