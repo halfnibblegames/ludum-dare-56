@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/horny_jail.aseprite-07f85d2bf0e4d04ee82ca62672a1959c.res"
+
+[deps]
+
+source_file="res://assets/horny_jail.aseprite"
+dest_files=[ "res://.import/horny_jail.aseprite-07f85d2bf0e4d04ee82ca62672a1959c.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

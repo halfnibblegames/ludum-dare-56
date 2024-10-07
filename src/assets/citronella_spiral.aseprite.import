@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/citronella_spiral.aseprite-f8d6a94ebecdfa428d29835f88d0130f.res"
+
+[deps]
+
+source_file="res://assets/citronella_spiral.aseprite"
+dest_files=[ "res://.import/citronella_spiral.aseprite-f8d6a94ebecdfa428d29835f88d0130f.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

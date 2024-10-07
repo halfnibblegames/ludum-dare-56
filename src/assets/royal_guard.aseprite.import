@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/royal_guard.aseprite-861b393a2cb3c3e91238e2539f36e2b2.res"
+
+[deps]
+
+source_file="res://assets/royal_guard.aseprite"
+dest_files=[ "res://.import/royal_guard.aseprite-861b393a2cb3c3e91238e2539f36e2b2.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

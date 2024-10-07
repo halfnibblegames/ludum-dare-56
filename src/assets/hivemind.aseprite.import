@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/hivemind.aseprite-ecaabd76079518ffa3a2526cc8df0b09.res"
+
+[deps]
+
+source_file="res://assets/hivemind.aseprite"
+dest_files=[ "res://.import/hivemind.aseprite-ecaabd76079518ffa3a2526cc8df0b09.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

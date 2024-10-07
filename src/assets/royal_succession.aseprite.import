@@ -1,0 +1,17 @@
+[remap]
+
+importer="aseprite_wizard.plugin"
+type="SpriteFrames"
+path="res://.import/royal_succession.aseprite-ac257b0e7456b0555e2abf6ec5a48df2.res"
+
+[deps]
+
+source_file="res://assets/royal_succession.aseprite"
+dest_files=[ "res://.import/royal_succession.aseprite-ac257b0e7456b0555e2abf6ec5a48df2.res" ]
+
+[params]
+
+split_layers=false
+exclude_layers_pattern=""
+only_visible_layers=false
+sheet_type="Packed"

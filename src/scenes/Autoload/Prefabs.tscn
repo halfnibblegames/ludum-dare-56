@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://nodes/Autoload/Prefabs.cs" type="Script" id=1]
 [ext_resource path="res://scenes/Objects/Tile.tscn" type="PackedScene" id=2]
@@ -11,6 +11,11 @@
 [ext_resource path="res://scenes/Objects/Effects/Capture.tscn" type="PackedScene" id=9]
 [ext_resource path="res://assets/sugar_cube.png" type="Texture" id=10]
 [ext_resource path="res://assets/feature.png" type="Texture" id=11]
+[ext_resource path="res://assets/mag.png" type="Texture" id=12]
+[ext_resource path="res://assets/royal_guard.png" type="Texture" id=13]
+[ext_resource path="res://assets/royal_succession.png" type="Texture" id=14]
+[ext_resource path="res://assets/citronella_spiral.png" type="Texture" id=15]
+[ext_resource path="res://assets/horny_jail.png" type="Texture" id=16]
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
@@ -22,11 +27,11 @@ Grasshopper = ExtResource( 8 )
 HornedBeetle = ExtResource( 5 )
 PrayingMantis = ExtResource( 4 )
 Feature = ExtResource( 11 )
-RoyalGuard = ExtResource( 11 )
+RoyalGuard = ExtResource( 13 )
 Sugar = ExtResource( 10 )
-MagnifierGlass = ExtResource( 11 )
-HornyJail = ExtResource( 11 )
+MagnifierGlass = ExtResource( 12 )
+HornyJail = ExtResource( 16 )
 Hivemind = ExtResource( 11 )
-RoyalSuccession = ExtResource( 11 )
-CitronellaSpiral = ExtResource( 11 )
+RoyalSuccession = ExtResource( 14 )
+CitronellaSpiral = ExtResource( 15 )
 CaptureExplosion = ExtResource( 9 )
