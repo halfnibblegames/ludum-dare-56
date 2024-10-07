@@ -51,7 +51,6 @@ sealed class Levels
         Prefabs.Ant!
     );
 
-
     private static IReadOnlyList<PackedScene> army(params PackedScene[] units) => units;
     private static IReadOnlyList<Enemy> army(params Enemy[] units) => units;
     private static Enemy enemy(PackedScene? unit, int x, int y) => new(unit!, new TileCoord(x, y));

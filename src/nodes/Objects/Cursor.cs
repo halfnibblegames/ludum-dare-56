@@ -15,6 +15,7 @@ sealed class Cursor : AnimatedSprite
     private Vector2 startPos;
     private float timeSinceStart;
     private Tile? targetTile;
+    private bool isActive;
 
     public event TileEventHandler? TileClicked;
     public event TileEventHandler? TileHovered;
@@ -34,11 +35,13 @@ sealed class Cursor : AnimatedSprite
             startPos = targetTile.Position;
             Visible = true;
         }
+        isActive = true;
     }
 
     public void Deactivate()
     {
         Visible = false;
+        isActive = false;
     }
 
     public void Reset()
@@ -51,6 +54,12 @@ sealed class Cursor : AnimatedSprite
     {
         if (tile == targetTile) return;
 
+        if (!isActive)
+        {
+            targetTile = tile;
+            return;
+        }
+
         startPos = targetTile?.Position ?? Position;
         Visible = true;
 
@@ -61,7 +70,7 @@ sealed class Cursor : AnimatedSprite
 
     public void Confirm()
     {
-        if (targetTile is null) return;
+        if (targetTile is null || !isActive) return;
 
         Play("Confirm");
         TileClicked?.Invoke(board, targetTile);
@@ -74,7 +83,7 @@ sealed class Cursor : AnimatedSprite
 
     public override void _Process(float delta)
     {
-        if (targetTile is null) return;
+        if (targetTile is null || !isActive) return;
 
         var remainingDiff = targetTile.Position - Position;
         if (remainingDiff.LengthSquared() < 0.01f)

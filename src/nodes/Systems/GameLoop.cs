@@ -42,12 +42,6 @@ public sealed class GameLoop : Node2D
         startGame();
     }
 
-    private void restartGame()
-    {
-        endGame();
-        startGame();
-    }
-
     private void startGame()
     {
         state = GameLoopState.Opening;
@@ -73,8 +67,9 @@ public sealed class GameLoop : Node2D
     {
         state = GameLoopState.Ended;
         input.Deactivate();
-        input.Reset();
         enemyMoves.Clear();
+
+        awaits.Add(board.Disappear());
     }
 
     private async Task deployPieces(Levels.Level level)
@@ -138,6 +133,7 @@ public sealed class GameLoop : Node2D
         {
             case GameLoopState.Opening:
                 if (stillWaiting()) break;
+                input.Reset();
                 startTurn();
                 break;
             case GameLoopState.AwaitingInput:
@@ -148,7 +144,7 @@ public sealed class GameLoop : Node2D
                 {
                     currentLevel++;
                     if (currentLevel == levels.All.Length) currentLevel = 0;
-                    restartGame();
+                    endGame();
                     break;
                 }
 
@@ -165,7 +161,7 @@ public sealed class GameLoop : Node2D
                 if (stillWaiting()) break;
                 if (checkGameEnd() != GameEnd.None)
                 {
-                    restartGame();
+                    endGame();
                     break;
                 }
 
@@ -194,7 +190,7 @@ public sealed class GameLoop : Node2D
         if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
         {
             currentLevel = 0;
-            restartGame();
+            endGame();
         }
     }
 

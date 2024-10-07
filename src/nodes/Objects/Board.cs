@@ -34,6 +34,12 @@ public sealed class Board : Node2D
         GetNode("EditorRect").QueueFree();
     }
 
+    public async Task Disappear()
+    {
+        await Task.WhenAll(pieces.Select(p => fadePiece(p, 0, FadeCurve.FadeOut)));
+        await fadeBoard(FadeCurve.FadeOut);
+    }
+
     public async Task Reset()
     {
         cleanUp();
@@ -78,7 +84,12 @@ public sealed class Board : Node2D
             }
         }
 
-        var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7, FadeCurve.FadeIn);
+        await fadeBoard(FadeCurve.FadeIn);
+    }
+
+    private async Task fadeBoard(FadeCurve fadeCurve)
+    {
+        var anim = new BoardRippleAnimation(this, Enumerable.Range(0, 8).Select(x => new TileCoord(x, 0)).ToList(), 7, fadeCurve);
         var signal = ToSignal(anim, nameof(BoardRippleAnimation.Finished));
         AddChild(anim);
         await signal;
@@ -98,11 +109,16 @@ public sealed class Board : Node2D
 
     private async Task fadeInPiece(Piece piece, int distance)
     {
+        await fadePiece(piece, distance, FadeCurve.FadeIn);
+    }
+
+    private async Task fadePiece(Piece piece, int distance, FadeCurve curve)
+    {
         const int delayPerDistance = 100;
 
         piece.Modulate = new Color(1, 1, 1, 0);
         await Task.Delay(delayPerDistance * distance);
-        var anim = new FadeAnimation(FadeCurve.FadeIn, piece);
+        var anim = new FadeAnimation(curve, piece);
         var signal = ToSignal(anim, nameof(FadeAnimation.Finished));
         AddChild(anim);
         await signal;
