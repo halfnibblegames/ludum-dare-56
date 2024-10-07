@@ -11,16 +11,10 @@ config_version=4
 [application]
 
 config/name="Cosmic Critter Chess"
-run/main_scene="res://scenes/Splash.tscn"
+run/main_scene="res://scenes/Game.tscn"
 config/icon="res://icon.png"
 config/macos_native_icon="res://icon.icns"
 config/windows_native_icon="res://icon.ico"
-
-[autoload]
-
-Global="*res://nodes/Autoload/Global.cs"
-Prefabs="*res://scenes/Autoload/Prefabs.tscn"
-AudioService="*res://nodes/Autoload/AudioService.cs"
 
 [display]
 
@@ -30,10 +24,6 @@ window/size/test_width=1280
 window/size/test_height=720
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/AsepriteWizard/plugin.cfg" )
 
 [global]
 
