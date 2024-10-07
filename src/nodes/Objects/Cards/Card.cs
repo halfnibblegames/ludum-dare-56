@@ -26,7 +26,7 @@ public abstract class CardWithTarget : Card
 
     public Tile? TargetTile { get; set; }
 
-    public override Task Use(Board board)
+    public sealed override Task Use(Board board)
     {
         if (TargetTile is null)
             throw new InvalidOperationException("Trying to use a card with target without a target.");

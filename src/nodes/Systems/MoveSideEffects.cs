@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects;
+using System.Linq;
 
 namespace HalfNibbleGame.Systems;
 
 public interface IMoveSideEffects
 {
-    void CapturePiece(Tile tile);
+    void CapturePiece(Board board, Tile tile);
     void Stun(int turnCount);
     void AllowContinuation(List<ReachableTile> continuationTiles);
     void PlaySound(Boombox.SoundEffect soundEffect);
@@ -31,7 +32,7 @@ public abstract class MoveSideSideEffectsBase : IMoveSideEffects
         Move = move;
     }
 
-    public abstract void CapturePiece(Tile tile);
+    public abstract void CapturePiece(Board moveBoard, Tile tile);
 
     public abstract void Stun(int turnCount);
 
@@ -49,9 +50,19 @@ public sealed class MoveSideEffects : MoveSideSideEffectsBase
 {
     public MoveSideEffects(Move move) : base(move) { }
 
-    public override void CapturePiece(Tile tile)
+    public override void CapturePiece(Board board, Tile tile)
     {
         if (tile.Piece is null) throw new InvalidOperationException();
+
+        if (tile.Piece.RevivesOnDeath)
+        {
+            var emptyTiles = board.Tiles.Where(x => x.Piece is null).ToList();
+            var random = new Random();
+            var randomTile = emptyTiles[random.Next(emptyTiles.Count)].Coord;
+            //TODO: IF we revive anything that is not a queen we need to figure this out.
+            board.AddPiece(Global.Prefabs.QueenBee!.Instance<Piece>(), randomTile);
+        }
+
         tile.Piece.Destroy();
         tile.Piece = null;
     }
@@ -79,7 +90,7 @@ sealed class MoveSideEffectsPreview : MoveSideSideEffectsBase, IMoveResult
         PiecesCaptured = piecesCaptured.AsReadOnly();
     }
 
-    public override void CapturePiece(Tile tile)
+    public override void CapturePiece(Board board, Tile tile)
     {
         if (tile.Piece is null) return;
         piecesCaptured.Add(tile.Piece);

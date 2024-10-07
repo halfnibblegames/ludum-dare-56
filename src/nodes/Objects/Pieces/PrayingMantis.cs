@@ -45,7 +45,7 @@ public sealed class PrayingMantis : Piece
             {
                 if (tile.Piece is not null && tile.Piece.IsEnemy != IsEnemy)
                 {
-                    sideEffects.CapturePiece(tile);
+                    sideEffects.CapturePiece(m.Board, tile);
                 }
             }
         }

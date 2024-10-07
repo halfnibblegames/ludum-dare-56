@@ -60,7 +60,7 @@ public sealed class Dragonfly : Piece
             return;
         }
 
-        sideEffects.CapturePiece(move.Board[lastTile]);
+        sideEffects.CapturePiece(move.Board, move.Board[lastTile]);
 
         // See if there are any turn continuations
         var newMoves = new List<TileCoord>();

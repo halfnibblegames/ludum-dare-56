@@ -47,7 +47,7 @@ public sealed class HornedBeetle : Piece
             var boardTile = move.Board[traversedTile];
             if (boardTile.Piece is { } piece && piece.IsEnemy != IsEnemy)
             {
-                sideEffects.CapturePiece(boardTile);
+                sideEffects.CapturePiece(move.Board, boardTile);
                 captured = true;
             }
         }

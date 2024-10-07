@@ -1,12 +1,14 @@
 ﻿using Godot;
 using HalfNibbleGame.Autoload;
+using JetBrains.Annotations;
 
 namespace HalfNibbleGame.Systems;
 
+[UsedImplicitly]
 public sealed class HelpService : Node
 {
-    private Label name;
-    private RichTextLabel description;
+    private Label name = default!;
+    private RichTextLabel description = default!;
     
     public override void _Ready()
     {

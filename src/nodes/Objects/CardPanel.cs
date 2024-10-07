@@ -10,9 +10,9 @@ namespace HalfNibbleGame.Objects;
 [UsedImplicitly]
 public sealed class CardPanel : Control
 {
-    private CardSlot slotOne;
-    private CardSlot slotTwo;
-    private CardSlot slotThree;
+    private CardSlot slotOne = default!;
+    private CardSlot slotTwo = default!;
+    private CardSlot slotThree = default!;
     
     public override void _Ready()
     {

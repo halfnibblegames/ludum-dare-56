@@ -60,9 +60,9 @@ public sealed class GameLoop : Node2D
         Task.Run(async () =>
         {
             await Task.Delay(1000);
-            Global.Services.Get<CardService>().AddCardToSlot( new Sugar(), CardService.Slot.One);
-            Global.Services.Get<CardService>().AddCardToSlot( new RoyalGuard(), CardService.Slot.Two);
-            Global.Services.Get<CardService>().AddCardToSlot( new Feature(), CardService.Slot.Three);
+            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.One);
+            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Two);
+            Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Three);
         });
 
         startTurn();

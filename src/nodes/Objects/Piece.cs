@@ -40,7 +40,8 @@ public abstract class Piece : Node2D, IHelpable
     public abstract string DisplayName { get; }
     public abstract string HelpText { get; }
     public abstract int Value { get; }
-
+    public bool RevivesOnDeath { get; set; }
+ 
     public virtual MoveOverride? InterruptMove(Move move)
     {
         return null;
@@ -50,7 +51,7 @@ public abstract class Piece : Node2D, IHelpable
     {
         if (move.To.Piece is { } piece && piece.IsEnemy != IsEnemy)
         {
-            sideEffects.CapturePiece(move.To);
+            sideEffects.CapturePiece(move.Board, move.To);
         }
     }
 
@@ -129,6 +130,9 @@ public abstract class Piece : Node2D, IHelpable
     {
         StunnedTurnsLeft = stunnedTurns;
         IsStunned = true;
+        
+        var stunLabel = GetNodeOrNull<Label>("Stun");
+        stunLabel.Text = StunnedTurnsLeft.ToString();
     }
 
     public void Destroy()

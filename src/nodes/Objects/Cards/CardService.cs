@@ -10,7 +10,7 @@ namespace HalfNibbleGame.Objects.Cards;
 public sealed class CardService : Node
 {
     private readonly Dictionary<Slot, Card> slots = new();
-    private Board board;
+    private Board board = default!;
     
     public List<Slot> SlotsInUse => slots.Keys.ToList();
     public Card? GetCardInSlotOrDefault(Slot slot) => slots.TryGetValue(slot, out var card) ? card : null;

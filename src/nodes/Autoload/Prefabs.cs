@@ -20,6 +20,11 @@ public sealed class Prefabs : Node
     [Export] public Texture? Feature;
     [Export] public Texture? RoyalGuard;
     [Export] public Texture? Sugar;
+    [Export] public Texture? MagnifierGlass;
+    [Export] public Texture? HornyJail;
+    [Export] public Texture? Hivemind;
+    [Export] public Texture? RoyalSuccession;
+    [Export] public Texture? CitronellaSpiral;
 
     // Effects
     [Export] public PackedScene? CaptureExplosion;
