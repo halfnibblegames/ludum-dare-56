@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/card_slots.png" type="Texture" id=1]
 [ext_resource path="res://nodes/Objects/CardSlot.cs" type="Script" id=2]
+[ext_resource path="res://assets/card_hover.png" type="Texture" id=3]
 [ext_resource path="res://nodes/Objects/CardPanel.cs" type="Script" id=4]
 
 [node name="Control" type="Control"]
@@ -35,6 +36,13 @@ margin_top = 2.0
 margin_right = 63.0
 margin_bottom = 21.0
 script = ExtResource( 2 )
+
+[node name="HoverFrame" type="TextureRect" parent="."]
+visible = false
+margin_right = 23.0
+margin_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource( 3 )
 
 [connection signal="mouse_entered" from="SlotOne" to="." method="OnSlotOneHoverEntered"]
 [connection signal="mouse_exited" from="SlotOne" to="." method="OnSlotHoverExited"]

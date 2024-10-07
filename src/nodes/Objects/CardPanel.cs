@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using HalfNibbleGame.Autoload;
 using HalfNibbleGame.Objects.Cards;
@@ -13,6 +13,9 @@ public sealed class CardPanel : Control
     private CardSlot slotOne = default!;
     private CardSlot slotTwo = default!;
     private CardSlot slotThree = default!;
+    private TextureRect cursorRect = default!;
+
+    private CardSlot? hoveringCard;
     
     public override void _Ready()
     {
@@ -25,6 +28,32 @@ public sealed class CardPanel : Control
         slotTwo.Slot = CardService.Slot.Two;
         slotThree = GetNode<CardSlot>("SlotThree");
         slotThree.Slot = CardService.Slot.Three;
+
+        cursorRect = GetNode<TextureRect>("HoverFrame");
+    }
+
+    public override void _Process(float delta)
+    {
+        base._Process(delta);
+
+        var cardService = Global.Services.Get<CardService>();
+        var cardInUse = cardService.CardInUse;
+        var slots = new[] { slotOne, slotTwo, slotThree };
+        var slotInUse = cardInUse is null
+            ? null
+            : slots.FirstOrDefault(s => cardService.GetCardInSlotOrDefault(s.Slot) == cardInUse);
+        var isHoveredSlotOccupied = hoveringCard is not null && cardService.GetCardInSlotOrDefault(hoveringCard.Slot) is not null;
+        var slotToHighlight = slotInUse ?? (isHoveredSlotOccupied ? hoveringCard : null);
+
+        if (slotToHighlight is null)
+        {
+            cursorRect.Visible = false;
+        }
+        else
+        {
+            cursorRect.RectPosition = slotToHighlight.RectPosition - new Vector2(2, 2);
+            cursorRect.Visible = true;
+        }
     }
 
     private void OnCardListUpdated()
@@ -39,30 +68,36 @@ public sealed class CardPanel : Control
     public void OnSlotOneHoverEntered()
     {
         HoverStarted(CardService.Slot.One);
+        hoveringCard = slotOne;
     }
 
     [UsedImplicitly]
     public void OnSlotTwoHoverEntered()
     {
         HoverStarted(CardService.Slot.Two);
+        hoveringCard = slotTwo;
     }
 
     [UsedImplicitly]
     public void OnSlotThreeHoverEntered()
     {
         HoverStarted(CardService.Slot.Three);
+        hoveringCard = slotThree;
     }
 
     private void HoverStarted(CardService.Slot slot)
     {
-        var card = Global.Services.Get<CardService>().GetCardInSlotOrDefault(slot);
+        var cardService = Global.Services.Get<CardService>();
+        var helpService = Global.Services.Get<HelpService>();
+
+        var card = cardService.GetCardInSlotOrDefault(slot);
         if (card is null)
         {
-            Global.Services.Get<HelpService>().ClearHelp();
+            helpService.ClearHelp();
         }
         else
         {
-            Global.Services.Get<HelpService>().ShowHelp(card);
+            helpService.ShowHelp(card);
         }
     }
 
@@ -70,5 +105,6 @@ public sealed class CardPanel : Control
     public void OnSlotHoverExited()
     {
         Global.Services.Get<HelpService>().ClearHelp();
+        hoveringCard = null;
     }
 }
