@@ -84,6 +84,8 @@ public sealed class GameLoop : Node2D
             enemyPieces.Add(new PieceAndLocation(piece, u.Location));
         }
         await deployPiecesOnBoard(enemyPieces);
+
+        Global.Services.Get<TurnCounterService>().OnBattleStart();
     }
 
     private static readonly int[] deployOrderInRow = { 3, 4, 2, 5, 1, 6, 0, 7 };
@@ -232,11 +234,13 @@ public sealed class GameLoop : Node2D
         if (!groupedPieces[true].Any())
         {
             end = GameEnd.Win;
+            Global.Services.Get<TurnCounterService>().Reset();
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
             end = GameEnd.Loss;
+            Global.Services.Get<TurnCounterService>().Reset();
         }
     }
 
@@ -256,6 +260,7 @@ public sealed class GameLoop : Node2D
 
     private void doEnemyMove()
     {
+        Global.Services.Get<TurnCounterService>().OnTurnStart();
         state = GameLoopState.EnemyMove;
 
         foreach (var move in enemyBrain.ImproveMoves(enemyMoves))
