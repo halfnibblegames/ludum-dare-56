@@ -322,6 +322,7 @@ public sealed class GameLoop : Node2D
         playerArmy.Clear();
         playerArmy.AddRange(levels.InitialArmy);
         Global.Services.Get<CardService>().ResetCards();
+        Global.Services.Get<Chronometer>().ResetTime();
     }
 
     private void winGame()
