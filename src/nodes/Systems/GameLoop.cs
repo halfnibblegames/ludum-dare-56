@@ -21,6 +21,7 @@ public sealed class GameLoop : Node2D
     private Board board = default!;
     private readonly List<PackedScene> playerArmy = new();
     private EnemyBrain enemyBrain = default!;
+    private GameEnd end = GameEnd.None;
     private GameLoopState state = GameLoopState.Opening;
 
     private int currentLevel;
@@ -38,13 +39,14 @@ public sealed class GameLoop : Node2D
         levels = new Levels();
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);
-        playerArmy.AddRange(levels.InitialArmy);
+        resetProgress();
         startGame();
     }
 
     private void startGame()
     {
         state = GameLoopState.Opening;
+        end = GameEnd.None;
         awaits.Add(startGameAsync(levels.All[currentLevel]));
     }
 
@@ -140,10 +142,9 @@ public sealed class GameLoop : Node2D
                 break;
             case GameLoopState.PlayerMove:
                 if (!playerMove!.IsCompleted) break;
-                if (checkGameEnd() != GameEnd.None)
+                updateGameEnd();
+                if (end != GameEnd.None)
                 {
-                    currentLevel++;
-                    if (currentLevel == levels.All.Length) currentLevel = 0;
                     endGame();
                     break;
                 }
@@ -159,7 +160,8 @@ public sealed class GameLoop : Node2D
                 break;
             case GameLoopState.EnemyMove:
                 if (stillWaiting()) break;
-                if (checkGameEnd() != GameEnd.None)
+                updateGameEnd();
+                if (end != GameEnd.None)
                 {
                     endGame();
                     break;
@@ -170,7 +172,17 @@ public sealed class GameLoop : Node2D
             case GameLoopState.Ended:
                 if (stillWaiting()) break;
 
+                if (end == GameEnd.Win)
+                {
+                    startChoices();
+                    break;
+                }
+
+                resetProgress();
                 startGame();
+                break;
+            case GameLoopState.ChoosePowerUp:
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -189,27 +201,27 @@ public sealed class GameLoop : Node2D
 
         if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
         {
-            currentLevel = 0;
+            end = GameEnd.Loss;
             endGame();
         }
     }
 
-    private GameEnd checkGameEnd()
+    private void updateGameEnd()
     {
+        if (end != GameEnd.None) throw new InvalidOperationException();
+
         var groupedPieces = board.Pieces.ToLookup(p => p.IsEnemy);
 
         // Check victory
         if (!groupedPieces[true].Any())
         {
-            return GameEnd.Win;
+            end = GameEnd.Win;
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
-            return GameEnd.Loss;
+            end = GameEnd.Loss;
         }
-
-        return GameEnd.None;
     }
 
     public void SubmitMove(Move move)
@@ -273,13 +285,30 @@ public sealed class GameLoop : Node2D
         }
     }
 
+    private void startChoices()
+    {
+        state = GameLoopState.ChoosePowerUp;
+        // TODO: card choice
+        currentLevel++;
+        startGame();
+    }
+
+    private void resetProgress()
+    {
+        currentLevel = 0;
+        playerArmy.Clear();
+        playerArmy.AddRange(levels.InitialArmy);
+        Global.Services.Get<CardService>().ResetCards();
+    }
+
     private enum GameLoopState
     {
         Opening,
         AwaitingInput,
         PlayerMove,
         EnemyMove,
-        Ended
+        Ended,
+        ChoosePowerUp
     }
 
     private enum GameEnd

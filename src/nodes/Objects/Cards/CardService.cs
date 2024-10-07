@@ -59,6 +59,12 @@ public sealed class CardService : Node
         OnCardListUpdated();
     }
 
+    public void ResetCards()
+    {
+        slots.Clear();
+        OnCardListUpdated();
+    }
+
     public enum Slot
     {
         One,
