@@ -72,15 +72,3 @@ public sealed class BoardRippleAnimation : Node
         }
     }
 }
-
-public sealed record FadeCurve(float Start, float End, int Steps)
-{
-    public static FadeCurve FadeIn => new(0, 1, 3);
-    public static FadeCurve FadeOut => new(1, 0, 3);
-
-    public float Value(float t)
-    {
-        var lerp = Start + t * (End - Start);
-        return Mathf.Ceil(lerp * Steps) / Steps;
-    }
-}
