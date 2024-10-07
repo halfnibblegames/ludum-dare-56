@@ -25,6 +25,8 @@ public sealed class GameLoop : Node2D
 
     private readonly Random random;
     private readonly List<Move> enemyMoves = new();
+    private Task<MoveContinuation?>? playerMove;
+    private readonly List<Task> awaits = new();
 
     private Board board = default!;
     private EnemyBrain enemyBrain = default!;
@@ -42,19 +44,23 @@ public sealed class GameLoop : Node2D
     {
         board = GetNode<Board>("Board");
         enemyBrain = new EnemyBrain(board, random);
-        _ = startGame();
+        startGame();
     }
 
-    private async Task restartGame()
+    private void restartGame()
     {
         endGame();
-        await startGame();
+        startGame();
     }
 
-    private async Task startGame()
+    private void startGame()
     {
         state = GameLoopState.Opening;
+        awaits.Add(startGameAsync());
+    }
 
+    private async Task startGameAsync()
+    {
         await board.Reset();
         await deployPieces();
 
@@ -66,8 +72,6 @@ public sealed class GameLoop : Node2D
             Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Two);
             Global.Services.Get<CardService>().AddCardToSlot(Cards.GetRandomCard(), CardService.Slot.Three);
         });
-
-        startTurn();
     }
 
     private void endGame()
@@ -137,84 +141,114 @@ public sealed class GameLoop : Node2D
 
     public override void _Process(float delta)
     {
-        checkGameEnd();
+        switch (state)
+        {
+            case GameLoopState.Opening:
+                if (stillWaiting()) break;
+                startTurn();
+                break;
+            case GameLoopState.AwaitingInput:
+                break;
+            case GameLoopState.PlayerMove:
+                if (!playerMove!.IsCompleted) break;
+                if (checkGameEnd() != GameEnd.None)
+                {
+                    restartGame();
+                    break;
+                }
+
+                var continuation = playerMove.Result;
+                if (continuation is not null)
+                {
+                    continueTurn(continuation);
+                    break;
+                }
+
+                doEnemyMove();
+                break;
+            case GameLoopState.EnemyMove:
+                if (stillWaiting()) break;
+                if (checkGameEnd() != GameEnd.None)
+                {
+                    restartGame();
+                    break;
+                }
+
+                startTurn();
+                break;
+            case GameLoopState.Ended:
+                if (stillWaiting()) break;
+
+                startGame();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private bool stillWaiting()
+    {
+        awaits.RemoveAll(t => t.IsCompleted);
+        return awaits.Count > 0;
     }
 
     public override void _Input(InputEvent @event)
     {
+        if (state != GameLoopState.AwaitingInput) return;
+
         if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F1 })
         {
-            _ = restartGame();
+            restartGame();
         }
     }
 
-    private void checkGameEnd()
+    private GameEnd checkGameEnd()
     {
-        if (state != GameLoopState.AwaitingInput) return;
-
         var groupedPieces = board.Pieces.ToLookup(p => p.IsEnemy);
 
         // Check victory
         if (!groupedPieces[true].Any())
         {
-            // Win!
-            _ = restartGame();
+            return GameEnd.Win;
         }
 
         if (!groupedPieces[false].Any(p => p is QueenBee))
         {
-            // Loss!
-            _ = restartGame();
+            return GameEnd.Loss;
         }
+
+        return GameEnd.None;
     }
 
     public void SubmitMove(Move move)
     {
         if (state != GameLoopState.AwaitingInput) throw new InvalidOperationException();
 
-        _ = doPlayerMove(move);
+        doPlayerMove(move);
     }
 
-    private async Task doPlayerMove(Move move)
+    private void doPlayerMove(Move move)
     {
         state = GameLoopState.PlayerMove;
         Input.Deactivate();
-        var continuation = await move.Execute();
-
-        if (continuation is not null)
-        {
-            continueTurn(continuation);
-            return;
-        }
-
-        _ = doEnemyMove();
+        playerMove = move.Execute();
     }
 
-    private async Task doEnemyMove()
+    private void doEnemyMove()
     {
         state = GameLoopState.EnemyMove;
+        GD.Print("Doing enemy move");
 
-        var moveExecutions = new List<Task>();
         foreach (var move in enemyBrain.ImproveMoves(enemyMoves))
         {
             move.Piece.IsPrimed = false;
             if (move.Validate())
             {
-                moveExecutions.Add(move.Execute());
+                awaits.Add(move.Execute());
             }
         }
 
-        var enemyAwait = Task.WhenAll(moveExecutions);
-        var timeout = Task.Delay(5000);
-
-        var completedTask = await Task.WhenAny(enemyAwait, timeout);
-        if (completedTask == timeout)
-        {
-            throw new Exception("Enemy move did not complete within 5 seconds");
-        }
-
         enemyMoves.Clear();
-        startTurn();
     }
 
     private void startTurn()
@@ -244,8 +278,11 @@ public sealed class GameLoop : Node2D
     private void determineEnemyMove()
     {
         GD.Print("Determining enemy turn");
+        GD.PrintStack();
+        GD.Print($"Starting with {enemyMoves.Count} moves (should be 0)");
         var plannedMoves = enemyBrain.PlanMoves().ToList();
         enemyMoves.AddRange(plannedMoves);
+        GD.Print($"Planned {enemyMoves.Count} moves");
         foreach (var m in plannedMoves)
         {
             m.Piece.IsPrimed = true;
@@ -259,5 +296,12 @@ public sealed class GameLoop : Node2D
         PlayerMove,
         EnemyMove,
         Ended
+    }
+
+    private enum GameEnd
+    {
+        None,
+        Win,
+        Loss
     }
 }

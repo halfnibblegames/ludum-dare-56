@@ -147,6 +147,7 @@ public abstract class Piece : Node2D, IHelpable
         QueueFree();
         Destroyed?.Invoke();
         IsDead = true;
+        GD.Print($"Destroyed {Name}");
     }
 
     protected bool ContainsSameColorPiece(Tile tile)

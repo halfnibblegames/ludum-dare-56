@@ -58,7 +58,7 @@ public sealed record Move(Board Board, Piece Piece, Tile From, Tile To, int Prev
 
     public IMoveResult Preview()
     {
-        GD.Print($"Previewing move for {Piece}");
+        GD.Print($"Previewing move for {Piece.Name}");
         var sideEffects = new MoveSideEffectsPreview(this);
         if (Piece.InterruptMove(this) is { } moveOverride)
         {
