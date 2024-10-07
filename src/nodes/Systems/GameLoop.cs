@@ -79,6 +79,7 @@ public sealed class GameLoop : Node2D
         state = GameLoopState.Ended;
         Input.Deactivate();
         Input.Reset();
+        enemyMoves.Clear();
     }
 
     private async Task deployPieces()
