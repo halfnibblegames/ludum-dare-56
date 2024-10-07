@@ -210,6 +210,11 @@ public sealed class GameLoop : Node2D
             end = GameEnd.Loss;
             endGame();
         }
+        if (@event is InputEventKey { Pressed: true, Scancode: (int) KeyList.F2 })
+        {
+            end = GameEnd.Win;
+            endGame();
+        }
     }
 
     private void updateGameEnd()
@@ -262,7 +267,6 @@ public sealed class GameLoop : Node2D
 
     private void startTurn()
     {
-        GD.Print("Starting new turn");
         state = GameLoopState.AwaitingInput;
         determineEnemyMove();
         foreach (var piece in board.Pieces)
@@ -281,10 +285,8 @@ public sealed class GameLoop : Node2D
 
     private void determineEnemyMove()
     {
-        GD.Print($"Determining enemy moves. Starting with {enemyMoves.Count} moves (should be 0)");
         var plannedMoves = enemyBrain.PlanMoves().ToList();
         enemyMoves.AddRange(plannedMoves);
-        GD.Print($"Planned {enemyMoves.Count} moves");
         foreach (var m in plannedMoves)
         {
             m.Piece.IsPrimed = true;
@@ -322,7 +324,10 @@ public sealed class GameLoop : Node2D
         playerArmy.Clear();
         playerArmy.AddRange(levels.InitialArmy);
         Global.Services.Get<CardService>().ResetCards();
-        Global.Services.Get<Chronometer>().ResetTime();
+        if (Global.Services.TryGet<Chronometer>(out var chronometer))
+        {
+            chronometer.ResetTime();
+        }
     }
 
     private void winGame()

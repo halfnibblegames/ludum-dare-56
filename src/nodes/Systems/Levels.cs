@@ -12,8 +12,8 @@ sealed class Levels
         new(
             1,
             army(
-                enemy(Prefabs.Grasshopper, 3, 7),
-                enemy(Prefabs.Grasshopper, 4, 7),
+                enemy(Prefabs.PrayingMantis, 3, 7),
+                enemy(Prefabs.PrayingMantis, 4, 7),
                 enemy(Prefabs.Ant, 2, 7),
                 enemy(Prefabs.Ant, 5, 7)
             )
@@ -23,8 +23,8 @@ sealed class Levels
             army(
                 enemy(Prefabs.Dragonfly, 3, 7),
                 enemy(Prefabs.Dragonfly, 4, 7),
-                enemy(Prefabs.Grasshopper, 2, 7),
-                enemy(Prefabs.Grasshopper, 5, 7),
+                enemy(Prefabs.PrayingMantis, 2, 7),
+                enemy(Prefabs.PrayingMantis, 5, 7),
                 enemy(Prefabs.Ant, 3, 6),
                 enemy(Prefabs.Ant, 4, 6)
             )
@@ -46,7 +46,7 @@ sealed class Levels
 
     public IReadOnlyList<PackedScene> InitialArmy { get; } = army(
         Prefabs.QueenBee!,
-        Prefabs.PrayingMantis!,
+        Prefabs.Dragonfly!,
         Prefabs.Ant!,
         Prefabs.Ant!
     );

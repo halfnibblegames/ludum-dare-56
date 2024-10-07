@@ -21,6 +21,7 @@ sealed class ChoicePanel : Control
             choice = value;
             cardSlot.SetCard(choice?.Card);
             spawnedPiece?.QueueFree();
+            spawnedPiece = null;
             if (choice == null) return;
             spawnedPiece = choice.PiecePrefab.Instance<Piece>();
             pieceSlot.AddChild(spawnedPiece);
@@ -32,6 +33,7 @@ sealed class ChoicePanel : Control
     {
         pieceSlot = GetNode<TextureButton>("PieceSlot");
         cardSlot = GetNode<CardSlot>("CardSlot");
+        GetNode<Control>("Background/Hover").Visible = false;
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -40,6 +42,34 @@ sealed class ChoicePanel : Control
             or InputEventScreenTouch { Pressed: true })
         {
             Global.Services.Get<ChoicesScreen>().UseChoice(Choice);
+            Global.Services.Get<HelpService>().ClearHelp();
         }
+    }
+
+    public void OnMouseEntered()
+    {
+        GetNode<Control>("Background/Hover").Visible = true;
+    }
+
+    public void OnMouseExited()
+    {
+        GetNode<Control>("Background/Hover").Visible = false;
+    }
+
+    public void OnPieceSlotMouseEntered()
+    {
+        if (spawnedPiece is null) return;
+        Global.Services.Get<HelpService>().ShowHelp(spawnedPiece);
+    }
+
+    public void OnCardSlotMouseEntered()
+    {
+        if (choice is null) return;
+        Global.Services.Get<HelpService>().ShowHelp(choice.Card);
+    }
+
+    public void OnSlotMouseExited()
+    {
+        Global.Services.Get<HelpService>().ClearHelp();
     }
 }

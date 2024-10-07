@@ -36,7 +36,6 @@ sealed class EnemyBrain
 
     public IEnumerable<Move> ImproveMoves(IEnumerable<Move> moves)
     {
-        GD.Print("Improving moves for pieces");
         var movesAsList = moves.ToList();
         var validPieces = movesAsList
             .Where(m =>
@@ -49,8 +48,6 @@ sealed class EnemyBrain
             })
             .Select(m => PlacedPiece.FromTile(m.Board, m.From))
             .ToList();
-
-        GD.Print($"We found {movesAsList.Count} moves and {validPieces.Count} valid pieces left");
 
         return planMovesForPieces(validPieces, validPieces.Count);
     }
